@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Status | Assistência Técnica</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ------------------------------------- */
+        /* ESTILOS GERAIS E FUNDO PRETO */
+        /* ------------------------------------- */
+        body {
+            font-family: 'Roboto', sans-serif; /* Fonte Roboto aplicada */
+            background-color: #000000;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 40px;
+            text-align: center;
+        }
+
+        /* ------------------------------------- */
+        /* CABEÇALHO (LOGO E TÍTULO) */
+        /* ------------------------------------- */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto 30px;
+        }
+
+        .logo-placeholder {
+            width: 150px; 
+            height: 50px;
+            margin-right: 20px;
+            background-color: #111; /* Cor mais sutil */
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            border-radius: 5px;
+        }
+
+        .title-group {
+            text-align: left;
+        }
+
+        h1 {
+            color: #00A65A; /* Um verde mais moderno */
+            margin: 0;
+            font-size: 3em;
+            letter-spacing: 1px;
+            font-weight: 300; /* Peso da fonte mais fino */
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #666666; /* Cinza mais discreto */
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        /* ------------------------------------- */
+        /* TABELA */
+        /* ------------------------------------- */
+        #status-table {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            text-align: left;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Sombra suave para destacar */
+        }
+
+        th {
+            background-color: #111111;
+            color: #ffffff;
+            padding: 18px 15px; /* Padding reduzido */
+            font-size: 1.4em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #00A65A;
+            font-weight: 400; /* Peso normal para o cabeçalho */
+        }
+
+        td {
+            background-color: #000000;
+            color: #f0f0f0;
+            padding: 20px 15px; /* Padding ajustado */
+            font-size: 1.3em;
+            vertical-align: middle;
+            border-bottom: 1px solid #1a1a1a; /* Linha divisória ainda mais sutil */
+            font-weight: 300; /* A fonte mais fina nas células de dados */
+        }
+        
+        /* Alternando cores para facilitar a leitura */
+        #data-body tr:nth-child(even) td {
+            background-color: #0a0a0a; 
+        }
+
+        /* ------------------------------------- */
+        /* ESTILOS DE STATUS (MAIS SUAVES) */
+        /* ------------------------------------- */
+
+        /* Destaque para PRONTO */
+        .status-pronto td {
+            background-color: #00A65A !important; 
+            color: #FFFFFF !important;
+            font-weight: 700 !important; /* Mais grosso para destaque máximo */
+        }
+        
+        /* Destaque para Aguardando Aprovação/Peça */
+        .status-espera td {
+            background-color: #333300 !important; /* Tom escuro e amarelado */
+            color: #FFD700 !important; /* Amarelo dourado no texto */
+            font-weight: 400;
+        }
+        
+        /* Destaque para Análise/Diagnóstico */
+        .status-analise td {
+            background-color: #000033 !important; /* Tom escuro e azulado */
+            color: #ADD8E6 !important; /* Azul claro no texto */
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="logo-placeholder">
+             [logo.png]
+        </div>
+
+        <div class="title-group">
+            <h1>ACOMPANHAMENTO DE SERVIÇOS</h1>
+            <div class="subtitle">Encontre o número da Ordem de Serviço (OS) para verificar o status.</div>
+        </div>
+    </div>
+
+    <table id="status-table">
+        <thead>
+            <tr>
+                <th style="width: 10%;">OS</th>
+                <th style="width: 25%;">Cliente</th>
+                <th style="width: 35%;">Status Atual</th>
+                <th style="width: 30%;">Previsão</th>
+            </tr>
+        </thead>
+        <tbody id="data-body">
+            </tbody>
+    </table>
+
+    <script>
+        // Função que simula a base de dados dos serviços
+        function getServiceData() {
+            // =========================================================
+            // *** IMPORTANTE: EDITE ESTA LISTA COM AS SUAS OS ATUAIS ***
+            // =========================================================
+            return [
+                { os: '00121', cliente: 'Mariana G.', status: 'Pronto para Retirada', previsao: 'Chamar no Balcão' },
+                { os: '00122', cliente: 'Lucas S.', status: 'Em Reparo (Display)', previsao: '35 minutos' },
+                { os: '00123', cliente: 'Pedro H.', status: 'Aguardando Aprovação', previsao: 'Entraremos em contato' },
+                { os: '00124', cliente: 'Camila A.', status: 'Análise/Diagnóstico', previsao: '15 minutos' },
+                { os: '00125', cliente: 'João B.', status: 'Pronto para Retirada', previsao: 'Chamar no Balcão' },
+                { os: '00126', cliente: 'Ana C.', status: 'Aguardando Peça (Bateria)', previsao: 'Terça-feira (08/07)' },
+                { os: '00127', cliente: 'Rafael D.', status: 'Em Reparo (Conector)', previsao: '20 minutos' },
+                { os: '00128', cliente: 'Sofia L.', status: 'Análise/Diagnóstico', previsao: '10 minutos' }
+            ];
+        }
+
+        // Função para renderizar os dados na tabela
+        function renderTable() {
+            const data = getServiceData();
+            const tbody = document.getElementById('data-body');
+            tbody.innerHTML = ''; 
+
+            data.forEach(item => {
+                const row = tbody.insertRow();
+                let statusClass = '';
+
+                // Define a classe de destaque baseada no status
+                if (item.status.includes('Pronto para Retirada')) {
+                    statusClass = 'status-pronto';
+                } else if (item.status.includes('Aguardando') || item.status.includes('Aprovação')) {
+                    statusClass = 'status-espera';
+                } else if (item.status.includes('Análise') || item.status.includes('Diagnóstico')) {
+                    statusClass = 'status-analise';
+                }
+                
+                row.className = statusClass;
+
+                row.insertCell().textContent = item.os;
+                row.insertCell().textContent = item.cliente;
+                
+                // Coluna Status (adiciona um emoji para realçar)
+                let statusText = item.status;
+                if (item.status.includes('Pronto')) {
+                    statusText = '✅ ' + statusText;
+                } else if (item.status.includes('Reparo')) {
+                    statusText = '🛠️ ' + statusText;
+                } else if (item.status.includes('Aguardando Peça')) {
+                    statusText = '⏳ ' + statusText;
+                } else if (item.status.includes('Análise')) {
+                    statusText = '🔍 ' + statusText;
+                }
+                row.insertCell().textContent = statusText;
+
+                row.insertCell().textContent = item.previsao;
+            });
+        }
+
+        // Atualiza a tabela a cada 10 segundos
+        renderTable(); 
+        setInterval(renderTable, 10000); // 10000 ms = 10 segundos
+    </script>
+
+</body>
+</html>
