@@ -26,7 +26,6 @@
             margin: 0 auto 30px;
         }
 
-        /* LOGO */
         .logo-placeholder {
             height: 90px;
             margin-right: 25px;
@@ -47,7 +46,6 @@
             font-weight: 300;
         }
 
-        /* TABELA FIXA */
         #status-table {
             width: 90%;
             max-width: 1400px;
@@ -70,20 +68,17 @@
             z-index: 10;
         }
 
-        /* ÁREA ROLÁVEL (SEM SCROLL) */
         #data-body {
             display: block;
             max-height: 500px;
             overflow-y: auto;
         }
 
-        /* Remover scrollbar Chrome/Edge/Safari */
         #data-body::-webkit-scrollbar {
             width: 0;
             height: 0;
         }
 
-        /* Remover scrollbar Firefox */
         #data-body {
             scrollbar-width: none;
         }
@@ -130,9 +125,24 @@
 <body>
 
     <div class="header-container">
-        <img src="5b1e1536-9944-4399-9448-b5e4b0f59294-removebg.png" 
-             alt="Logo Aliencell" 
-             class="logo-placeholder">
+        
+        <!-- ====================================== -->
+        <!--  ESCOLHA APENAS UMA DAS 3 OPÇÕES AQUI  -->
+        <!--  Apague as duas que você NÃO usa       -->
+        <!-- ====================================== -->
+
+        <!-- OPÇÃO 1 - LOGO NA MESMA PASTA DO INDEX -->
+        <img src="5b1e1536-9944-4399-9448-b5e4b0f59294-removebg.png" class="logo-placeholder" alt="Logo Aliencell">
+
+        <!-- OPÇÃO 2 - LOGO DENTRO DE /img/ -->
+        <!-- <img src="img/5b1e1536-9944-4399-9448-b5e4b0f59294-removebg.png" class="logo-placeholder" alt="Logo Aliencell"> -->
+
+        <!-- OPÇÃO 3 - USANDO LINK RAW DO GITHUB (100% FUNCIONA) -->
+        <!-- <img src="COLAR_AQUI_O_LINK_RAW" class="logo-placeholder" alt="Logo Aliencell"> -->
+
+        <!-- ====================================== -->
+        <!--    FIM DAS 3 OPÇÕES PARA A LOGO        -->
+        <!-- ====================================== -->
         
         <div class="title-group">
             <h1>ACOMPANHAMENTO DE SERVIÇOS</h1>
@@ -201,13 +211,9 @@
         renderTable();
         setInterval(renderTable, 10000);
 
-        /* ==== ROLAGEM AUTOMÁTICA ==== */
         function autoScroll() {
             const tbody = document.getElementById("data-body");
-            tbody.scrollBy({
-                top: 1,
-                behavior: "smooth"
-            });
+            tbody.scrollBy({ top: 1, behavior: "smooth" });
 
             if (tbody.scrollTop + tbody.clientHeight >= tbody.scrollHeight - 2) {
                 tbody.scrollTo({ top: 0, behavior: "smooth" });
