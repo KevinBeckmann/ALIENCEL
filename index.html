@@ -8,78 +8,186 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
-:root { --verde: #00A65A; }
+
+:root {
+    --verde: #00A65A;
+}
+
+/* FUNDO CINZA + IMAGEM COM TRANSPARÊNCIA + MÁSCARA DIAGONAL */
 body {
     font-family: 'Roboto', sans-serif;
     background: #111;
-    margin: 0; padding: 20px; color: #fff;
+    margin: 0;
+    padding: 20px;
+    color: #fff;
+    overflow-x: hidden;
+
+    /* imagem direita */
     background-image: url("preview.png");
     background-repeat: no-repeat;
     background-size: 55% 100%;
     background-position: right top;
     background-attachment: fixed;
 }
+
+/* Degradê suave entre lados */
 body::before {
-    content: ""; position: fixed; left: 0; top: 0;
-    width: 60%; height: 100%;
+    content: "";
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 60%;
+    height: 100%;
     background: linear-gradient(to right, #111 70%, transparent);
     z-index: -2;
 }
+
+/* Máscara diagonal elegante */
 body::after {
-    content: ""; position: fixed; right: 0; top: 0;
-    width: 55%; height: 100%;
+    content: "";
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 55%;
+    height: 100%;
     background: rgba(0,0,0,0.45);
     backdrop-filter: blur(2px);
     clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
     z-index: -1;
 }
-.header-container { display: flex; justify-content: center; margin-bottom: 5px; }
-.logo-placeholder { height: 120px; }
-h1 {
-    font-size: 2.2em; font-weight: 300; text-align: center;
-    color: var(--verde); text-shadow: 0 0 10px #00a65a55; margin-bottom: 20px;
+
+/* ÍCONE ADMIN */
+.admin-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    font-size: 32px;
+    text-decoration: none;
+    color: var(--verde);
+    background: rgba(0,0,0,0.5);
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 2px solid var(--verde);
+    transition: 0.2s;
+    z-index: 9999;
+}
+.admin-btn:hover {
+    background: var(--verde);
+    color: black;
+    cursor: pointer;
 }
 
-/* TABELA */
-.table-center { width: 100%; display: flex; justify-content: center; }
+/* LOGO CENTRALIZADO */
+.header-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.logo-placeholder {
+    height: 120px;
+}
+
+/* TÍTULO EM VERDE SUAVE */
+h1 {
+    font-size: 2.2em;
+    font-weight: 300;
+    text-align: center;
+    color: var(--verde);
+    text-shadow: 0 0 10px #00a65a55;
+    margin-bottom: 20px;
+}
+
+/* TABELA CENTRALIZADA */
+.table-center {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 #status-table {
-    width: 85%; max-width: 1500px; border-collapse: collapse;
+    width: 85%;
+    max-width: 1500px;
+    border-collapse: collapse;
     background: rgba(20,20,20,0.85);
-    border: 3px solid var(--verde); border-radius: 10px;
+    border: 3px solid var(--verde);
+    border-radius: 10px;
     box-shadow: 0 0 15px #00a65a55;
 }
-#status-table thead th {
-    background: rgba(0,0,0,0.6); color: var(--verde);
-    padding: 15px; border-bottom: 3px solid var(--verde);
-    font-size: 1.3em; position: sticky; top: 0;
-}
-#data-body { display: block; max-height: 500px; overflow-y: hidden; }
-#data-body tr, #status-table thead tr { display: table; width: 100%; table-layout: fixed; }
-td {
-    padding: 16px; color: #fff; border-bottom: 1px solid #333; font-size: 1.2em;
-}
-.status-pronto td { background: #00A65A; font-weight: 700; }
-.status-espera td { background: #333300; color: #FFD700; }
-.status-analise td { background: #001144; color: #A7C8FF; }
 
-/* PROMOÇÕES */
+#status-table thead th {
+    background: rgba(0,0,0,0.6);
+    color: var(--verde);
+    padding: 15px;
+    border-bottom: 3px solid var(--verde);
+    font-size: 1.3em;
+    position: sticky;
+    top: 0;
+}
+
+#data-body {
+    display: block;
+    max-height: 500px;
+    overflow-y: hidden;
+}
+
+#data-body tr, #status-table thead tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+td {
+    padding: 16px;
+    color: #fff;
+    border-bottom: 1px solid #333;
+    font-size: 1.2em;
+}
+
+/* CORES DE STATUS */
+.status-pronto td {
+    background: #00A65A;
+    font-weight: 700;
+}
+.status-espera td {
+    background: #333300;
+    color: #FFD700;
+}
+.status-analise td {
+    background: #001144;
+    color: #A7C8FF;
+}
+
+/* PROMOÇÕES DO DIA */
 .promos-container {
-    margin-top: 35px; background: rgba(20,20,20,0.85);
-    border-top: 3px solid var(--verde); border-bottom: 3px solid var(--verde);
-    padding: 12px 0; overflow: hidden; white-space: nowrap;
+    margin-top: 35px;
+    background: rgba(20,20,20,0.85);
+    border-top: 3px solid var(--verde);
+    border-bottom: 3px solid var(--verde);
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
     box-shadow: 0 0 12px #00a65a55;
 }
+
 .promos-text {
-    display: inline-block; font-size: 1.5em; color: var(--verde);
-    padding-left: 100%; animation: scrollPromos 18s linear infinite;
+    display: inline-block;
+    font-size: 1.5em;
+    color: var(--verde);
+    padding-left: 100%;
+    animation: scrollPromos 18s linear infinite;
 }
+
 @keyframes scrollPromos {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
 }
+
 </style>
 </head>
 <body>
+
+<!-- BOTÃO ADMIN -->
+<a href="administrador.html" class="admin-btn">⚙️</a>
 
 <div class="header-container">
     <img src="imageem.png" class="logo-placeholder">
@@ -89,7 +197,13 @@ td {
 
 <div class="table-center">
     <table id="status-table">
-        <thead><tr><th>Cliente</th><th>Status</th><th>Previsão</th></tr></thead>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Status</th>
+                <th>Previsão</th>
+            </tr>
+        </thead>
         <tbody id="data-body"></tbody>
     </table>
 </div>
@@ -102,23 +216,30 @@ td {
 
 <script>
 
-function calcularPrevisao(txt) {
-    if (!txt.match(/\d/)) return txt;
+/* CÁLCULO DO HORÁRIO FINAL */
+function calcularPrevisao(texto) {
+    const original = texto;
+
+    if (!texto.match(/\d/)) return original;
 
     const agora = new Date();
-    let min = 0;
+    let minutos = 0;
 
-    const m = txt.match(/(\d+)\s*min/);
-    if (m) min += parseInt(m[1]);
+    const min = texto.match(/(\d+)\s*min/);
+    if (min) minutos += parseInt(min[1]);
 
-    const h = txt.match(/(\d+)\s*h/);
-    if (h) min += parseInt(h[1]) * 60;
+    const hr = texto.match(/(\d+)\s*h/);
+    if (hr) minutos += parseInt(hr[1]) * 60;
 
-    agora.setMinutes(agora.getMinutes() + min);
+    agora.setMinutes(agora.getMinutes() + minutos);
 
-    return `${txt} → ${agora.getHours().toString().padStart(2,"0")}:${agora.getMinutes().toString().padStart(2,"0")}`;
+    const h = agora.getHours().toString().padStart(2, "0");
+    const m = agora.getMinutes().toString().padStart(2, "0");
+
+    return `${original} → ${h}:${m}`;
 }
 
+/* RENDER TABELA */
 function renderTable() {
     const data = getTabela();
     const tbody = document.getElementById("data-body");
@@ -137,10 +258,12 @@ function renderTable() {
     });
 }
 
+/* PROMOÇÕES */
 document.getElementById("promos").textContent = getPromocoes();
 
+/* ATUALIZAÇÃO AUTOMÁTICA */
 renderTable();
-setInterval(renderTable, 5000);
+setInterval(renderTable, 7000);
 
 </script>
 
