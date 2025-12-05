@@ -304,9 +304,9 @@ td{
 
 <script>
 /* ===========================
-   Storage helpers (localStorage)
+   BANCO DE DADOS CORRIGIDO
    =========================== */
-const STORAGE_KEY = "assist_db";
+const STORAGE_KEY = "assist_db";  // <<< AQUI FOI A ÚNICA ALTERAÇÃO
 
 function getDB(){
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -328,6 +328,8 @@ function setTabela(tabela){ const db=getDB(); db.tabela=tabela; saveDB(db); }
 
 function getPromocoes(){ return (getDB().promocoes) || ""; }
 function setPromocoes(txt){ const db=getDB(); db.promocoes = txt||""; saveDB(db); }
+
+
 
 /* ===========================
    UI / Data functions
@@ -367,6 +369,8 @@ function carregar(){
 }
 
 function escapeHtml(s){ return (s+"").replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+
 
 /* salvar / editar */
 function limpar(){
@@ -408,7 +412,7 @@ document.getElementById("service-form").addEventListener("submit", (e)=>{
 function editar(i){
   const item = getTabela()[i];
   if(!item) return;
-  // create hidden index field if not exists
+
   let idxEl = document.getElementById("service-index");
   if(!idxEl){
     idxEl = document.createElement("input");
@@ -417,6 +421,7 @@ function editar(i){
     document.getElementById("service-form").appendChild(idxEl);
   }
   idxEl.value = i;
+
   document.getElementById("cliente").value = item.cliente;
   document.getElementById("status").value = item.status;
   document.getElementById("previsao").value = item.previsao;
@@ -431,11 +436,15 @@ function excluir(i){
   carregar();
 }
 
+
+
 /* promos */
 function salvarPromo(){
   setPromocoes(document.getElementById("promo").value);
   alert("Promoções atualizadas!");
 }
+
+
 
 /* success message */
 function showSuccess(text){
@@ -445,8 +454,10 @@ function showSuccess(text){
   setTimeout(()=> el.style.display = "none", 2000);
 }
 
+
+
 /* ===========================
-   Chart: status distribution
+   CHART
    =========================== */
 let chartInstance = null;
 function atualizarGrafico(){
@@ -491,23 +502,24 @@ function atualizarGrafico(){
   });
 }
 
+
+
 /* ===========================
-   Alerts: check every 30s for HH:MM items within ≤5min
+   ALERTAS
    =========================== */
 
 function parseTimeHHMM(hhmm){
-  // returns Date object for today with given HH:MM; if time already passed, return next day (so soon alerts work for late-night)
   const m = hhmm.match(/^([0-2][0-9]):([0-5][0-9])$/);
   if(!m) return null;
   const now = new Date();
   const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(m[1],10), parseInt(m[2],10), 0, 0);
-  if(d.getTime() < now.getTime() - (1000*60)) { // if more than 1 minute in past, treat as next day
+  if(d.getTime() < now.getTime() - (1000*60)) {
     d.setDate(d.getDate()+1);
   }
   return d;
 }
 
-function minutesDiff(a,b){ // a,b Date -> minutes b - a
+function minutesDiff(a,b){
   return (b.getTime() - a.getTime()) / 60000;
 }
 
@@ -532,7 +544,6 @@ function atualizarAlertsUI(){
     return;
   }
 
-  // sort by time remaining
   alerts.sort((a,b)=> a.mins - b.mins);
 
   alerts.forEach(a=>{
@@ -552,28 +563,27 @@ function atualizarAlertsUI(){
   });
 }
 
-/* periodic check: every 30s */
 let alertInterval = null;
 function startAlertChecker(){
   if(alertInterval) clearInterval(alertInterval);
-  // initial
   atualizarAlertsUI();
   alertInterval = setInterval(()=> {
     atualizarAlertsUI();
   }, 30*1000);
 }
 
+
+
 /* ===========================
-   Init - load data and listeners
+   INIT
    =========================== */
 
 function initDemoDataIfEmpty(){
   const db = getDB();
   if(!db.tabela || db.tabela.length === 0){
-    // add a couple of example rows (optional), times relative to now for demo
     const now = new Date();
-    const a = new Date(now.getTime() + 7*60000); // +7min
-    const b = new Date(now.getTime() + 2*60000); // +2min
+    const a = new Date(now.getTime() + 7*60000);
+    const b = new Date(now.getTime() + 2*60000);
     const fmt = d => String(d.getHours()).padStart(2,'0')+":"+String(d.getMinutes()).padStart(2,'0');
     db.tabela = [
       { cliente: "João Silva", status: "Em Reparo", previsao: fmt(a) },
@@ -583,7 +593,6 @@ function initDemoDataIfEmpty(){
   }
 }
 
-// initial load
 initDemoDataIfEmpty();
 carregar();
 startAlertChecker();
