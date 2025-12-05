@@ -1,254 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle | Lançamento de Serviços</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #1a1a1a;
-            color: #f0f0f0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #222;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
-        h1 {
-            color: #00A65A;
-            font-weight: 300;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            font-weight: 400;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #444;
-            border-radius: 4px;
-            box-sizing: border-box;
-            background-color: #333;
-            color: #f0f0f0;
-        }
-        .form-group button {
-            margin-top: 20px;
-            padding: 12px 20px;
-            background-color: #00A65A;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s;
-        }
-        .form-group button:hover {
-            background-color: #007e46;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid #333;
-            text-align: left;
-            font-weight: 300;
-        }
-        th {
-            background-color: #111;
-            color: #fff;
-            font-weight: 400;
-        }
-        td button {
-            padding: 5px 10px;
-            margin-right: 5px;
-            cursor: pointer;
-            border: none;
-            border-radius: 3px;
-        }
-        .btn-edit { background-color: #3498db; color: white; }
-        .btn-delete { background-color: #e74c3c; color: white; }
-        .msg-sucesso {
-            background-color: #00A65A;
-            color: white;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrador | Painel</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+body { background:#111; color:white; font-family:Roboto; padding:20px; }
+.container {
+    max-width:900px; margin:auto; background:#1d1d1d; padding:25px;
+    border-radius:10px; box-shadow:0 0 15px #000;
+}
+h1 { color:#00A65A; font-weight:300; }
+input, select {
+    width:100%; padding:10px; margin-top:8px; margin-bottom:15px;
+    border:none; border-radius:6px; background:#333; color:white;
+}
+button {
+    padding:10px 20px; border:none; border-radius:6px;
+    background:#00A65A; color:white; cursor:pointer;
+}
+button:hover { background:#008b4d; }
+table { width:100%; border-collapse:collapse; margin-top:20px; }
+th, td { padding:12px; border-bottom:1px solid #333; }
+.btn-edit { background:#3498db; }
+.btn-delete { background:#e74c3c; }
+.promobox { margin-top:25px; }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Painel de Lançamento de Serviços</h1>
+<div class="container">
 
-        <div id="success-msg" class="msg-sucesso">Dados salvos e painel de TV atualizado!</div>
+    <h1>Painel Administrativo</h1>
 
-        <form id="service-form">
-            <input type="hidden" id="service-index">
+    <h2>Adicionar / Editar Serviço</h2>
 
-            <div class="form-group">
-                <label for="os">OS:</label>
-                <input type="text" id="os" required>
-            </div>
-            <div class="form-group">
-                <label for="cliente">Cliente (OS + Nome):</label>
-                <input type="text" id="cliente" required>
-            </div>
-            <div class="form-group">
-                <label for="status">Status:</label>
-                <select id="status" required>
-                    <option value="Análise/Diagnóstico">Análise/Diagnóstico</option>
-                    <option value="Aguardando Aprovação">Aguardando Aprovação</option>
-                    <option value="Aguardando Peça">Aguardando Peça</option>
-                    <option value="Em Reparo">Em Reparo</option>
-                    <option value="Pronto para Retirada">Pronto para Retirada</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="previsao">Previsão:</label>
-                <input type="text" id="previsao" placeholder="Ex: 30 minutos ou 08/07">
-            </div>
+    <input type="hidden" id="id">
 
-            <div class="form-group">
-                <button type="submit" id="submit-btn">Adicionar Serviço</button>
-            </div>
-        </form>
+    <label>Cliente</label>
+    <input type="text" id="cliente">
 
-        <h2>Serviços Ativos</h2>
-        <table id="services-table">
-            <thead>
-                <tr>
-                    <th>OS</th>
-                    <th>Cliente</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="services-list">
-                </tbody>
-        </table>
+    <label>Status</label>
+    <select id="status">
+        <option value="Análise/Diagnóstico">Análise/Diagnóstico</option>
+        <option value="Aguardando Aprovação">Aguardando Aprovação</option>
+        <option value="Aguardando Peça">Aguardando Peça</option>
+        <option value="Em Reparo">Em Reparo</option>
+        <option value="Pronto para Retirada">Pronto para Retirada</option>
+    </select>
+
+    <label>Previsão</label>
+    <input type="text" id="previsao">
+
+    <button onclick="salvar()">Salvar</button>
+
+    <h2>Serviços Cadastrados</h2>
+
+    <table>
+        <thead><tr><th>Cliente</th><th>Status</th><th>Previsão</th><th>Ações</th></tr></thead>
+        <tbody id="lista"></tbody>
+    </table>
+
+    <div class="promobox">
+        <h2>Promoções do Dia</h2>
+        <textarea id="promo" style="width:100%;height:80px;background:#333;color:white;"></textarea>
+        <button onclick="salvarPromo()">Salvar Promoções</button>
     </div>
 
-    <script>
-        const STORAGE_KEY = 'servicePanelData';
+</div>
 
-        // Função para carregar dados do localStorage
-        function loadServices() {
-            const data = localStorage.getItem(STORAGE_KEY);
-            return data ? JSON.parse(data) : [];
-        }
+<script src="dados.js"></script>
 
-        // Função para salvar dados no localStorage
-        function saveServices(services) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(services));
-            displaySuccessMessage();
-            renderServicesTable();
-        }
+<script>
 
-        // Exibe mensagem de sucesso por 3 segundos
-        function displaySuccessMessage() {
-            const msg = document.getElementById('success-msg');
-            msg.style.display = 'block';
-            setTimeout(() => {
-                msg.style.display = 'none';
-            }, 3000);
-        }
+function carregar() {
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
 
-        // Renderiza a tabela de serviços ativos
-        function renderServicesTable() {
-            const services = loadServices();
-            const list = document.getElementById('services-list');
-            list.innerHTML = '';
+    getTabela().forEach((item, i) => {
+        let tr = document.createElement("tr");
 
-            services.forEach((service, index) => {
-                const row = list.insertRow();
-                row.insertCell().textContent = service.os;
-                row.insertCell().textContent = service.cliente;
-                row.insertCell().textContent = service.status;
+        tr.innerHTML = `
+            <td>${item.cliente}</td>
+            <td>${item.status}</td>
+            <td>${item.previsao}</td>
+            <td>
+                <button class="btn-edit" onclick="editar(${i})">Editar</button>
+                <button class="btn-delete" onclick="excluir(${i})">Excluir</button>
+            </td>
+        `;
 
-                const actionsCell = row.insertCell();
-                const editBtn = document.createElement('button');
-                editBtn.textContent = 'Editar';
-                editBtn.className = 'btn-edit';
-                editBtn.onclick = () => editService(index);
-                actionsCell.appendChild(editBtn);
+        lista.appendChild(tr);
+    });
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Excluir';
-                deleteBtn.className = 'btn-delete';
-                deleteBtn.onclick = () => deleteService(index);
-                actionsCell.appendChild(deleteBtn);
-            });
-        }
+    document.getElementById("promo").value = getPromocoes();
+}
 
-        // Lidar com o envio do formulário (Adicionar/Salvar Edição)
-        document.getElementById('service-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+function salvar() {
+    const id = document.getElementById("id").value;
+    const cliente = document.getElementById("cliente").value;
+    const status = document.getElementById("status").value;
+    const previsao = document.getElementById("previsao").value;
 
-            const os = document.getElementById('os').value;
-            const cliente = document.getElementById('cliente').value;
-            const status = document.getElementById('status').value;
-            const previsao = document.getElementById('previsao').value;
-            const index = document.getElementById('service-index').value;
+    if (cliente.trim() === "") return alert("Preencha o cliente.");
 
-            const newService = { os, cliente, status, previsao };
-            let services = loadServices();
+    const db = getDB();
 
-            if (index === "") {
-                // Adicionar novo
-                services.push(newService);
-            } else {
-                // Editar existente
-                services[parseInt(index)] = newService;
-                document.getElementById('service-index').value = ""; // Limpar índice
-                document.getElementById('submit-btn').textContent = "Adicionar Serviço";
-            }
-            
-            saveServices(services);
-            this.reset(); // Limpar o formulário
-        });
+    if (id === "") {
+        // adicionar
+        db.tabela.push({ cliente, status, previsao });
+    } else {
+        // editar
+        db.tabela[id] = { cliente, status, previsao };
+    }
 
-        // Preencher o formulário para edição
-        function editService(index) {
-            const services = loadServices();
-            const service = services[index];
-            
-            document.getElementById('os').value = service.os;
-            document.getElementById('cliente').value = service.cliente;
-            document.getElementById('status').value = service.status;
-            document.getElementById('previsao').value = service.previsao;
-            document.getElementById('service-index').value = index;
+    saveDB(db);
+    limpar();
+    carregar();
+}
 
-            document.getElementById('submit-btn').textContent = "Salvar Edição";
-        }
+function editar(i) {
+    const item = getTabela()[i];
+    document.getElementById("cliente").value = item.cliente;
+    document.getElementById("status").value = item.status;
+    document.getElementById("previsao").value = item.previsao;
+    document.getElementById("id").value = i;
+}
 
-        // Excluir um serviço
-        function deleteService(index) {
-            if (confirm("Tem certeza que deseja excluir este serviço?")) {
-                let services = loadServices();
-                services.splice(index, 1);
-                saveServices(services);
-            }
-        }
+function excluir(i) {
+    if (!confirm("Excluir registro?")) return;
+    deleteLinha(i);
+    carregar();
+}
 
-        // Inicializar a tabela ao carregar a página
-        document.addEventListener('DOMContentLoaded', renderServicesTable);
-    </script>
+function limpar() {
+    document.getElementById("id").value = "";
+    document.getElementById("cliente").value = "";
+    document.getElementById("previsao").value = "";
+}
+
+function salvarPromo() {
+    setPromocoes(document.getElementById("promo").value);
+    alert("Promoções atualizadas!");
+}
+
+carregar();
+
+</script>
 
 </body>
 </html>
