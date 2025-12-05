@@ -9,11 +9,9 @@
 
 <style>
 
-:root {
-    --verde: #00A65A;
-}
+:root { --verde: #00A65A; }
 
-/* FUNDO CINZA + IMAGEM COM TRANSPARÊNCIA + MÁSCARA DIAGONAL */
+/* FUNDO */
 body {
     font-family: 'Roboto', sans-serif;
     background: #111;
@@ -22,7 +20,6 @@ body {
     color: #fff;
     overflow-x: hidden;
 
-    /* imagem direita */
     background-image: url("preview.png");
     background-repeat: no-repeat;
     background-size: 55% 100%;
@@ -30,7 +27,6 @@ body {
     background-attachment: fixed;
 }
 
-/* Degradê suave entre lados */
 body::before {
     content: "";
     position: fixed;
@@ -42,7 +38,6 @@ body::before {
     z-index: -2;
 }
 
-/* Máscara diagonal elegante */
 body::after {
     content: "";
     position: fixed;
@@ -56,7 +51,42 @@ body::after {
     z-index: -1;
 }
 
-/* LOGO CENTRALIZADO */
+/* BOTÃO ADMIN */
+.admin-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    font-size: 32px;
+    text-decoration: none;
+    color: var(--verde);
+    background: rgba(0,0,0,0.5);
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 2px solid var(--verde);
+    transition: 0.2s;
+    z-index: 9999;
+}
+.admin-btn:hover {
+    background: var(--verde);
+    color: black;
+}
+
+/* RELOGIO */
+.relogio {
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--verde);
+    background: rgba(0,0,0,0.4);
+    padding: 6px 14px;
+    border-radius: 10px;
+    border: 2px solid var(--verde);
+    z-index: 9999;
+}
+
+/* LOGO */
 .header-container {
     display: flex;
     justify-content: center;
@@ -66,7 +96,7 @@ body::after {
     height: 120px;
 }
 
-/* TÍTULO EM VERDE SUAVE */
+/* TÍTULO */
 h1 {
     font-size: 2.2em;
     font-weight: 300;
@@ -76,13 +106,8 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* TABELA CENTRALIZADA */
-.table-center {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
+/* TABELA */
+.table-center { width: 100%; display: flex; justify-content: center; }
 #status-table {
     width: 85%;
     max-width: 1500px;
@@ -92,29 +117,23 @@ h1 {
     border-radius: 10px;
     box-shadow: 0 0 15px #00a65a55;
 }
-
 #status-table thead th {
     background: rgba(0,0,0,0.6);
     color: var(--verde);
     padding: 15px;
     border-bottom: 3px solid var(--verde);
     font-size: 1.3em;
-    position: sticky;
-    top: 0;
 }
-
 #data-body {
     display: block;
     max-height: 500px;
     overflow-y: hidden;
 }
-
 #data-body tr, #status-table thead tr {
     display: table;
     width: 100%;
     table-layout: fixed;
 }
-
 td {
     padding: 16px;
     color: #fff;
@@ -122,21 +141,12 @@ td {
     font-size: 1.2em;
 }
 
-/* CORES DE STATUS */
-.status-pronto td {
-    background: #00A65A;
-    font-weight: 700;
-}
-.status-espera td {
-    background: #333300;
-    color: #FFD700;
-}
-.status-analise td {
-    background: #001144;
-    color: #A7C8FF;
-}
+/* CORES */
+.status-pronto td { background: #00A65A; font-weight: 700; }
+.status-espera td { background: #333300; color: #FFD700; }
+.status-analise td { background: #001144; color: #A7C8FF; }
 
-/* PROMOÇÕES DO DIA */
+/* PROMOÇÕES */
 .promos-container {
     margin-top: 35px;
     background: rgba(20,20,20,0.85);
@@ -147,7 +157,6 @@ td {
     white-space: nowrap;
     box-shadow: 0 0 12px #00a65a55;
 }
-
 .promos-text {
     display: inline-block;
     font-size: 1.5em;
@@ -155,15 +164,44 @@ td {
     padding-left: 100%;
     animation: scrollPromos 18s linear infinite;
 }
-
 @keyframes scrollPromos {
     from { transform: translateX(0); }
     to { transform: translateX(-100%); }
 }
 
+/* BOTÃO TELA CHEIA */
+.fullscreen-btn {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 25px;
+    font-size: 20px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid var(--verde);
+    color: var(--verde);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.25s;
+    z-index: 9999;
+}
+.fullscreen-btn:hover {
+    background: var(--verde);
+    color: black;
+}
+
 </style>
 </head>
 <body>
+
+<!-- Ícone ADM -->
+<a href="administrador.html" class="admin-btn">⚙️</a>
+
+<!-- Relógio -->
+<div class="relogio" id="relogio">00:00</div>
+
+<!-- Botão Tela Cheia -->
+<div class="fullscreen-btn" onclick="toggleFullscreen()">📺 Tela Cheia</div>
 
 <div class="header-container">
     <img src="imageem.png" class="logo-placeholder">
@@ -185,30 +223,37 @@ td {
 </div>
 
 <div class="promos-container">
-    <div class="promos-text">
-        💥 PROMOÇÕES DO DIA • Tela iPhone 11 → R$ 299 • Bateria iPhone XR → R$ 149 • Capinha 3x10 → R$ 30 •
-    </div>
+    <div id="promos" class="promos-text"></div>
 </div>
+
+<script src="dados.js"></script>
 
 <script>
 
-/* DADOS EXEMPLO */
-function getServiceData() {
-    return [
-        { cliente: "Mariana G.", status: "Pronto para Retirada", previsao: "Chamar no Balcão" },
-        { cliente: "Lucas S.", status: "Em Reparo (Display)", previsao: "35 minutos" },
-        { cliente: "Pedro H.", status: "Aguardando Aprovação", previsao: "Entraremos em contato" },
-        { cliente: "Camila A.", status: "Análise/Diagnóstico", previsao: "15 minutos" },
-        { cliente: "João B.", status: "Pronto para Retirada", previsao: "Chamar no Balcão" },
-        { cliente: "Ana C.", status: "Aguardando Peça", previsao: "Terça-feira (08/07)" },
-        { cliente: "Rafael T.", status: "Em Reparo (Conector)", previsao: "20 minutos" }
-    ];
+/* RELOGIO */
+function atualizarRelogio() {
+    const agora = new Date();
+    const h = agora.getHours().toString().padStart(2,"0");
+    const m = agora.getMinutes().toString().padStart(2,"0");
+    document.getElementById("relogio").textContent = `${h}:${m}`;
+}
+setInterval(atualizarRelogio, 1000);
+atualizarRelogio();
+
+/* BOTÃO TELA CHEIA */
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        document.querySelector(".fullscreen-btn").textContent = "❌ Sair da Tela Cheia";
+    } else {
+        document.exitFullscreen();
+        document.querySelector(".fullscreen-btn").textContent = "📺 Tela Cheia";
+    }
 }
 
-/* CALCULAR PREVISÃO → COM HORA FINAL */
+/* CÁLCULO PREVISÃO */
 function calcularPrevisao(texto) {
     const original = texto;
-
     if (!texto.match(/\d/)) return original;
 
     const agora = new Date();
@@ -222,15 +267,15 @@ function calcularPrevisao(texto) {
 
     agora.setMinutes(agora.getMinutes() + minutos);
 
-    const h = agora.getHours().toString().padStart(2, "0");
-    const m = agora.getMinutes().toString().padStart(2, "0");
+    const h = agora.getHours().toString().padStart(2,"0");
+    const m = agora.getMinutes().toString().padStart(2,"0");
 
     return `${original} → ${h}:${m}`;
 }
 
-/* RENDER TABELA */
+/* RENDERIZA TABELA */
 function renderTable() {
-    const data = getServiceData();
+    const data = getTabela();
     const tbody = document.getElementById("data-body");
     tbody.innerHTML = "";
 
@@ -247,10 +292,10 @@ function renderTable() {
     });
 }
 
-renderTable();
-setInterval(renderTable, 10000);
+/* PROMOÇÕES */
+document.getElementById("promos").textContent = getPromocoes();
 
-/* SCROLL AUTOMÁTICO */
+/* SCROLL AUTOMÁTICO DA TABELA */
 function autoScroll() {
     const tbody = document.getElementById("data-body");
     const rows = tbody.querySelectorAll("tr").length;
@@ -267,8 +312,11 @@ function autoScroll() {
         tbody.scrollTo({ top: 0 });
     }
 }
-
 setInterval(autoScroll, 100);
+
+/* ATUALIZAÇÃO */
+renderTable();
+setInterval(renderTable, 7000);
 
 </script>
 
