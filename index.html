@@ -3,102 +3,133 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Painel de Controle | Serviços</title>
+<title>Status Assistência — Visual</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-/* ---------- GERAL ---------- */
 :root{
   --accent: #4caf50;
   --bg-dark: #0f0f0f;
   --panel: #161616;
   --muted: #bdbdbd;
+  --text: #e6e6e6;
 }
 *{box-sizing:border-box}
+html,body{height:100%;}
 body{
   margin:0;
   font-family:"Inter",sans-serif;
   background: linear-gradient(180deg,#000000,#131313,#1c1c1c);
-  color:#e6e6e6;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+
+.container{
+  width:100%;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:20px 28px;
+}
+
+/* HEADER NOVO */
+.header-block{
+  width:100%;
   display:flex;
   justify-content:center;
-  padding:20px;
-}
-
-/* ---------- CONTAINER ---------- */
-.container{
-  width:95%;
-  max-width:980px;
-  background:var(--bg-dark);
-  padding:22px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.06);
-  box-shadow:0 12px 30px rgba(0,0,0,0.75);
-  animation:fadeIn .6s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(-8px)}
-  to{opacity:1; transform:none}
-}
-
-/* ---------- LOGO + VOLTAR ---------- */
-.header-row{
-  display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:8px;
+  margin-bottom:25px;
+  gap:25px;
 }
-.logo-container{text-align:center;flex:1;}
-.logo-container img{width:150px;filter:drop-shadow(0 0 6px rgba(255,255,255,0.2));}
 
-.voltar-btn{
+.header-logo{
+  height:150px;
+  width:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,0.25));
+}
+
+.header-text{
+  text-align:center;
+}
+
+.header-title{
+  font-size:48px;
+  font-weight:800;
+  margin:0;
+  padding:0;
+}
+
+.header-subtitle{
+  font-size:22px;
+  margin:0;
+  padding:0;
+  opacity:0.90;
+}
+
+/* TÍTULO ENTRE ALERTAS E GRÁFICO */
+.mid-title-wrapper{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:12px 0 20px 0;
+}
+
+.mid-title-text{
   font-size:26px;
-  color:var(--accent);
-  text-decoration:none;
-  padding:6px 10px;
-  border-radius:8px;
+  font-weight:700;
+  color:#e8e8e8;
+  opacity:0.95;
+  text-align:center;
 }
-.voltar-btn:hover{background:rgba(76,175,80,0.12)}
 
-/* ---------- TOP ROW ---------- */
+/* ALERTAS + GRÁFICO */
 .top-row{
   display:grid;
-  grid-template-columns:1fr 360px;
+  grid-template-columns: 1fr 360px;
   gap:16px;
-  margin:12px 0 20px;
+  margin-bottom:18px;
   align-items:start;
 }
 
 .alerts{
   background:linear-gradient(180deg,#171717,#121212);
-  border-radius:10px;
-  padding:12px;
-  border:1px solid rgba(255,255,255,0.04);
-  min-height:84px;
+  border-radius:12px;
+  padding:12px 14px;
+  border:1px solid rgba(255,255,255,0.06);
 }
-.alerts h3{margin:0 0 8px;color:#ffb3b3;font-size:16px;}
-.alerts-list{display:flex;flex-direction:column;gap:8px;}
-.alert-empty{color:var(--muted);font-size:14px}
+.alerts h3{
+  margin:0 0 8px;
+  color:#ffb3b3;
+  font-size:18px;
+}
+.alerts-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.alert-empty{ color:var(--muted); font-size:14px; }
 
 .alert-item{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:10px;
-  padding:8px;
-  border-radius:8px;
-  background:linear-gradient(90deg, rgba(255,0,0,0.06), rgba(255,0,0,0.02));
-  border:1px solid rgba(255,0,0,0.08);
+  padding:10px;
+  border-radius:10px;
+  background:linear-gradient(90deg,rgba(255,0,0,0.10),rgba(255,0,0,0.03));
+  border:1px solid rgba(255,0,0,0.12);
   color:#ffdede;
-  font-size:14px;
 }
-.alert-item .left{display:flex;gap:10px;align-items:center;}
-.alert-time{font-weight:700;color:#ffdede;}
+.alert-time{ font-weight:700; color:#ffdede; }
 
+/* GRÁFICO */
 .chart-card{
   background:linear-gradient(180deg,#0b0b0b,#090909);
   padding:12px;
@@ -106,118 +137,119 @@ body{
   border:1px solid rgba(255,255,255,0.04);
   box-shadow:0 6px 18px rgba(0,0,0,0.6);
   height:100%;
+  min-height:120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* ---------- FORM ---------- */
-form{margin-bottom:14px;}
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  align-items:end;
-}
-@media(max-width:720px){
-  .top-row{grid-template-columns:1fr;}
-  .form-grid{grid-template-columns:1fr;}
-  .chart-card{order:2}
-  .alerts{order:1}
-}
-
-.form-group{width:100%;display:flex;flex-direction:column;}
-.form-group.full{grid-column:1/-1}
-label{font-size:14px;color:#dcdcdc;font-weight:600;margin-bottom:6px;}
-
-input[type="text"], select, textarea{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #333;
-  background:var(--panel);
-  color:#eaeaea;
-  font-size:15px;
-}
-input:focus, select:focus, textarea:focus{
-  outline:none;
-  border-color:var(--accent);
-  box-shadow:0 0 10px rgba(76,175,80,0.08);
-}
-
-textarea{min-height:88px;resize:vertical;}
-
-.btn-principal{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  background:linear-gradient(90deg,var(--accent),#3e8e41);
-  color:white;
-  font-weight:600;
-  font-size:15px;
-  cursor:pointer;
-  transition:.14s transform;
-}
-.btn-principal:hover{transform:translateY(-2px)}
-
-/* ---------- TABLE ---------- */
-.table-card{
-  margin-top:14px;
-  border-radius:12px;
-  overflow:hidden;
-  border:1px solid #444;
+/* TABELA */
+.table-wrapper{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  background:linear-gradient(180deg,#0d0d0d,#090909);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px;
+  padding:14px;
   box-shadow:0 8px 30px rgba(0,0,0,0.6);
+  margin-bottom:18px;
+  min-height:0;
 }
+.table-title{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:12px;
+}
+
+.scroll-area{
+  flex:1;
+  overflow-y:auto;
+  border-radius:10px;
+  padding-right:8px;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
   background:linear-gradient(180deg,#3a3a3a 0%,#2b2b2b 45%,#1f1f1f 100%);
 }
-th{
-  padding:12px 14px;
+thead th{
+  padding:14px;
   background:linear-gradient(180deg,#545454,#3f3f3f);
-  color:#fff;
   text-align:left;
+  color:#fff;
+  font-size:15px;
   font-weight:700;
+  position:sticky;
+  top:0;
 }
-td{
-  padding:12px 14px;
+tbody td{
+  padding:14px;
   border-bottom:1px solid rgba(0,0,0,0.25);
   color:#e0e0e0;
+  font-size:15px;
 }
 
-/* actions */
-.btn-edit{padding:8px 12px;background:#3498db;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
-.btn-delete{padding:8px 12px;background:#e74c3c;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
-
-.msg-sucesso{
-  background:var(--accent);
-  color:#fff;
-  padding:10px;
-  border-radius:8px;
-  text-align:center;
-  display:none;
-  margin-bottom:12px;
+.status-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:13px;
+  color:#0b0b0b;
+  display:inline-block;
 }
 
-.small-muted{color:var(--muted);font-size:13px;}
+/* PROMOÇÕES */
+#promosBox{
+  width:100%;
+  background:linear-gradient(180deg,#171717,#121212);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;
+  padding:12px 14px;
+  white-space:nowrap;
+  overflow:hidden;
+}
+#promosText{
+  font-size:18px;
+  color:#dcdcdc;
+  display:inline-block;
+  padding-left:100%;
+  animation: slidePromo 14s linear infinite;
+}
+@keyframes slidePromo{
+  from{ transform:translateX(0%); }
+  to{ transform:translateX(-100%); }
+}
+
+@media (max-width:920px){
+  .top-row{ grid-template-columns:1fr; }
+  .chart-card{ order:2; }
+}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-  <div class="header-row">
-    <a class="voltar-btn" href="index.html">←</a>
-    <div class="logo-container"><img src="imageem.png" alt="Logo"></div>
-    <div style="width:34px"></div>
+  <!-- HEADER -->
+  <div class="header-block">
+    <img src="imageem.png" class="header-logo" alt="Logo">
+    <div class="header-text">
+      <h1 class="header-title">TÍTULO</h1>
+      <div class="header-subtitle">subtitulo</div>
+    </div>
   </div>
 
-  <h1 style="margin-top:6px;margin-bottom:8px;text-align:center">Painel de Controle</h1>
+  <!-- TÍTULO CENTRAL ENTRE ALERTAS E GRÁFICO -->
+  <div class="mid-title-wrapper">
+      <h2 class="mid-title-text">Status de Serviço</h2>
+  </div>
 
-  <div id="success-msg" class="msg-sucesso">Dados salvos!</div>
-
-  <!-- TOP ROW -->
+  <!-- ALERTAS + GRÁFICO -->
   <div class="top-row">
-    <div class="alerts" id="alerts">
+
+    <div class="alerts" role="status" aria-live="polite">
       <h3>Alertas (5 minutos)</h3>
       <div id="alerts-list" class="alerts-list">
         <div class="alert-empty">Nenhum alerta no momento.</div>
@@ -225,91 +257,47 @@ td{
     </div>
 
     <div class="chart-card">
-      <canvas id="statusChart" style="width:100%;height:220px"></canvas>
+      <canvas id="statusChart" style="width:100%;max-width:320px;height:180px"></canvas>
+    </div>
+
+  </div>
+
+  <!-- TABELA -->
+  <div class="table-wrapper">
+    <div class="scroll-area" id="scrollArea">
+      <table id="tabelaStatus">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Status</th>
+            <th>Previsão</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
   </div>
 
-  <!-- FORM -->
-  <form id="service-form">
-    <div class="form-grid">
-      <div class="form-group">
-        <label for="cliente">Cliente:</label>
-        <input type="text" id="cliente" required placeholder="Nome do cliente">
-      </div>
-
-      <div class="form-group">
-        <label for="status">Status:</label>
-        <select id="status">
-          <option>Análise/Diagnóstico</option>
-          <option>Aguardando Aprovação</option>
-          <option>Aguardando Peça</option>
-          <option>Em Reparo</option>
-          <option>Pronto para Retirada</option>
-        </select>
-      </div>
-
-      <div class="form-group full">
-        <label for="previsao">Previsão (HH:MM):</label>
-        <input type="text" id="previsao" placeholder="Ex: 15:20" pattern="[0-2][0-9]:[0-5][0-9]" required>
-      </div>
-
-      <div class="form-group full" style="margin-top:4px">
-        <button type="submit" id="submit-btn" class="btn-principal">Adicionar Serviço</button>
-      </div>
-    </div>
-  </form>
-
-  <!-- TABLE -->
-  <div class="table-card">
-    <table id="services-table">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Status</th>
-          <th>Previsão</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="services-list"></tbody>
-    </table>
-  </div>
-
-  <h2 style="margin-top:18px">Promoções do Dia</h2>
-  <textarea id="promo"></textarea>
-  <div style="margin-top:10px">
-    <button class="btn-principal" onclick="salvarPromo()">Salvar Promoções</button>
+  <!-- PROMOÇÕES -->
+  <div id="promosBox">
+    <span id="promosText"></span>
   </div>
 
 </div>
 
 <script>
-/* ===========================
-   BANCO DE DADOS
-   =========================== */
 const STORAGE_KEY = "assist_db";
 
 function getDB(){
   const raw = localStorage.getItem(STORAGE_KEY);
-  if(!raw){
-    const db = { tabela:[], promocoes:"" };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-    return db;
-  }
-  try { return JSON.parse(raw); }
-  catch(e){ return { tabela:[], promocoes:"" }; }
+  if(!raw) return { tabela: [], promocoes: "" };
+  try{ return JSON.parse(raw); }
+  catch{ return { tabela: [], promocoes: "" }; }
 }
 
-function saveDB(db){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
-
 function getTabela(){ return getDB().tabela || []; }
-function setTabela(t){ const db=getDB(); db.tabela=t; saveDB(db); }
-
 function getPromocoes(){ return getDB().promocoes || ""; }
-function setPromocoes(t){ const db=getDB(); db.promocoes=t||""; saveDB(db); }
 
-/* ===========================
-   STATUS COLORS (ALTERAÇÃO PEDIDA)
-   =========================== */
 const statusColors = {
   "Análise/Diagnóstico": "#9aa0a6",
   "Aguardando Aprovação": "#f1c40f",
@@ -318,11 +306,90 @@ const statusColors = {
   "Pronto para Retirada": "#2ecc71"
 };
 
-/* ===========================
-   UI FUNCTIONS
-   =========================== */
+function escapeHtml(s){
+  return (s+"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+}
 
-const statusOptions = [
+function carregarTabela(){
+  const tbody=document.querySelector("#tabelaStatus tbody");
+  const dados=getTabela();
+  tbody.innerHTML="";
+
+  if(dados.length===0){
+    tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">Nenhum serviço lançado.</td></tr>`;
+    atualizarGrafico();
+    return;
+  }
+
+  dados.forEach(item=>{
+    const cor=statusColors[item.status]||"#999";
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHtml(item.cliente)}</td>
+      <td><span class="status-badge" style="background:${cor}">${escapeHtml(item.status)}</span></td>
+      <td>${escapeHtml(item.previsao)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  iniciarAutoScroll();
+  atualizarAlertsUI();
+  atualizarGrafico();
+}
+
+function carregarPromocoes(){
+  document.getElementById("promosText").textContent=getPromocoes();
+}
+
+function parseTimeHHMM(t){
+  const m=String(t).match(/^([0-2][0-9]):([0-5][0-9])$/);
+  if(!m) return null;
+  const now=new Date();
+  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1]),parseInt(m[2]));
+  if(d < now - 60000) d.setDate(d.getDate()+1);
+  return d;
+}
+
+function minutesDiff(a,b){ return (b-a)/60000; }
+
+function atualizarAlertsUI(){
+  const lista=getTabela();
+  const box=document.getElementById("alerts-list");
+  box.innerHTML="";
+  const now=new Date();
+  const arr=[];
+
+  lista.forEach(item=>{
+    const t=parseTimeHHMM(item.previsao);
+    if(!t) return;
+    const m=minutesDiff(now,t);
+    if(m>=0 && m<=5) arr.push({item,m});
+  });
+
+  if(arr.length===0){
+    box.innerHTML=`<div class="alert-empty">Nenhum alerta no momento.</div>`;
+    return;
+  }
+
+  arr.sort((a,b)=>a.m-b.m);
+
+  arr.forEach(a=>{
+    const div=document.createElement("div");
+    div.className="alert-item";
+    div.innerHTML=`
+      <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
+      <div style="text-align:right">
+        <div class="alert-time">${escapeHtml(a.item.previsao)}</div>
+        <div style="font-size:13px;color:#ffdede">${Math.ceil(a.m)} min</div>
+      </div>
+    `;
+    box.appendChild(div);
+  });
+}
+
+/* GRÁFICO */
+let chartInstance=null;
+const statusOptions=[
   "Análise/Diagnóstico",
   "Aguardando Aprovação",
   "Aguardando Peça",
@@ -330,236 +397,79 @@ const statusOptions = [
   "Pronto para Retirada"
 ];
 
-function carregar(){
-  document.getElementById("promo").value = getPromocoes();
-
-  const lista = document.getElementById("services-list");
-  lista.innerHTML = "";
-  getTabela().forEach((item, i)=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${escapeHtml(item.cliente)}</td>
-      <td>${escapeHtml(item.status)}</td>
-      <td>${escapeHtml(item.previsao)}</td>
-      <td>
-        <button class="btn-edit" onclick="editar(${i})">Editar</button>
-        <button class="btn-delete" onclick="excluir(${i})">Excluir</button>
-      </td>`;
-    lista.appendChild(tr);
-  });
-
-  atualizarGrafico();
-  atualizarAlertsUI();
-}
-
-function escapeHtml(s){
-  return (s+"").replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"
-  }[c]));
-}
-
-function salvar(){
-  const cliente = document.getElementById("cliente").value.trim();
-  const status = document.getElementById("status").value;
-  const previsao = document.getElementById("previsao").value.trim();
-
-  if(!cliente){alert("Preencha o nome do cliente.");return;}
-  if(!/^[0-2][0-9]:[0-5][0-9]$/.test(previsao)){alert("Previsão inválida.");return;}
-
-  const db = getDB();
-  const indexInput = document.getElementById("service-index");
-
-  if(indexInput && indexInput.value !== ""){
-    db.tabela[indexInput.value] = { cliente,status,previsao };
-  } else {
-    db.tabela.push({ cliente,status,previsao });
-  }
-
-  saveDB(db);
-  limpar();
-  showSuccess("Dados salvos!");
-  carregar();
-}
-
-document.getElementById("service-form").addEventListener("submit",e=>{
-  e.preventDefault();
-  salvar();
-});
-
-function editar(i){
-  const item = getTabela()[i];
-  let idxEl = document.getElementById("service-index");
-  if(!idxEl){
-    idxEl = document.createElement("input");
-    idxEl.type="hidden";
-    idxEl.id="service-index";
-    document.getElementById("service-form").appendChild(idxEl);
-  }
-  idxEl.value=i;
-
-  document.getElementById("cliente").value=item.cliente;
-  document.getElementById("status").value=item.status;
-  document.getElementById("previsao").value=item.previsao;
-  document.getElementById("submit-btn").textContent="Salvar Alterações";
-}
-
-function excluir(i){
-  if(!confirm("Deseja excluir?"))return;
-  const db=getDB();
-  db.tabela.splice(i,1);
-  saveDB(db);
-  carregar();
-}
-
-function salvarPromo(){
-  setPromocoes(document.getElementById("promo").value);
-  alert("Promoções atualizadas!");
-}
-
-function limpar(){
-  document.getElementById("service-index")?.remove?.();
-  document.getElementById("cliente").value="";
-  document.getElementById("status").value=statusOptions[0];
-  document.getElementById("previsao").value="";
-  document.getElementById("submit-btn").textContent="Adicionar Serviço";
-}
-
-function showSuccess(text){
-  const el=document.getElementById("success-msg");
-  el.textContent=text;
-  el.style.display="block";
-  setTimeout(()=>el.style.display="none",2000);
-}
-
-/* ===========================
-   GRÁFICO (CORRIGIDO)
-   =========================== */
-
-let chartInstance=null;
-
 function atualizarGrafico(){
   const tabela=getTabela();
   const counts={};
   statusOptions.forEach(s=>counts[s]=0);
-  tabela.forEach(item=>counts[item.status]++);
+  tabela.forEach(x=>counts[x.status]!==undefined && counts[x.status]++);
 
-  const labels=statusOptions;
-  const data=labels.map(l=>counts[l]);
+  const data=statusOptions.map(s=>counts[s]);
   const ctx=document.getElementById("statusChart").getContext("2d");
 
   if(chartInstance){
-    chartInstance.data.labels=labels;
     chartInstance.data.datasets[0].data=data;
-    chartInstance.data.datasets[0].backgroundColor =
-        labels.map(label=>statusColors[label]);
     chartInstance.update();
     return;
   }
 
   chartInstance=new Chart(ctx,{
-    type:'doughnut',
+    type:"doughnut",
     data:{
-      labels,
+      labels:statusOptions,
       datasets:[{
         data,
-        backgroundColor: labels.map(label=>statusColors[label]),
-        borderColor:'rgba(0,0,0,0.3)',
-        borderWidth:1
+        backgroundColor:statusOptions.map(s=>statusColors[s]),
+        borderWidth:1,
+        borderColor:"rgba(0,0,0,0.4)"
       }]
     },
     options:{
-      maintainAspectRatio:false,
-      plugins:{
-        legend:{position:'bottom',labels:{color:'#dcdcdc'}}
-      }
+      plugins:{ legend:{ display:false }},
+      maintainAspectRatio:false
     }
   });
 }
 
-/* ===========================
-   ALERTAS
-   =========================== */
+let scrollInterval=null;
+function iniciarAutoScroll(){
+  const area=document.getElementById("scrollArea");
+  const table=document.getElementById("tabelaStatus");
+  if(!area||!table) return;
 
-function parseTimeHHMM(hhmm){
-  const m=hhmm.match(/^([0-2][0-9]):([0-5][0-9])$/);
-  if(!m)return null;
-  const now=new Date();
-  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1],10),parseInt(m[2],10));
-  if(d.getTime()<now.getTime()-(1000*60)){d.setDate(d.getDate()+1);}
-  return d;
+  clearInterval(scrollInterval);
+  area.scrollTop=0;
+
+  const linhas=table.querySelectorAll("tbody tr").length;
+  if(linhas<=10) return;
+
+  scrollInterval=setInterval(()=>{
+    area.scrollTop+=1;
+    if(area.scrollTop >= table.offsetHeight - area.offsetHeight){
+      area.scrollTop=0;
+    }
+  },80);
 }
 
-function minutesDiff(a,b){return (b-a)/60000;}
-
-function atualizarAlertsUI(){
-  const lista=getTabela();
-  const container=document.getElementById("alerts-list");
-  container.innerHTML="";
-  const now=new Date();
-  const alerts=[];
-
-  lista.forEach(item=>{
-    const target=parseTimeHHMM(item.previsao);
-    if(!target)return;
-    const mins=minutesDiff(now,target);
-    if(mins<=5 && mins>=0){
-      alerts.push({item,mins});
-    }
-  });
-
-  if(alerts.length===0){
-    container.innerHTML=`<div class="alert-empty">Nenhum alerta no momento.</div>`;
-    return;
+let lastRaw=localStorage.getItem(STORAGE_KEY);
+setInterval(()=>{
+  const nowRaw=localStorage.getItem(STORAGE_KEY);
+  if(nowRaw!==lastRaw){
+    lastRaw=nowRaw;
+    refreshAll();
   }
+},900);
 
-  alerts.sort((a,b)=>a.mins-b.mins);
-
-  alerts.forEach(a=>{
-    const div=document.createElement("div");
-    div.className="alert-item";
-    div.innerHTML=`
-      <div class="left">
-        <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
-        <div style="font-size:13px;color:#ffdede">${escapeHtml(a.item.status)}</div>
-      </div>
-      <div style="text-align:right">
-        <div class="alert-time">${a.item.previsao}</div>
-        <div style="font-size:13px;color:#ffdede">${Math.ceil(a.mins)} min</div>
-      </div>`;
-    container.appendChild(div);
-  });
-}
-
-let alertInterval=null;
-function startAlertChecker(){
-  if(alertInterval)clearInterval(alertInterval);
+function refreshAll(){
+  carregarTabela();
+  carregarPromocoes();
   atualizarAlertsUI();
-  alertInterval=setInterval(atualizarAlertsUI,30000);
 }
 
-/* ===========================
-   INIT
-   =========================== */
-
-function initDemoDataIfEmpty(){
-  const db=getDB();
-  if(!db.tabela || db.tabela.length===0){
-    const now=new Date();
-    const a=new Date(now.getTime()+7*60000);
-    const b=new Date(now.getTime()+2*60000);
-    const fmt=d=>String(d.getHours()).padStart(2,'0')+":"+String(d.getMinutes()).padStart(2,'0');
-    db.tabela=[
-      {cliente:"João Silva",status:"Em Reparo",previsao:fmt(a)},
-      {cliente:"Maria Costa",status:"Aguardando Peça",previsao:fmt(b)}
-    ];
-    saveDB(db);
-  }
-}
-
-initDemoDataIfEmpty();
-carregar();
-startAlertChecker();
-
+document.addEventListener("DOMContentLoaded",()=>{
+  refreshAll();
+  setTimeout(()=>atualizarGrafico(),150);
+});
 </script>
+
 </body>
 </html>
