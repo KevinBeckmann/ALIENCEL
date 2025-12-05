@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #000;
+            background-color: #111; /* CINZA ESCURO */
             color: #fff;
             margin: 0;
             padding: 20px;
@@ -55,6 +55,7 @@
             border: 3px solid #00A65A;
             border-radius: 10px;
             box-shadow: 0 0 15px #00A65A55;
+            background-color: #000; /* MANTÉM O FUNDO DA TABELA PRETO */
         }
 
         #status-table thead th {
@@ -183,7 +184,7 @@
         ];
     }
 
-    /* CÁLCULO DE PREVISÃO */
+    /* CALCULAR PREVISÃO AUTOMÁTICA */
     function calcularPrevisao(texto) {
         const original = texto;
 
@@ -233,7 +234,7 @@
     renderTable();
     setInterval(renderTable, 10000);
 
-    /* SCROLL AUTOMÁTICO SE +7 LINHAS */
+    /* SCROLL AUTOMÁTICO */
     function autoScroll() {
         const tbody = document.getElementById("data-body");
         const rows = tbody.querySelectorAll("tr").length;
