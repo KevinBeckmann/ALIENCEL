@@ -207,7 +207,7 @@ td {
     <img src="imageem.png" class="logo-placeholder">
 </div>
 
-<h1>ACOMPANHAMENTO DE SERVIÇOS</h1>
+<h1>PAINEL DE SERVIÇOS</h1>
 
 <div class="table-center">
     <table id="status-table">
