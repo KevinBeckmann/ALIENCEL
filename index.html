@@ -2,57 +2,63 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- CORREÇÃO DO CHROME: evita zoom automático e garante escala consistente -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
 <title>Painel Assistência Técnica</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
+:root {
+    --verde: #00A65A;
+    --bg: #111;
+}
 
-:root { --verde: #00A65A; }
-
-/* BASE */
+/* BASE / CORREÇÕES PARA CHROME */
+html, body {
+    height: 100%;
+}
 body {
     font-family: 'Roboto', sans-serif;
-    background: #111;
+    background: var(--bg);
     margin: 0;
-    padding: 20px;
+    padding: 50px 20px 20px 20px; /* topo maior pra não colar no relógio/btn */
     color: #fff;
     overflow-x: hidden;
+    min-width: 320px; /* evita deformação em Chrome com DPI estranho */
+    -webkit-font-smoothing: antialiased;
+}
 
+/* Fundo (imagem) e máscaras */
+body {
     background-image: url("preview.png");
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: 55% 100%;
     background-position: right top;
     background-attachment: fixed;
 }
-
-/* GRADIENTE E FUNDO DO PAINEL */
 body::before {
     content: "";
     position: fixed;
-    left: 0;
-    top: 0;
-    width: 70%;
-    height: 100%;
+    left: 0; top: 0;
+    width: 60%; height: 100%;
     background: linear-gradient(to right, #111 70%, transparent);
     z-index: -2;
 }
-
 body::after {
     content: "";
     position: fixed;
-    right: 0;
-    top: 0;
-    width: 55%;
-    height: 100%;
+    right: 0; top: 0;
+    width: 55%; height: 100%;
     background: rgba(0,0,0,0.45);
     backdrop-filter: blur(2px);
     clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
     z-index: -1;
 }
 
-/* ÍCONE ADM */
+/* ADMIN ICON */
 .admin-btn {
     position: fixed;
     top: 15px;
@@ -61,290 +67,275 @@ body::after {
     text-decoration: none;
     color: var(--verde);
     background: rgba(0,0,0,0.5);
-    padding: 8px 14px;
+    padding: 8px 12px;
     border-radius: 10px;
     border: 2px solid var(--verde);
-    transition: 0.2s;
+    transition: 0.18s;
     z-index: 9999;
 }
-.admin-btn:hover {
-    background: var(--verde);
-    color: black;
-}
+.admin-btn:hover { background: var(--verde); color: black; }
 
-/* RELÓGIO */
+/* clock */
 .relogio {
     position: fixed;
     top: 15px;
-    left: 20px;
-    font-size: clamp(18px, 2.5vw, 28px);
-    font-weight: 400;
+    left: 15px;
+    font-size: clamp(16px, 2.4vw, 28px);
     color: var(--verde);
-    background: rgba(0,0,0,0.4);
-    padding: 6px 18px;
+    background: rgba(0,0,0,0.45);
+    padding: 6px 12px;
     border-radius: 10px;
     border: 2px solid var(--verde);
     z-index: 9999;
 }
 
-/* LOGO */
-.header-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5px;
-}
-.logo-placeholder {
-    height: clamp(80px, 20vw, 150px);
+/* Container centralizado (limita largura para telas grandes) */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 12px;
 }
 
-/* TÍTULO */
+/* Logo e título */
+.header-container { display:flex; justify-content:center; margin-bottom: 8px; }
+.logo-placeholder { height: clamp(80px, 16vw, 140px); }
+
 h1 {
-    font-size: clamp(22px, 3vw, 36px);
+    font-size: clamp(20px, 3vw, 34px);
     font-weight: 300;
     text-align: center;
     color: var(--verde);
     text-shadow: 0 0 10px #00a65a55;
-    margin-bottom: 20px;
+    margin: 6px 0 20px 0;
 }
 
-/* TABELA */
-.table-center { width: 100%; display: flex; justify-content: center; }
+/* TABELA PRINCIPAL */
+.table-center { width:100%; display:flex; justify-content:center; }
 
 #status-table {
     width: 95%;
-    max-width: 1400px;
+    max-width: 1500px;
     border-collapse: collapse;
     background: rgba(20,20,20,0.85);
     border: 3px solid var(--verde);
     border-radius: 10px;
-    overflow: hidden;
     box-shadow: 0 0 15px #00a65a55;
+    overflow: hidden;
 }
 
 #status-table thead th {
     background: rgba(0,0,0,0.6);
     color: var(--verde);
-    padding: 1.2rem;
+    padding: 14px;
     border-bottom: 3px solid var(--verde);
-    font-size: clamp(16px, 2vw, 24px);
+    font-size: clamp(14px, 2vw, 20px);
+    text-align: center;
 }
 
+/* corpo da tabela separado para controlar altura/scroll */
 #data-body {
-    display: block;
-    max-height: 50vh;
+    display:block;
+    max-height: calc( ( ( (1.2rem * 7) + 7px ) * 7 ) ); /* fallback */
     overflow-y: hidden;
 }
 
-#data-body tr,
-#status-table thead tr {
+/* garantir que linhas renderizem como tabela */
+#data-body tr, #status-table thead tr {
     display: table;
     width: 100%;
     table-layout: fixed;
 }
 
 td {
-    padding: 1rem;
+    padding: 14px 16px;
     color: #fff;
-    border-bottom: 1px solid #333;
-    font-size: clamp(14px, 1.7vw, 22px);
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+    font-size: clamp(14px, 1.6vw, 20px);
+    text-align: center;
 }
 
-/* CORES */
-.status-pronto td { background: #00A65A; font-weight: 700; }
-.status-espera td { background: #333300; color: #FFD700; }
-.status-analise td { background: #001144; color: #A7C8FF; }
+/* cores de status */
+.status-pronto td { background: #00A65A; font-weight:700; color:black; }
+.status-espera td { background: #333300; color: #FFD700; font-weight:600; }
+.status-analise td { background: #001144; color: #A7C8FF; font-weight:600; }
 
 /* PROMOÇÕES */
 .promos-container {
-    margin-top: 35px;
+    margin-top: 28px;
     background: rgba(20,20,20,0.85);
     border-top: 3px solid var(--verde);
     border-bottom: 3px solid var(--verde);
-    padding: 12px 0;
+    padding: 12px 10px;
     overflow: hidden;
     white-space: nowrap;
     box-shadow: 0 0 12px #00a65a55;
 }
 .promos-text {
-    display: inline-block;
-    font-size: clamp(18px, 2.5vw, 28px);
+    display:inline-block;
+    font-size: clamp(16px, 2.4vw, 24px);
     color: var(--verde);
     padding-left: 100%;
     animation: scrollPromos 18s linear infinite;
 }
-@keyframes scrollPromos {
-    from { transform: translateX(0); }
-    to { transform: translateX(-100%); }
-}
+@keyframes scrollPromos { from { transform: translateX(0); } to { transform: translateX(-100%); } }
 
-/* BOTÃO TELA CHEIA */
+/* TELA CHEIA */
 .fullscreen-btn {
     position: fixed;
-    bottom: 15px;
+    bottom: 18px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 10px 25px;
-    font-size: clamp(16px, 2vw, 22px);
+    padding: 10px 22px;
+    font-size: clamp(14px, 2vw, 20px);
     background: rgba(0,0,0,0.6);
     border: 2px solid var(--verde);
     color: var(--verde);
     border-radius: 10px;
     cursor: pointer;
-    transition: 0.25s;
     z-index: 9999;
 }
-.fullscreen-btn:hover {
-    background: var(--verde);
-    color: black;
+.fullscreen-btn:hover { background: var(--verde); color:black; }
+
+/* RESPONSIVIDADE: ajustes finos */
+@media (max-width: 900px) {
+    body { padding-top: 45px; }
+    #status-table thead th { padding: 12px; }
+    td { padding: 12px; }
 }
-
-/* RESPONSIVIDADE EXTRA */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-        background-size: cover;
-        background-position: center;
-    }
-
-    #data-body {
-        max-height: 60vh;
-    }
-}
-
 @media (max-width: 480px) {
-    td { padding: 8px; }
-    #status-table thead th { padding: 8px; }
+    body { padding-top: 42px; }
+    .logo-placeholder { height: clamp(60px, 18vw, 100px); }
+    #status-table thead th { font-size: 14px; padding:10px; }
+    td { font-size: 14px; padding:8px; }
+    .promos-text { font-size: 16px; }
 }
 
 </style>
 </head>
 <body>
 
-<!-- Ícone ADM -->
-<a href="administrador.html" class="admin-btn">⚙️</a>
-
-<!-- Relógio -->
 <div class="relogio" id="relogio">00:00</div>
+<a href="administrador.html" class="admin-btn" title="Painel administrativo">⚙️</a>
 
-<!-- Botão Tela Cheia -->
-<div class="fullscreen-btn" onclick="toggleFullscreen()">📺 Tela Cheia</div>
+<div class="container">
 
-<div class="header-container">
-    <img src="imageem.png" class="logo-placeholder">
+    <div class="header-container">
+        <img src="imageem.png" class="logo-placeholder" alt="logo">
+    </div>
+
+    <h1>ACOMPANHAMENTO DE SERVIÇOS</h1>
+
+    <div class="table-center">
+        <table id="status-table" role="table" aria-label="Tabela de serviços">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Status</th>
+                    <th>Previsão</th>
+                </tr>
+            </thead>
+            <tbody id="data-body"></tbody>
+        </table>
+    </div>
+
+    <div class="promos-container">
+        <div id="promos" class="promos-text"></div>
+    </div>
+
 </div>
 
-<h1>ACOMPANHAMENTO DE SERVIÇOS</h1>
-
-<div class="table-center">
-    <table id="status-table">
-        <thead>
-            <tr>
-                <th>Cliente</th>
-                <th>Status</th>
-                <th>Previsão</th>
-            </tr>
-        </thead>
-        <tbody id="data-body"></tbody>
-    </table>
-</div>
-
-<div class="promos-container">
-    <div id="promos" class="promos-text"></div>
-</div>
+<button class="fullscreen-btn" onclick="toggleFullscreen()">📺 Tela Cheia</button>
 
 <script src="dados.js"></script>
 
 <script>
-
-/* RELOGIO */
-function atualizarRelogio() {
+/* ---------- Relógio ---------- */
+function atualizarRelogio(){
     const agora = new Date();
-    const h = agora.getHours().toString().padStart(2,"0");
-    const m = agora.getMinutes().toString().padStart(2,"0");
-    document.getElementById("relogio").textContent = `${h}:${m}`;
+    const h = agora.getHours().toString().padStart(2,'0');
+    const m = agora.getMinutes().toString().padStart(2,'0');
+    document.getElementById('relogio').textContent = `${h}:${m}`;
 }
-setInterval(atualizarRelogio, 1000);
+setInterval(atualizarRelogio,1000);
 atualizarRelogio();
 
-/* BOTÃO TELA CHEIA */
-function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        document.querySelector(".fullscreen-btn").textContent = "❌ Sair da Tela Cheia";
-    } else {
-        document.exitFullscreen();
-        document.querySelector(".fullscreen-btn").textContent = "📺 Tela Cheia";
-    }
-}
-
-/* CÁLCULO PREVISÃO */
-function calcularPrevisao(texto) {
-    const original = texto;
-    if (!texto.match(/\d/)) return original;
-
+/* ---------- Previsão (calcula hora final se houver minutos/horas) ---------- */
+function calcularPrevisao(texto){
+    const original = texto || "";
+    if (!texto || !texto.match(/\d/)) return original;
     const agora = new Date();
     let minutos = 0;
-
     const min = texto.match(/(\d+)\s*min/);
-    if (min) minutos += parseInt(min[1]);
-
+    if (min) minutos += parseInt(min[1],10);
     const hr = texto.match(/(\d+)\s*h/);
-    if (hr) minutos += parseInt(hr[1]) * 60;
-
+    if (hr) minutos += parseInt(hr[1],10) * 60;
     agora.setMinutes(agora.getMinutes() + minutos);
-
-    const h = agora.getHours().toString().padStart(2,"0");
-    const m = agora.getMinutes().toString().padStart(2,"0");
-
-    return `${original} → ${h}:${m}`;
+    const H = agora.getHours().toString().padStart(2,'0');
+    const M = agora.getMinutes().toString().padStart(2,'0');
+    return `${original} → ${H}:${M}`;
 }
 
-/* RENDERIZA TABELA */
-function renderTable() {
-    const data = getTabela();
-    const tbody = document.getElementById("data-body");
-    tbody.innerHTML = "";
+/* ---------- Render tabela usando dados.js (getTabela / getPromocoes) ---------- */
+function renderTable(){
+    const data = getTabela() || [];
+    const tbody = document.getElementById('data-body');
+    tbody.innerHTML = '';
 
     data.forEach(item => {
         const row = tbody.insertRow();
+        const statusTxt = (item.status || "").toString();
 
-        if (item.status.includes("Pronto")) row.className = "status-pronto";
-        else if (item.status.includes("Aguardando")) row.className = "status-espera";
-        else if (item.status.includes("Análise")) row.className = "status-analise";
+        if (statusTxt.includes("Pronto")) row.className = "status-pronto";
+        else if (statusTxt.includes("Aguardando")) row.className = "status-espera";
+        else if (statusTxt.includes("Análise") || statusTxt.includes("Análise/Diagnóstico")) row.className = "status-analise";
 
-        row.insertCell().textContent = item.cliente;
-        row.insertCell().textContent = item.status;
-        row.insertCell().textContent = calcularPrevisao(item.previsao);
+        const c1 = row.insertCell(); c1.textContent = item.cliente || "";
+        const c2 = row.insertCell(); c2.textContent = item.status || "";
+        const c3 = row.insertCell(); c3.textContent = calcularPrevisao(item.previsao || "");
     });
+
+    // atualizar promo
+    document.getElementById('promos').textContent = getPromocoes() || "💥 PROMOÇÕES DO DIA • Sem promoções •";
 }
 
-/* PROMOÇÕES */
-document.getElementById("promos").textContent = getPromocoes();
+/* ---------- Auto-scroll quando > 7 linhas ---------- */
+function autoScroll(){
+    const tbody = document.getElementById('data-body');
+    const rowsCount = tbody.querySelectorAll('tr').length;
 
-/* SCROLL AUTOMÁTICO */
-function autoScroll() {
-    const tbody = document.getElementById("data-body");
-    const rows = tbody.querySelectorAll("tr").length;
+    if (rowsCount > 7) {
+        // habilita scroll e faz movimentação pequena
+        tbody.style.overflowY = 'auto';
+        // scroll suave: avança 1px por chamada
+        tbody.scrollBy({ top: 1, behavior: 'smooth' });
 
-    if (rows > 7) {
-        tbody.style.overflowY = "auto";
-        tbody.scrollBy({ top: 1, behavior: "smooth" });
-
+        // se chegou ao final, volta ao topo
         if (tbody.scrollTop + tbody.clientHeight >= tbody.scrollHeight - 2) {
-            tbody.scrollTo({ top: 0, behavior: "smooth" });
+            // pausa minúscula e volta ao top para evitar "piscar" abrupto
+            setTimeout(()=> { tbody.scrollTo({ top: 0, behavior: 'smooth' }); }, 400);
         }
     } else {
-        tbody.style.overflowY = "hidden";
+        tbody.style.overflowY = 'hidden';
         tbody.scrollTo({ top: 0 });
     }
 }
-setInterval(autoScroll, 100);
 
-/* ATUALIZAÇÃO AUTOMÁTICA */
+/* ---------- Fullscreen ---------- */
+function toggleFullscreen(){
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(()=>{});
+        document.querySelector('.fullscreen-btn').textContent = "❌ Sair da Tela Cheia";
+    } else {
+        document.exitFullscreen().catch(()=>{});
+        document.querySelector('.fullscreen-btn').textContent = "📺 Tela Cheia";
+    }
+}
+
+/* ---------- Inicialização / loops ---------- */
 renderTable();
-setInterval(renderTable, 7000);
+setInterval(renderTable, 7000); // atualiza a tabela a cada 7s
+setInterval(autoScroll, 100);    // verifica/rola a tabela a cada 100ms
 
 </script>
-
 </body>
 </html>
