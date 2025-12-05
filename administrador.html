@@ -1,288 +1,593 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle | Lançamento de Serviços</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Painel de Controle | Serviços</title>
 
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #1a1a1a;
-            color: #f0f0f0;
-            padding: 20px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        /* BOTÃO VOLTAR */
-        .voltar-btn {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            font-size: 26px;
-            text-decoration: none;
-            color: #00A65A;
-            background: rgba(0,0,0,0.5);
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: 2px solid #00A65A;
-            transition: 0.2s;
-            z-index: 9999;
-        }
-        .voltar-btn:hover {
-            background: #00A65A;
-            color: black;
-        }
+<style>
+/* ---------- GERAL ---------- */
+:root{
+  --accent: #4caf50;
+  --bg-dark: #0f0f0f;
+  --panel: #161616;
+  --muted: #bdbdbd;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Inter",sans-serif;
+  background: linear-gradient(180deg,#000000,#131313,#1c1c1c);
+  color:#e6e6e6;
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
 
-        /* LOGO IGUAL AO INDEX */
-        .header-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            margin-top: 10px;
-        }
-        .logo-placeholder {
-            height: 120px;
-        }
+/* ---------- CONTAINER ---------- */
+.container{
+  width:95%;
+  max-width:980px;
+  background:var(--bg-dark);
+  padding:22px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 12px 30px rgba(0,0,0,0.75);
+  animation:fadeIn .6s ease;
+}
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #222;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
+/* animations */
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(-8px)}
+  to{opacity:1; transform:none}
+}
 
-        h1 {
-            color: #00A65A;
-            font-weight: 300;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+/* ---------- LOGO + VOLTAR ---------- */
+.header-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:8px;
+}
+.logo-container{ text-align:center; flex:1; }
+.logo-container img{ width:150px; filter:drop-shadow(0 0 6px rgba(255,255,255,0.2)); }
 
-        .form-group label {
-            display: block;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            font-weight: 400;
-        }
+.voltar-btn{
+  font-size:26px;
+  color:var(--accent);
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:8px;
+}
+.voltar-btn:hover{ background:rgba(76,175,80,0.12) }
 
-        .form-group input, .form-group select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #444;
-            border-radius: 4px;
-            box-sizing: border-box;
-            background-color: #333;
-            color: #f0f0f0;
-        }
+/* ---------- TOP ROW: ALERTS + CHART ---------- */
+.top-row{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:16px;
+  margin:12px 0 20px;
+  align-items:start;
+}
 
-        .form-group button {
-            margin-top: 20px;
-            padding: 12px 20px;
-            background-color: #00A65A;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s;
-        }
-        .form-group button:hover {
-            background-color: #007e46;
-        }
+/* alerts */
+.alerts{
+  background:linear-gradient(180deg,#171717,#121212);
+  border-radius:10px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.04);
+  min-height:84px;
+}
+.alerts h3{ margin:0 0 8px; color:#ffb3b3; font-size:16px; }
+.alerts-list{ display:flex; flex-direction:column; gap:8px; }
+.alert-empty{ color:var(--muted); font-size:14px }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid #333;
-            text-align: left;
-            font-weight: 300;
-        }
-        th {
-            background-color: #111;
-            color: #fff;
-        }
+/* single alert */
+.alert-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:8px;
+  border-radius:8px;
+  background:linear-gradient(90deg, rgba(255,0,0,0.06), rgba(255,0,0,0.02));
+  border:1px solid rgba(255,0,0,0.08);
+  color:#ffdede;
+  font-size:14px;
+}
+.alert-item .left{ display:flex; gap:10px; align-items:center; }
+.alert-time{ font-weight:700; color:#ffdede; }
 
-        td button {
-            padding: 5px 10px;
-            margin-right: 5px;
-            cursor: pointer;
-            border: none;
-            border-radius: 3px;
-        }
+/* chart card */
+.chart-card{
+  background:linear-gradient(180deg,#0b0b0b,#090909);
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow:0 6px 18px rgba(0,0,0,0.6);
+  height:100%;
+}
 
-        .btn-edit { background-color: #3498db; color: white; }
-        .btn-delete { background-color: #e74c3c; color: white; }
+/* ---------- FORM ---------- */
+form{ margin-bottom:14px; }
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  align-items:end;
+}
+@media (max-width:720px){
+  .top-row{ grid-template-columns:1fr; }
+  .form-grid{ grid-template-columns:1fr; }
+  .chart-card{ order:2 }
+  .alerts{ order:1 }
+}
 
-        .msg-sucesso {
-            background-color: #00A65A;
-            color: white;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            display: none;
-        }
+/* form groups */
+.form-group{ width:100%; display:flex; flex-direction:column; }
+.form-group.full{ grid-column:1/-1 }
+label{ font-size:14px; color:#dcdcdc; font-weight:600; margin-bottom:6px; }
+input[type="text"], select, textarea{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #333;
+  background:var(--panel);
+  color:#eaeaea;
+  font-size:15px;
+  transition:.14s;
+}
+input:focus, select:focus, textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 10px rgba(76,175,80,0.08);
+}
+textarea{ min-height:88px; resize:vertical; }
 
-    </style>
+/* button style (same width as inputs) */
+.btn-principal{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background:linear-gradient(90deg,var(--accent),#3e8e41);
+  color:white;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+  transition:.14s transform;
+}
+.btn-principal:hover{ transform:translateY(-2px) }
+
+/* ---------- TABLE (CROMADO) ---------- */
+.table-card{
+  margin-top:14px;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid #444;
+  box-shadow:0 8px 30px rgba(0,0,0,0.6);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:linear-gradient(180deg,#3a3a3a 0%,#2b2b2b 45%,#1f1f1f 100%);
+}
+th{
+  padding:12px 14px;
+  background:linear-gradient(180deg,#545454,#3f3f3f);
+  color:#fff;
+  text-align:left;
+  font-weight:700;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+td{
+  padding:12px 14px;
+  border-bottom:1px solid rgba(0,0,0,0.25);
+  color:#e0e0e0;
+  vertical-align:middle;
+}
+
+/* actions */
+.btn-edit, .btn-delete{
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+}
+.btn-edit{ background:#3498db; color:white }
+.btn-delete{ background:#e74c3c; color:white }
+
+/* message */
+.msg-sucesso{
+  background:var(--accent);
+  color:#fff;
+  padding:10px;
+  border-radius:8px;
+  text-align:center;
+  display:none;
+  margin-bottom:12px;
+}
+
+/* small helpers */
+.small-muted{ color:var(--muted); font-size:13px; }
+
+</style>
 </head>
 <body>
 
-    <!-- BOTÃO VOLTAR -->
-    <a href="index.html" class="voltar-btn">⬅️ Voltar</a>
+<div class="container">
 
-    <!-- LOGO NO TOPO (IGUAL AO INDEX) -->
-    <div class="header-container">
-        <img src="imageem.png" class="logo-placeholder">
+  <div class="header-row">
+    <a class="voltar-btn" href="index.html">←</a>
+    <div class="logo-container"><img src="logo.png" alt="Logo"></div>
+    <div style="width:34px"></div>
+  </div>
+
+  <h1 style="margin-top:6px;margin-bottom:8px;text-align:center">Painel de Controle</h1>
+
+  <div id="success-msg" class="msg-sucesso">Dados salvos!</div>
+
+  <!-- TOP ROW -->
+  <div class="top-row">
+    <div class="alerts" id="alerts">
+      <h3>Alertas (5 minutos)</h3>
+      <div id="alerts-list" class="alerts-list">
+        <div class="alert-empty">Nenhum alerta no momento.</div>
+      </div>
     </div>
 
-    <div class="container">
-        <h1>Painel de Lançamento de Serviços</h1>
-
-        <div id="success-msg" class="msg-sucesso">Dados salvos e painel de TV atualizado!</div>
-
-        <form id="service-form">
-            <input type="hidden" id="service-index">
-
-            <div class="form-group">
-                <label for="cliente">Cliente:</label>
-                <input type="text" id="cliente" required>
-            </div>
-
-            <div class="form-group">
-                <label for="status">Status:</label>
-                <select id="status" required>
-                    <option value="Análise/Diagnóstico">Análise/Diagnóstico</option>
-                    <option value="Aguardando Aprovação">Aguardando Aprovação</option>
-                    <option value="Aguardando Peça">Aguardando Peça</option>
-                    <option value="Em Reparo">Em Reparo</option>
-                    <option value="Pronto para Retirada">Pronto para Retirada</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="previsao">Previsão:</label>
-                <input type="text" id="previsao" placeholder="Ex: 30 minutos, 15 min, 2h, 08/07...">
-            </div>
-
-            <div class="form-group">
-                <button type="submit" id="submit-btn">Adicionar Serviço</button>
-            </div>
-        </form>
-
-        <h2 style="color:#00A65A; font-weight:300; margin-top:25px;">Serviços Ativos</h2>
-
-        <table id="services-table">
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Status</th>
-                    <th>Previsão</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="services-list"></tbody>
-        </table>
-
-        <h2 style="color:#00A65A; font-weight:300; margin-top:25px;">Promoções do Dia</h2>
-        <textarea id="promo" style="height:80px;"></textarea>
-        <button onclick="salvarPromo()">Salvar Promoções</button>
-
+    <div class="chart-card">
+      <canvas id="statusChart" style="width:100%;height:220px"></canvas>
     </div>
+  </div>
 
-<script src="dados.js"></script>
+  <!-- FORM -->
+  <form id="service-form">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="cliente">Cliente:</label>
+        <input type="text" id="cliente" placeholder="Nome do cliente" required>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <select id="status">
+          <option>Análise/Diagnóstico</option>
+          <option>Aguardando Aprovação</option>
+          <option>Aguardando Peça</option>
+          <option>Em Reparo</option>
+          <option>Pronto para Retirada</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label for="previsao">Previsão (HH:MM):</label>
+        <input type="text" id="previsao" placeholder="Ex: 15:20" pattern="[0-2][0-9]:[0-5][0-9]" required>
+        <div class="small-muted" style="margin-top:6px">Formato aceito: <strong>HH:MM</strong> (24h). Ex.: 09:45, 18:05</div>
+      </div>
+
+      <div class="form-group full" style="margin-top:4px">
+        <button type="submit" id="submit-btn" class="btn-principal">Adicionar Serviço</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <table id="services-table">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Status</th>
+          <th>Previsão</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="services-list"></tbody>
+    </table>
+  </div>
+
+  <h2 style="margin-top:18px">Promoções do Dia</h2>
+  <textarea id="promo" style="width:100%;padding:12px;border-radius:10px;border:1px solid #333;background:#161616;color:#eaeaea"></textarea>
+  <div style="margin-top:10px">
+    <button class="btn-principal" onclick="salvarPromo()">Salvar Promoções</button>
+  </div>
+
+</div>
 
 <script>
+/* ===========================
+   Storage helpers (localStorage)
+   =========================== */
+const STORAGE_KEY = "servicosDB_v1";
 
-function carregar() {
-    const lista = document.getElementById("services-list");
-    lista.innerHTML = "";
-
-    getTabela().forEach((item, i) => {
-        let tr = document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>${item.cliente}</td>
-            <td>${item.status}</td>
-            <td>${item.previsao}</td>
-            <td>
-                <button class="btn-edit" onclick="editar(${i})">Editar</button>
-                <button class="btn-delete" onclick="excluir(${i})">Excluir</button>
-            </td>
-        `;
-
-        lista.appendChild(tr);
-    });
-
-    document.getElementById("promo").value = getPromocoes();
+function getDB(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) {
+    const db = { tabela: [], promocoes: "" };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    return db;
+  }
+  try { return JSON.parse(raw); }
+  catch(e){ return { tabela: [], promocoes: "" }; }
 }
 
-function salvar() {
-    const id = document.getElementById("service-index").value;
-    const cliente = document.getElementById("cliente").value;
-    const status = document.getElementById("status").value;
-    const previsao = document.getElementById("previsao").value;
-
-    if (cliente.trim() === "") return alert("Preencha o nome do cliente.");
-
-    const db = getDB();
-
-    if (id === "") {
-        db.tabela.push({ cliente, status, previsao });
-    } else {
-        db.tabela[id] = { cliente, status, previsao };
-    }
-
-    saveDB(db);
-    limpar();
-    carregar();
+function saveDB(db){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
 }
 
-function editar(i) {
-    const item = getTabela()[i];
-    document.getElementById("cliente").value = item.cliente;
-    document.getElementById("status").value = item.status;
-    document.getElementById("previsao").value = item.previsao;
-    document.getElementById("service-index").value = i;
-    document.getElementById("submit-btn").textContent = "Salvar Edição";
+function getTabela(){ return getDB().tabela || []; }
+function setTabela(tabela){ const db=getDB(); db.tabela=tabela; saveDB(db); }
+
+function getPromocoes(){ return (getDB().promocoes) || ""; }
+function setPromocoes(txt){ const db=getDB(); db.promocoes = txt||""; saveDB(db); }
+
+/* ===========================
+   UI / Data functions
+   =========================== */
+
+const statusOptions = [
+  "Análise/Diagnóstico",
+  "Aguardando Aprovação",
+  "Aguardando Peça",
+  "Em Reparo",
+  "Pronto para Retirada"
+];
+
+function carregar(){
+  // preencher promo
+  document.getElementById("promo").value = getPromocoes();
+
+  // preencher tabela
+  const lista = document.getElementById("services-list");
+  lista.innerHTML = "";
+  getTabela().forEach((item, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td data-label="Cliente">${escapeHtml(item.cliente)}</td>
+      <td data-label="Status">${escapeHtml(item.status)}</td>
+      <td data-label="Previsão">${escapeHtml(item.previsao)}</td>
+      <td data-label="Ações">
+        <button class="btn-edit" onclick="editar(${i})">Editar</button>
+        <button class="btn-delete" onclick="excluir(${i})">Excluir</button>
+      </td>
+    `;
+    lista.appendChild(tr);
+  });
+
+  atualizarGrafico();
+  atualizarAlertsUI();
 }
 
-function excluir(i) {
-    if (!confirm("Deseja realmente excluir este registro?")) return;
+function escapeHtml(s){ return (s+"").replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
 
-    deleteLinha(i);
-    carregar();
+/* salvar / editar */
+function limpar(){
+  document.getElementById("service-index")?.remove?.();
+  document.getElementById("cliente").value = "";
+  document.getElementById("status").value = statusOptions[0];
+  document.getElementById("previsao").value = "";
+  document.getElementById("submit-btn").textContent = "Adicionar Serviço";
 }
 
-function limpar() {
-    document.getElementById("service-index").value = "";
-    document.getElementById("cliente").value = "";
-    document.getElementById("previsao").value = "";
-    document.getElementById("submit-btn").textContent = "Adicionar Serviço";
+function salvar(){
+  const cliente = document.getElementById("cliente").value.trim();
+  const status = document.getElementById("status").value;
+  const previsao = document.getElementById("previsao").value.trim();
+
+  if(!cliente){ alert("Preencha o nome do cliente."); return; }
+  if(!/^[0-2][0-9]:[0-5][0-9]$/.test(previsao)){ alert("Previsão inválida. Use HH:MM (24h). Ex.: 15:20"); return; }
+
+  const db = getDB();
+  const indexInput = document.getElementById("service-index");
+  if(indexInput && indexInput.value !== ""){
+    const idx = parseInt(indexInput.value,10);
+    db.tabela[idx] = { cliente, status, previsao };
+  } else {
+    db.tabela.push({ cliente, status, previsao });
+  }
+  saveDB(db);
+  limpar();
+  showSuccess("Dados salvos!");
+  carregar();
 }
 
-function salvarPromo() {
-    const texto = document.getElementById("promo").value;
-    setPromocoes(texto);
-    alert("Promoções atualizadas!");
-}
-
-document.getElementById("service-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    salvar();
+document.getElementById("service-form").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  salvar();
 });
 
+/* editar / excluir */
+function editar(i){
+  const item = getTabela()[i];
+  if(!item) return;
+  // create hidden index field if not exists
+  let idxEl = document.getElementById("service-index");
+  if(!idxEl){
+    idxEl = document.createElement("input");
+    idxEl.type = "hidden";
+    idxEl.id = "service-index";
+    document.getElementById("service-form").appendChild(idxEl);
+  }
+  idxEl.value = i;
+  document.getElementById("cliente").value = item.cliente;
+  document.getElementById("status").value = item.status;
+  document.getElementById("previsao").value = item.previsao;
+  document.getElementById("submit-btn").textContent = "Salvar Alterações";
+}
+
+function excluir(i){
+  if(!confirm("Deseja realmente excluir este registro?")) return;
+  const db = getDB();
+  db.tabela.splice(i,1);
+  saveDB(db);
+  carregar();
+}
+
+/* promos */
+function salvarPromo(){
+  setPromocoes(document.getElementById("promo").value);
+  alert("Promoções atualizadas!");
+}
+
+/* success message */
+function showSuccess(text){
+  const el = document.getElementById("success-msg");
+  el.textContent = text;
+  el.style.display = "block";
+  setTimeout(()=> el.style.display = "none", 2000);
+}
+
+/* ===========================
+   Chart: status distribution
+   =========================== */
+let chartInstance = null;
+function atualizarGrafico(){
+  const tabela = getTabela();
+  const counts = {};
+  statusOptions.forEach(s=> counts[s]=0);
+  tabela.forEach(item=>{
+    if(counts[item.status] !== undefined) counts[item.status] += 1;
+    else counts[item.status] = (counts[item.status]||0)+1;
+  });
+
+  const labels = statusOptions;
+  const data = labels.map(l=>counts[l]||0);
+  const ctx = document.getElementById("statusChart").getContext("2d");
+
+  if(chartInstance) {
+    chartInstance.data.labels = labels;
+    chartInstance.data.datasets[0].data = data;
+    chartInstance.update();
+    return;
+  }
+
+  chartInstance = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: [
+          '#9aa0a6','#7b7f85','#616568','#4b4f52','#2f8f4a'
+        ],
+        borderColor: 'rgba(0,0,0,0.3)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{ position:'bottom', labels:{ color:'#dcdcdc' } }
+      }
+    }
+  });
+}
+
+/* ===========================
+   Alerts: check every 30s for HH:MM items within ≤5min
+   =========================== */
+
+function parseTimeHHMM(hhmm){
+  // returns Date object for today with given HH:MM; if time already passed, return next day (so soon alerts work for late-night)
+  const m = hhmm.match(/^([0-2][0-9]):([0-5][0-9])$/);
+  if(!m) return null;
+  const now = new Date();
+  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(m[1],10), parseInt(m[2],10), 0, 0);
+  if(d.getTime() < now.getTime() - (1000*60)) { // if more than 1 minute in past, treat as next day
+    d.setDate(d.getDate()+1);
+  }
+  return d;
+}
+
+function minutesDiff(a,b){ // a,b Date -> minutes b - a
+  return (b.getTime() - a.getTime()) / 60000;
+}
+
+function atualizarAlertsUI(){
+  const lista = getTabela();
+  const alertsContainer = document.getElementById("alerts-list");
+  alertsContainer.innerHTML = "";
+  const now = new Date();
+  const alerts = [];
+
+  lista.forEach((item, idx) => {
+    const target = parseTimeHHMM(item.previsao);
+    if(!target) return;
+    const mins = minutesDiff(now, target);
+    if(mins <= 5 && mins >= 0) {
+      alerts.push({ idx, item, mins: Math.max(0, mins) });
+    }
+  });
+
+  if(alerts.length === 0){
+    alertsContainer.innerHTML = `<div class="alert-empty">Nenhum alerta no momento.</div>`;
+    return;
+  }
+
+  // sort by time remaining
+  alerts.sort((a,b)=> a.mins - b.mins);
+
+  alerts.forEach(a=>{
+    const div = document.createElement("div");
+    div.className = "alert-item";
+    div.innerHTML = `
+      <div class="left">
+        <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
+        <div style="font-size:13px;color:#ffdede">${escapeHtml(a.item.status)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="alert-time">${a.item.previsao}</div>
+        <div style="font-size:13px;color:#ffdede">${Math.ceil(a.mins)} min</div>
+      </div>
+    `;
+    alertsContainer.appendChild(div);
+  });
+}
+
+/* periodic check: every 30s */
+let alertInterval = null;
+function startAlertChecker(){
+  if(alertInterval) clearInterval(alertInterval);
+  // initial
+  atualizarAlertsUI();
+  alertInterval = setInterval(()=> {
+    atualizarAlertsUI();
+  }, 30*1000);
+}
+
+/* ===========================
+   Init - load data and listeners
+   =========================== */
+
+function initDemoDataIfEmpty(){
+  const db = getDB();
+  if(!db.tabela || db.tabela.length === 0){
+    // add a couple of example rows (optional), times relative to now for demo
+    const now = new Date();
+    const a = new Date(now.getTime() + 7*60000); // +7min
+    const b = new Date(now.getTime() + 2*60000); // +2min
+    const fmt = d => String(d.getHours()).padStart(2,'0')+":"+String(d.getMinutes()).padStart(2,'0');
+    db.tabela = [
+      { cliente: "João Silva", status: "Em Reparo", previsao: fmt(a) },
+      { cliente: "Maria Costa", status: "Aguardando Peça", previsao: fmt(b) }
+    ];
+    saveDB(db);
+  }
+}
+
+// initial load
+initDemoDataIfEmpty();
 carregar();
+startAlertChecker();
 
 </script>
-
 </body>
 </html>
