@@ -1,257 +1,274 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Assistência Técnica</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Assistência Técnica</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #000;
-            color: #fff;
-            margin: 0;
-            padding: 20px;
-            overflow-x: hidden;
-        }
+<style>
 
-        /* LOGO CENTRALIZADA */
-        .header-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 5px;
-            width: 100%;
-        }
+:root {
+    --verde: #00A65A;
+}
 
-        .logo-placeholder {
-            height: 120px;
-        }
+/* FUNDO CINZA + IMAGEM COM TRANSPARÊNCIA + MÁSCARA DIAGONAL */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #111;
+    margin: 0;
+    padding: 20px;
+    color: #fff;
+    overflow-x: hidden;
 
-        /* TÍTULO CENTRALIZADO */
-        h1 {
-            font-size: 2.4em;
-            font-weight: 300;
-            color: #00A65A;
-            margin: 10px auto 20px auto;
-            text-align: center;
-            width: 100%;
-        }
+    /* imagem direita */
+    background-image: url("preview.png");
+    background-repeat: no-repeat;
+    background-size: 55% 100%;
+    background-position: right top;
+    background-attachment: fixed;
+}
 
-        /* TABELA CENTRALIZADA */
-        .table-center {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
+/* Degradê suave entre lados */
+body::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(to right, #111 70%, transparent);
+    z-index: -2;
+}
 
-        #status-table {
-            width: 90%;
-            max-width: 1600px;
-            border-collapse: collapse;
-            text-align: left;
-            border: 3px solid #00A65A;
-            border-radius: 10px;
-            box-shadow: 0 0 15px #00A65A55;
-        }
+/* Máscara diagonal elegante */
+body::after {
+    content: "";
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 55%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(2px);
+    clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
+    z-index: -1;
+}
 
-        #status-table thead th {
-            background-color: #111;
-            color: #fff;
-            padding: 18px;
-            border-bottom: 3px solid #00A65A;
-            font-size: 1.4em;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+/* LOGO CENTRALIZADO */
+.header-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.logo-placeholder {
+    height: 120px;
+}
 
-        /* ÁREA DO SCROLL */
-        #data-body {
-            display: block;
-            max-height: 500px;
-            overflow-y: hidden;
-        }
+/* TÍTULO EM VERDE SUAVE */
+h1 {
+    font-size: 2.2em;
+    font-weight: 300;
+    text-align: center;
+    color: var(--verde);
+    text-shadow: 0 0 10px #00a65a55;
+    margin-bottom: 20px;
+}
 
-        #data-body::-webkit-scrollbar { width: 0; }
-        #data-body { scrollbar-width: none; }
+/* TABELA CENTRALIZADA */
+.table-center {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 
-        #data-body tr,
-        #status-table thead tr {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-        }
+#status-table {
+    width: 85%;
+    max-width: 1500px;
+    border-collapse: collapse;
+    background: rgba(20,20,20,0.85);
+    border: 3px solid var(--verde);
+    border-radius: 10px;
+    box-shadow: 0 0 15px #00a65a55;
+}
 
-        td {
-            padding: 18px;
-            font-size: 1.3em;
-            border-bottom: 1px solid #1a1a1a;
-        }
+#status-table thead th {
+    background: rgba(0,0,0,0.6);
+    color: var(--verde);
+    padding: 15px;
+    border-bottom: 3px solid var(--verde);
+    font-size: 1.3em;
+    position: sticky;
+    top: 0;
+}
 
-        /* CORES POR STATUS */
-        .status-pronto td {
-            background-color: #00A65A !important;
-            color: #fff !important;
-            font-weight: 700 !important;
-        }
+#data-body {
+    display: block;
+    max-height: 500px;
+    overflow-y: hidden;
+}
 
-        .status-espera td {
-            background-color: #333300 !important;
-            color: #FFD700 !important;
-        }
+#data-body tr, #status-table thead tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
 
-        .status-analise td {
-            background-color: #001144 !important;
-            color: #9dccff !important;
-        }
+td {
+    padding: 16px;
+    color: #fff;
+    border-bottom: 1px solid #333;
+    font-size: 1.2em;
+}
 
-        /* PROMOÇÕES */
-        .promos-container {
-            margin-top: 35px;
-            width: 100%;
-            background: #0a0a0a;
-            border-top: 3px solid #00A65A;
-            border-bottom: 3px solid #00A65A;
-            padding: 14px 0;
-            overflow: hidden;
-            white-space: nowrap;
-        }
+/* CORES DE STATUS */
+.status-pronto td {
+    background: #00A65A;
+    font-weight: 700;
+}
+.status-espera td {
+    background: #333300;
+    color: #FFD700;
+}
+.status-analise td {
+    background: #001144;
+    color: #A7C8FF;
+}
 
-        .promos-text {
-            display: inline-block;
-            font-size: 1.6em;
-            font-weight: 300;
-            color: #00ffbf;
-            padding-left: 100%;
-            animation: scrollPromos 18s linear infinite;
-        }
+/* PROMOÇÕES DO DIA */
+.promos-container {
+    margin-top: 35px;
+    background: rgba(20,20,20,0.85);
+    border-top: 3px solid var(--verde);
+    border-bottom: 3px solid var(--verde);
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: 0 0 12px #00a65a55;
+}
 
-        @keyframes scrollPromos {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); }
-        }
+.promos-text {
+    display: inline-block;
+    font-size: 1.5em;
+    color: var(--verde);
+    padding-left: 100%;
+    animation: scrollPromos 18s linear infinite;
+}
 
-    </style>
+@keyframes scrollPromos {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
+
+</style>
 </head>
 <body>
 
-    <!-- LOGO -->
-    <div class="header-container">
-        <img src="imageem.png" class="logo-placeholder" alt="Logo">
-    </div>
+<div class="header-container">
+    <img src="imageem.png" class="logo-placeholder">
+</div>
 
-    <!-- TÍTULO -->
-    <h1>ACOMPANHAMENTO DE SERVIÇOS</h1>
+<h1>ACOMPANHAMENTO DE SERVIÇOS</h1>
 
-    <!-- TABELA CENTRALIZADA -->
-    <div class="table-center">
-        <table id="status-table">
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Status</th>
-                    <th>Previsão</th>
-                </tr>
-            </thead>
-            <tbody id="data-body"></tbody>
-        </table>
-    </div>
+<div class="table-center">
+    <table id="status-table">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Status</th>
+                <th>Previsão</th>
+            </tr>
+        </thead>
+        <tbody id="data-body"></tbody>
+    </table>
+</div>
 
-    <!-- PROMOÇÕES -->
-    <div class="promos-container">
-        <div class="promos-text">
-            💥 PROMOÇÕES DO DIA • Tela iPhone 11 → R$ 299 • Bateria iPhone XR → R$ 149 • Capinha 3x10 → R$ 30 •
-        </div>
+<div class="promos-container">
+    <div class="promos-text">
+        💥 PROMOÇÕES DO DIA • Tela iPhone 11 → R$ 299 • Bateria iPhone XR → R$ 149 • Capinha 3x10 → R$ 30 •
     </div>
+</div>
 
 <script>
 
-    /* DADOS DE TESTE */
-    function getServiceData() {
-        return [
-            { cliente: 'Mariana G.', status: 'Pronto para Retirada', previsao: 'Chamar no Balcão' },
-            { cliente: 'Lucas S.', status: 'Em Reparo (Display)', previsao: '35 minutos' },
-            { cliente: 'Pedro H.', status: 'Aguardando Aprovação', previsao: 'Entraremos em contato' },
-            { cliente: 'Camila A.', status: 'Análise/Diagnóstico', previsao: '15 minutos' },
-            { cliente: 'João B.', status: 'Pronto para Retirada', previsao: 'Chamar no Balcão' },
-            { cliente: 'Ana C.', status: 'Aguardando Peça (Bateria)', previsao: 'Terça-feira (08/07)' },
-            { cliente: 'Rafael D.', status: 'Em Reparo (Conector)', previsao: '20 minutos' },
-            { cliente: 'Sofia L.', status: 'Análise/Diagnóstico', previsao: '10 minutos' }
-        ];
-    }
+/* DADOS EXEMPLO */
+function getServiceData() {
+    return [
+        { cliente: "Mariana G.", status: "Pronto para Retirada", previsao: "Chamar no Balcão" },
+        { cliente: "Lucas S.", status: "Em Reparo (Display)", previsao: "35 minutos" },
+        { cliente: "Pedro H.", status: "Aguardando Aprovação", previsao: "Entraremos em contato" },
+        { cliente: "Camila A.", status: "Análise/Diagnóstico", previsao: "15 minutos" },
+        { cliente: "João B.", status: "Pronto para Retirada", previsao: "Chamar no Balcão" },
+        { cliente: "Ana C.", status: "Aguardando Peça", previsao: "Terça-feira (08/07)" },
+        { cliente: "Rafael T.", status: "Em Reparo (Conector)", previsao: "20 minutos" }
+    ];
+}
 
-    /* CÁLCULO DE PREVISÃO */
-    function calcularPrevisao(texto) {
-        const original = texto;
+/* CALCULAR PREVISÃO → COM HORA FINAL */
+function calcularPrevisao(texto) {
+    const original = texto;
 
-        if (!texto.match(/\d/)) return original;
+    if (!texto.match(/\d/)) return original;
 
-        const agora = new Date();
-        let minutosSomar = 0;
+    const agora = new Date();
+    let minutos = 0;
 
-        texto = texto.toLowerCase();
+    const min = texto.match(/(\d+)\s*min/);
+    if (min) minutos += parseInt(min[1]);
 
-        const minMatch = texto.match(/(\d+)\s*min/);
-        if (minMatch) minutosSomar += parseInt(minMatch[1]);
+    const hr = texto.match(/(\d+)\s*h/);
+    if (hr) minutos += parseInt(hr[1]) * 60;
 
-        const horaMatch = texto.match(/(\d+)\s*h/);
-        if (horaMatch) minutosSomar += parseInt(horaMatch[1]) * 60;
+    agora.setMinutes(agora.getMinutes() + minutos);
 
-        agora.setMinutes(agora.getMinutes() + minutosSomar);
+    const h = agora.getHours().toString().padStart(2, "0");
+    const m = agora.getMinutes().toString().padStart(2, "0");
 
-        const h = agora.getHours().toString().padStart(2, '0');
-        const m = agora.getMinutes().toString().padStart(2, '0');
+    return `${original} → ${h}:${m}`;
+}
 
-        return `${original} → ${h}:${m}`;
-    }
+/* RENDER TABELA */
+function renderTable() {
+    const data = getServiceData();
+    const tbody = document.getElementById("data-body");
+    tbody.innerHTML = "";
 
-    /* RENDER TABELA */
-    function renderTable() {
-        const data = getServiceData();
-        const tbody = document.getElementById("data-body");
-        tbody.innerHTML = "";
+    data.forEach(item => {
+        const row = tbody.insertRow();
 
-        data.forEach(item => {
-            const row = tbody.insertRow();
+        if (item.status.includes("Pronto")) row.className = "status-pronto";
+        else if (item.status.includes("Aguardando")) row.className = "status-espera";
+        else if (item.status.includes("Análise")) row.className = "status-analise";
 
-            let cls = "";
-            if (item.status.includes("Pronto")) cls = "status-pronto";
-            else if (item.status.includes("Aguardando")) cls = "status-espera";
-            else if (item.status.includes("Análise")) cls = "status-analise";
+        row.insertCell().textContent = item.cliente;
+        row.insertCell().textContent = item.status;
+        row.insertCell().textContent = calcularPrevisao(item.previsao);
+    });
+}
 
-            row.className = cls;
+renderTable();
+setInterval(renderTable, 10000);
 
-            row.insertCell().textContent = item.cliente;
-            row.insertCell().textContent = item.status;
-            row.insertCell().textContent = calcularPrevisao(item.previsao);
-        });
-    }
+/* SCROLL AUTOMÁTICO */
+function autoScroll() {
+    const tbody = document.getElementById("data-body");
+    const rows = tbody.querySelectorAll("tr").length;
 
-    renderTable();
-    setInterval(renderTable, 10000);
+    if (rows > 7) {
+        tbody.style.overflowY = "auto";
+        tbody.scrollBy({ top: 1, behavior: "smooth" });
 
-    /* SCROLL AUTOMÁTICO SE +7 LINHAS */
-    function autoScroll() {
-        const tbody = document.getElementById("data-body");
-        const rows = tbody.querySelectorAll("tr").length;
-
-        if (rows > 7) {
-            tbody.style.overflowY = "auto";
-            tbody.scrollBy({ top: 1, behavior: "smooth" });
-
-            if (tbody.scrollTop + tbody.clientHeight >= tbody.scrollHeight - 2) {
-                tbody.scrollTo({ top: 0, behavior: "smooth" });
-            }
-        } else {
-            tbody.style.overflowY = "hidden";
-            tbody.scrollTo({ top: 0 });
+        if (tbody.scrollTop + tbody.clientHeight >= tbody.scrollHeight - 2) {
+            tbody.scrollTo({ top: 0, behavior: "smooth" });
         }
+    } else {
+        tbody.style.overflowY = "hidden";
+        tbody.scrollTo({ top: 0 });
     }
+}
 
-    setInterval(autoScroll, 100);
+setInterval(autoScroll, 100);
 
 </script>
 
