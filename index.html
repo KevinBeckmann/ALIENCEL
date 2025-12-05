@@ -11,7 +11,7 @@
 
 :root { --verde: #00A65A; }
 
-/* FUNDO */
+/* BASE */
 body {
     font-family: 'Roboto', sans-serif;
     background: #111;
@@ -22,17 +22,18 @@ body {
 
     background-image: url("preview.png");
     background-repeat: no-repeat;
-    background-size: 55% 100%;
+    background-size: contain;
     background-position: right top;
     background-attachment: fixed;
 }
 
+/* GRADIENTE E FUNDO DO PAINEL */
 body::before {
     content: "";
     position: fixed;
     left: 0;
     top: 0;
-    width: 60%;
+    width: 70%;
     height: 100%;
     background: linear-gradient(to right, #111 70%, transparent);
     z-index: -2;
@@ -51,16 +52,16 @@ body::after {
     z-index: -1;
 }
 
-/* BOTÃO ADMIN */
+/* ÍCONE ADM */
 .admin-btn {
     position: fixed;
     top: 15px;
     right: 15px;
-    font-size: 32px;
+    font-size: clamp(22px, 3vw, 32px);
     text-decoration: none;
     color: var(--verde);
     background: rgba(0,0,0,0.5);
-    padding: 8px 12px;
+    padding: 8px 14px;
     border-radius: 10px;
     border: 2px solid var(--verde);
     transition: 0.2s;
@@ -71,16 +72,16 @@ body::after {
     color: black;
 }
 
-/* RELOGIO */
+/* RELÓGIO */
 .relogio {
     position: fixed;
     top: 15px;
     left: 20px;
-    font-size: 26px;
+    font-size: clamp(18px, 2.5vw, 28px);
     font-weight: 400;
     color: var(--verde);
     background: rgba(0,0,0,0.4);
-    padding: 6px 14px;
+    padding: 6px 18px;
     border-radius: 10px;
     border: 2px solid var(--verde);
     z-index: 9999;
@@ -93,12 +94,12 @@ body::after {
     margin-bottom: 5px;
 }
 .logo-placeholder {
-    height: 120px;
+    height: clamp(80px, 20vw, 150px);
 }
 
 /* TÍTULO */
 h1 {
-    font-size: 2.2em;
+    font-size: clamp(22px, 3vw, 36px);
     font-weight: 300;
     text-align: center;
     color: var(--verde);
@@ -108,37 +109,44 @@ h1 {
 
 /* TABELA */
 .table-center { width: 100%; display: flex; justify-content: center; }
+
 #status-table {
-    width: 85%;
-    max-width: 1500px;
+    width: 95%;
+    max-width: 1400px;
     border-collapse: collapse;
     background: rgba(20,20,20,0.85);
     border: 3px solid var(--verde);
     border-radius: 10px;
+    overflow: hidden;
     box-shadow: 0 0 15px #00a65a55;
 }
+
 #status-table thead th {
     background: rgba(0,0,0,0.6);
     color: var(--verde);
-    padding: 15px;
+    padding: 1.2rem;
     border-bottom: 3px solid var(--verde);
-    font-size: 1.3em;
+    font-size: clamp(16px, 2vw, 24px);
 }
+
 #data-body {
     display: block;
-    max-height: 500px;
+    max-height: 50vh;
     overflow-y: hidden;
 }
-#data-body tr, #status-table thead tr {
+
+#data-body tr,
+#status-table thead tr {
     display: table;
     width: 100%;
     table-layout: fixed;
 }
+
 td {
-    padding: 16px;
+    padding: 1rem;
     color: #fff;
     border-bottom: 1px solid #333;
-    font-size: 1.2em;
+    font-size: clamp(14px, 1.7vw, 22px);
 }
 
 /* CORES */
@@ -159,7 +167,7 @@ td {
 }
 .promos-text {
     display: inline-block;
-    font-size: 1.5em;
+    font-size: clamp(18px, 2.5vw, 28px);
     color: var(--verde);
     padding-left: 100%;
     animation: scrollPromos 18s linear infinite;
@@ -176,7 +184,7 @@ td {
     left: 50%;
     transform: translateX(-50%);
     padding: 10px 25px;
-    font-size: 20px;
+    font-size: clamp(16px, 2vw, 22px);
     background: rgba(0,0,0,0.6);
     border: 2px solid var(--verde);
     color: var(--verde);
@@ -188,6 +196,24 @@ td {
 .fullscreen-btn:hover {
     background: var(--verde);
     color: black;
+}
+
+/* RESPONSIVIDADE EXTRA */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+        background-size: cover;
+        background-position: center;
+    }
+
+    #data-body {
+        max-height: 60vh;
+    }
+}
+
+@media (max-width: 480px) {
+    td { padding: 8px; }
+    #status-table thead th { padding: 8px; }
 }
 
 </style>
@@ -295,7 +321,7 @@ function renderTable() {
 /* PROMOÇÕES */
 document.getElementById("promos").textContent = getPromocoes();
 
-/* SCROLL AUTOMÁTICO DA TABELA */
+/* SCROLL AUTOMÁTICO */
 function autoScroll() {
     const tbody = document.getElementById("data-body");
     const rows = tbody.querySelectorAll("tr").length;
@@ -314,7 +340,7 @@ function autoScroll() {
 }
 setInterval(autoScroll, 100);
 
-/* ATUALIZAÇÃO */
+/* ATUALIZAÇÃO AUTOMÁTICA */
 renderTable();
 setInterval(renderTable, 7000);
 
