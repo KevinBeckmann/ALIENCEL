@@ -7,11 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
     <style>
+        :root { --verde: #00A65A; }
+
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #1a1a1a;
+            background-color: #111;
             color: #f0f0f0;
-            padding: 20px;
+            margin: 0;
+            padding: 15px;
+            overflow-x: hidden;
         }
 
         /* BOTÃO VOLTAR */
@@ -19,118 +23,128 @@
             position: fixed;
             top: 15px;
             left: 15px;
-            font-size: 26px;
+            font-size: clamp(18px, 2.5vw, 26px);
             text-decoration: none;
-            color: #00A65A;
+            color: var(--verde);
             background: rgba(0,0,0,0.5);
-            padding: 8px 12px;
+            padding: 8px 14px;
             border-radius: 10px;
-            border: 2px solid #00A65A;
+            border: 2px solid var(--verde);
             transition: 0.2s;
             z-index: 9999;
         }
         .voltar-btn:hover {
-            background: #00A65A;
+            background: var(--verde);
             color: black;
         }
 
-        /* LOGO IGUAL AO INDEX */
+        /* LOGO TOPO */
         .header-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
-            margin-top: 10px;
+            margin-top: 45px;
         }
         .logo-placeholder {
-            height: 120px;
+            height: clamp(80px, 15vw, 150px);
         }
 
+        /* CONTAINER PRINCIPAL */
         .container {
-            max-width: 900px;
-            margin: 0 auto;
+            max-width: 1000px;
+            margin: 25px auto;
             background-color: #222;
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
         }
 
+        /* TÍTULO */
         h1 {
-            color: #00A65A;
+            text-align: center;
+            color: var(--verde);
             font-weight: 300;
+            font-size: clamp(22px, 3vw, 34px);
+            margin-bottom: 20px;
             border-bottom: 2px solid #333;
             padding-bottom: 10px;
-            margin-bottom: 20px;
-            text-align: center;
         }
-
-        .form-group label {
-            display: block;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            font-weight: 400;
-        }
-
-        .form-group input, .form-group select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #444;
-            border-radius: 4px;
-            box-sizing: border-box;
-            background-color: #333;
-            color: #f0f0f0;
-        }
-
-        .form-group button {
-            margin-top: 20px;
-            padding: 12px 20px;
-            background-color: #00A65A;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s;
-        }
-        .form-group button:hover {
-            background-color: #007e46;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid #333;
-            text-align: left;
-            font-weight: 300;
-        }
-        th {
-            background-color: #111;
-            color: #fff;
-        }
-
-        td button {
-            padding: 5px 10px;
-            margin-right: 5px;
-            cursor: pointer;
-            border: none;
-            border-radius: 3px;
-        }
-
-        .btn-edit { background-color: #3498db; color: white; }
-        .btn-delete { background-color: #e74c3c; color: white; }
 
         .msg-sucesso {
-            background-color: #00A65A;
-            color: white;
+            background-color: var(--verde);
             padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 18px;
             display: none;
         }
 
+        /* FORMULÁRIO */
+        .form-group label {
+            font-size: clamp(14px, 2vw, 18px);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-group input,
+        .form-group select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: #333;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+            font-size: clamp(14px, 2vw, 18px);
+        }
+
+        .form-group button {
+            margin-top: 18px;
+            padding: 14px 20px;
+            background-color: var(--verde);
+            color: black;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: clamp(16px, 2vw, 20px);
+            width: 100%;
+        }
+        .form-group button:hover { background: #00994f; }
+
+        /* TABELA */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 12px;
+            font-size: clamp(14px, 1.8vw, 18px);
+        }
+
+        th {
+            background: #111;
+            color: white;
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: clamp(12px, 2vw, 16px);
+        }
+
+        .btn-edit { background: #3498db; color: white; }
+        .btn-delete { background: #e74c3c; color: white; }
+
+        textarea { height: 90px; }
+
+        @media (max-width: 600px) {
+            table { display: block; overflow-x: auto; }
+        }
     </style>
 </head>
 <body>
@@ -138,27 +152,30 @@
     <!-- BOTÃO VOLTAR -->
     <a href="index.html" class="voltar-btn">⬅️ Voltar</a>
 
-    <!-- LOGO NO TOPO (IGUAL AO INDEX) -->
+    <!-- LOGO -->
     <div class="header-container">
         <img src="imageem.png" class="logo-placeholder">
     </div>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <div class="container">
+
         <h1>Painel de Lançamento de Serviços</h1>
 
-        <div id="success-msg" class="msg-sucesso">Dados salvos e painel de TV atualizado!</div>
+        <div id="success-msg" class="msg-sucesso">Dados atualizados com sucesso!</div>
 
+        <!-- FORMULÁRIO -->
         <form id="service-form">
             <input type="hidden" id="service-index">
 
             <div class="form-group">
-                <label for="cliente">Cliente:</label>
+                <label>Cliente:</label>
                 <input type="text" id="cliente" required>
             </div>
 
             <div class="form-group">
-                <label for="status">Status:</label>
-                <select id="status" required>
+                <label>Status:</label>
+                <select id="status">
                     <option value="Análise/Diagnóstico">Análise/Diagnóstico</option>
                     <option value="Aguardando Aprovação">Aguardando Aprovação</option>
                     <option value="Aguardando Peça">Aguardando Peça</option>
@@ -168,8 +185,8 @@
             </div>
 
             <div class="form-group">
-                <label for="previsao">Previsão:</label>
-                <input type="text" id="previsao" placeholder="Ex: 30 minutos, 15 min, 2h, 08/07...">
+                <label>Previsão:</label>
+                <input type="text" id="previsao" placeholder="Ex: 30 min, 2h, 08/07...">
             </div>
 
             <div class="form-group">
@@ -177,9 +194,10 @@
             </div>
         </form>
 
-        <h2 style="color:#00A65A; font-weight:300; margin-top:25px;">Serviços Ativos</h2>
+        <!-- LISTA DE SERVIÇOS -->
+        <h2 style="color:var(--verde); font-weight:300; margin-top:25px;">Serviços Ativos</h2>
 
-        <table id="services-table">
+        <table>
             <thead>
                 <tr>
                     <th>Cliente</th>
@@ -191,8 +209,10 @@
             <tbody id="services-list"></tbody>
         </table>
 
-        <h2 style="color:#00A65A; font-weight:300; margin-top:25px;">Promoções do Dia</h2>
-        <textarea id="promo" style="height:80px;"></textarea>
+        <!-- PROMOÇÕES -->
+        <h2 style="color:var(--verde); font-weight:300; margin-top:25px;">Promoções do Dia</h2>
+
+        <textarea id="promo"></textarea>
         <button onclick="salvarPromo()">Salvar Promoções</button>
 
     </div>
@@ -203,9 +223,12 @@
 
 function carregar() {
     const lista = document.getElementById("services-list");
+    lista.innerinnerHTML = "";
+
+    const dados = getTabela();
     lista.innerHTML = "";
 
-    getTabela().forEach((item, i) => {
+    dados.forEach((item, i) => {
         let tr = document.createElement("tr");
 
         tr.innerHTML = `
@@ -230,7 +253,7 @@ function salvar() {
     const status = document.getElementById("status").value;
     const previsao = document.getElementById("previsao").value;
 
-    if (cliente.trim() === "") return alert("Preencha o nome do cliente.");
+    if (cliente.trim() === "") return alert("Digite o nome do cliente.");
 
     const db = getDB();
 
@@ -241,17 +264,23 @@ function salvar() {
     }
 
     saveDB(db);
+
+    document.getElementById("success-msg").style.display = "block";
+    setTimeout(() => document.getElementById("success-msg").style.display = "none", 1500);
+
     limpar();
     carregar();
 }
 
 function editar(i) {
     const item = getTabela()[i];
+
     document.getElementById("cliente").value = item.cliente;
     document.getElementById("status").value = item.status;
     document.getElementById("previsao").value = item.previsao;
+
     document.getElementById("service-index").value = i;
-    document.getElementById("submit-btn").textContent = "Salvar Edição";
+    document.getElementById("submit-btn").textContent = "Salvar Alterações";
 }
 
 function excluir(i) {
@@ -269,12 +298,11 @@ function limpar() {
 }
 
 function salvarPromo() {
-    const texto = document.getElementById("promo").value;
-    setPromocoes(texto);
-    alert("Promoções atualizadas!");
+    setPromocoes(document.getElementById("promo").value);
+    alert("Promoção atualizada!");
 }
 
-document.getElementById("service-form").addEventListener("submit", function(e) {
+document.getElementById("service-form").addEventListener("submit", e => {
     e.preventDefault();
     salvar();
 });
