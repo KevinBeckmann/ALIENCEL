@@ -1,1 +1,288 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle | Lançamento de Serviços</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            padding: 20px;
+        }
+
+        /* BOTÃO VOLTAR */
+        .voltar-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 26px;
+            text-decoration: none;
+            color: #00A65A;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 2px solid #00A65A;
+            transition: 0.2s;
+            z-index: 9999;
+        }
+        .voltar-btn:hover {
+            background: #00A65A;
+            color: black;
+        }
+
+        /* LOGO IGUAL AO INDEX */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+        .logo-placeholder {
+            height: 120px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #222;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #00A65A;
+            font-weight: 300;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .form-group input, .form-group select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #333;
+            color: #f0f0f0;
+        }
+
+        .form-group button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #00A65A;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        .form-group button:hover {
+            background-color: #007e46;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #333;
+            text-align: left;
+            font-weight: 300;
+        }
+        th {
+            background-color: #111;
+            color: #fff;
+        }
+
+        td button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 3px;
+        }
+
+        .btn-edit { background-color: #3498db; color: white; }
+        .btn-delete { background-color: #e74c3c; color: white; }
+
+        .msg-sucesso {
+            background-color: #00A65A;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- BOTÃO VOLTAR -->
+    <a href="index.html" class="voltar-btn">⬅️ Voltar</a>
+
+    <!-- LOGO NO TOPO (IGUAL AO INDEX) -->
+    <div class="header-container">
+        <img src="imageem.png" class="logo-placeholder">
+    </div>
+
+    <div class="container">
+        <h1>Painel de Lançamento de Serviços</h1>
+
+        <div id="success-msg" class="msg-sucesso">Dados salvos e painel de TV atualizado!</div>
+
+        <form id="service-form">
+            <input type="hidden" id="service-index">
+
+            <div class="form-group">
+                <label for="cliente">Cliente:</label>
+                <input type="text" id="cliente" required>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" required>
+                    <option value="Análise/Diagnóstico">Análise/Diagnóstico</option>
+                    <option value="Aguardando Aprovação">Aguardando Aprovação</option>
+                    <option value="Aguardando Peça">Aguardando Peça</option>
+                    <option value="Em Reparo">Em Reparo</option>
+                    <option value="Pronto para Retirada">Pronto para Retirada</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="previsao">Previsão:</label>
+                <input type="text" id="previsao" placeholder="Ex: 30 minutos, 15 min, 2h, 08/07...">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" id="submit-btn">Adicionar Serviço</button>
+            </div>
+        </form>
+
+        <h2 style="color:#00A65A; font-weight:300; margin-top:25px;">Serviços Ativos</h2>
+
+        <table id="services-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Status</th>
+                    <th>Previsão</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="services-list"></tbody>
+        </table>
+
+        <h2 style="color:#00A65A; font-weight:300; margin-top:25px;">Promoções do Dia</h2>
+        <textarea id="promo" style="height:80px;"></textarea>
+        <button onclick="salvarPromo()">Salvar Promoções</button>
+
+    </div>
+
+<script src="dados.js"></script>
+
+<script>
+
+function carregar() {
+    const lista = document.getElementById("services-list");
+    lista.innerHTML = "";
+
+    getTabela().forEach((item, i) => {
+        let tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${item.cliente}</td>
+            <td>${item.status}</td>
+            <td>${item.previsao}</td>
+            <td>
+                <button class="btn-edit" onclick="editar(${i})">Editar</button>
+                <button class="btn-delete" onclick="excluir(${i})">Excluir</button>
+            </td>
+        `;
+
+        lista.appendChild(tr);
+    });
+
+    document.getElementById("promo").value = getPromocoes();
+}
+
+function salvar() {
+    const id = document.getElementById("service-index").value;
+    const cliente = document.getElementById("cliente").value;
+    const status = document.getElementById("status").value;
+    const previsao = document.getElementById("previsao").value;
+
+    if (cliente.trim() === "") return alert("Preencha o nome do cliente.");
+
+    const db = getDB();
+
+    if (id === "") {
+        db.tabela.push({ cliente, status, previsao });
+    } else {
+        db.tabela[id] = { cliente, status, previsao };
+    }
+
+    saveDB(db);
+    limpar();
+    carregar();
+}
+
+function editar(i) {
+    const item = getTabela()[i];
+    document.getElementById("cliente").value = item.cliente;
+    document.getElementById("status").value = item.status;
+    document.getElementById("previsao").value = item.previsao;
+    document.getElementById("service-index").value = i;
+    document.getElementById("submit-btn").textContent = "Salvar Edição";
+}
+
+function excluir(i) {
+    if (!confirm("Deseja realmente excluir este registro?")) return;
+
+    deleteLinha(i);
+    carregar();
+}
+
+function limpar() {
+    document.getElementById("service-index").value = "";
+    document.getElementById("cliente").value = "";
+    document.getElementById("previsao").value = "";
+    document.getElementById("submit-btn").textContent = "Adicionar Serviço";
+}
+
+function salvarPromo() {
+    const texto = document.getElementById("promo").value;
+    setPromocoes(texto);
+    alert("Promoções atualizadas!");
+}
+
+document.getElementById("service-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    salvar();
+});
+
+carregar();
+
+</script>
+
+</body>
+</html>
