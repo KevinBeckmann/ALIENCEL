@@ -169,15 +169,39 @@ td {
     to { transform: translateX(-100%); }
 }
 
+/* BOTÃO TELA CHEIA */
+.fullscreen-btn {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 25px;
+    font-size: 20px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid var(--verde);
+    color: var(--verde);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.25s;
+    z-index: 9999;
+}
+.fullscreen-btn:hover {
+    background: var(--verde);
+    color: black;
+}
+
 </style>
 </head>
 <body>
 
-<!-- ÍCONE ADMIN -->
+<!-- Ícone ADM -->
 <a href="administrador.html" class="admin-btn">⚙️</a>
 
-<!-- RELOGIO -->
+<!-- Relógio -->
 <div class="relogio" id="relogio">00:00</div>
+
+<!-- Botão Tela Cheia -->
+<div class="fullscreen-btn" onclick="toggleFullscreen()">📺 Tela Cheia</div>
 
 <div class="header-container">
     <img src="imageem.png" class="logo-placeholder">
@@ -206,7 +230,7 @@ td {
 
 <script>
 
-/* RELOGIO ATUALIZANDO */
+/* RELOGIO */
 function atualizarRelogio() {
     const agora = new Date();
     const h = agora.getHours().toString().padStart(2,"0");
@@ -215,6 +239,17 @@ function atualizarRelogio() {
 }
 setInterval(atualizarRelogio, 1000);
 atualizarRelogio();
+
+/* BOTÃO TELA CHEIA */
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        document.querySelector(".fullscreen-btn").textContent = "❌ Sair da Tela Cheia";
+    } else {
+        document.exitFullscreen();
+        document.querySelector(".fullscreen-btn").textContent = "📺 Tela Cheia";
+    }
+}
 
 /* CÁLCULO PREVISÃO */
 function calcularPrevisao(texto) {
@@ -279,7 +314,7 @@ function autoScroll() {
 }
 setInterval(autoScroll, 100);
 
-/* LOOP DE ATUALIZAÇÃO */
+/* ATUALIZAÇÃO */
 renderTable();
 setInterval(renderTable, 7000);
 
