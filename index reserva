@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Assistência Técnica</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* LOGO CENTRALIZADA */
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
+            width: 100%;
+        }
+
+        .logo-placeholder {
+            height: 120px;
+        }
+
+        /* TÍTULO CENTRALIZADO */
+        h1 {
+            font-size: 2.4em;
+            font-weight: 300;
+            color: #00A65A;
+            margin: 10px auto 20px auto;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* TABELA CENTRALIZADA */
+        .table-center {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #status-table {
+            width: 90%;
+            max-width: 1600px;
+            border-collapse: collapse;
+            text-align: left;
+            border: 3px solid #00A65A;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #00A65A55;
+        }
+
+        #status-table thead th {
+            background-color: #111;
+            color: #fff;
+            padding: 18px;
+            border-bottom: 3px solid #00A65A;
+            font-size: 1.4em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* ÁREA DO SCROLL */
+        #data-body {
+            display: block;
+            max-height: 500px;
+            overflow-y: hidden;
+        }
+
+        #data-body::-webkit-scrollbar { width: 0; }
+        #data-body { scrollbar-width: none; }
+
+        #data-body tr,
+        #status-table thead tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        td {
+            padding: 18px;
+            font-size: 1.3em;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        /* CORES POR STATUS */
+        .status-pronto td {
+            background-color: #00A65A !important;
+            color: #fff !important;
+            font-weight: 700 !important;
+        }
+
+        .status-espera td {
+            background-color: #333300 !important;
+            color: #FFD700 !important;
+        }
+
+        .status-analise td {
+            background-color: #001144 !important;
+            color: #9dccff !important;
+        }
+
+        /* PROMOÇÕES */
+        .promos-container {
+            margin-top: 35px;
+            width: 100%;
+            background: #0a0a0a;
+            border-top: 3px solid #00A65A;
+            border-bottom: 3px solid #00A65A;
+            padding: 14px 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .promos-text {
+            display: inline-block;
+            font-size: 1.6em;
+            font-weight: 300;
+            color: #00ffbf;
+            padding-left: 100%;
+            animation: scrollPromos 18s linear infinite;
+        }
+
+        @keyframes scrollPromos {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- LOGO -->
+    <div class="header-container">
+        <img src="imageem.png" class="logo-placeholder" alt="Logo">
+    </div>
+
+    <!-- TÍTULO -->
+    <h1>ACOMPANHAMENTO DE SERVIÇOS</h1>
+
+    <!-- TABELA CENTRALIZADA -->
+    <div class="table-center">
+        <table id="status-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Status</th>
+                    <th>Previsão</th>
+                </tr>
+            </thead>
+            <tbody id="data-body"></tbody>
+        </table>
+    </div>
+
+    <!-- PROMOÇÕES -->
+    <div class="promos-container">
+        <div class="promos-text">
+            💥 PROMOÇÕES DO DIA • Tela iPhone 11 → R$ 299 • Bateria iPhone XR → R$ 149 • Capinha 3x10 → R$ 30 •
+        </div>
+    </div>
+
+<script>
+
+    /* DADOS DE TESTE */
+    function getServiceData() {
+        return [
+            { cliente: 'Mariana G.', status: 'Pronto para Retirada', previsao: 'Chamar no Balcão' },
+            { cliente: 'Lucas S.', status: 'Em Reparo (Display)', previsao: '35 minutos' },
+            { cliente: 'Pedro H.', status: 'Aguardando Aprovação', previsao: 'Entraremos em contato' },
+            { cliente: 'Camila A.', status: 'Análise/Diagnóstico', previsao: '15 minutos' },
+            { cliente: 'João B.', status: 'Pronto para Retirada', previsao: 'Chamar no Balcão' },
+            { cliente: 'Ana C.', status: 'Aguardando Peça (Bateria)', previsao: 'Terça-feira (08/07)' },
+            { cliente: 'Rafael D.', status: 'Em Reparo (Conector)', previsao: '20 minutos' },
+            { cliente: 'Sofia L.', status: 'Análise/Diagnóstico', previsao: '10 minutos' }
+        ];
+    }
+
+    /* CÁLCULO DE PREVISÃO */
+    function calcularPrevisao(texto) {
+        const original = texto;
+
+        if (!texto.match(/\d/)) return original;
+
+        const agora = new Date();
+        let minutosSomar = 0;
+
+        texto = texto.toLowerCase();
+
+        const minMatch = texto.match(/(\d+)\s*min/);
+        if (minMatch) minutosSomar += parseInt(minMatch[1]);
+
+        const horaMatch = texto.match(/(\d+)\s*h/);
+        if (horaMatch) minutosSomar += parseInt(horaMatch[1]) * 60;
+
+        agora.setMinutes(agora.getMinutes() + minutosSomar);
+
+        const h = agora.getHours().toString().padStart(2, '0');
+        const m = agora.getMinutes().toString().padStart(2, '0');
+
+        return `${original} → ${h}:${m}`;
+    }
+
+    /* RENDER TABELA */
+    function renderTable() {
+        const data = getServiceData();
+        const tbody = document.getElementById("data-body");
+        tbody.innerHTML = "";
+
+        data.forEach(item => {
+            const row = tbody.insertRow();
+
+            let cls = "";
+            if (item.status.includes("Pronto")) cls = "status-pronto";
+            else if (item.status.includes("Aguardando")) cls = "status-espera";
+            else if (item.status.includes("Análise")) cls = "status-analise";
+
+            row.className = cls;
+
+            row.insertCell().textContent = item.cliente;
+            row.insertCell().textContent = item.status;
+            row.insertCell().textContent = calcularPrevisao(item.previsao);
+        });
+    }
+
+    renderTable();
+    setInterval(renderTable, 10000);
+
+    /* SCROLL AUTOMÁTICO SE +7 LINHAS */
+    function autoScroll() {
+        const tbody = document.getElementById("data-body");
+        const rows = tbody.querySelectorAll("tr").length;
+
+        if (rows > 7) {
+            tbody.style.overflowY = "auto";
+            tbody.scrollBy({ top: 1, behavior: "smooth" });
+
+            if (tbody.scrollTop + tbody.clientHeight >= tbody.scrollHeight - 2) {
+                tbody.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        } else {
+            tbody.style.overflowY = "hidden";
+            tbody.scrollTo({ top: 0 });
+        }
+    }
+
+    setInterval(autoScroll, 100);
+
+</script>
+
+</body>
+</html>
