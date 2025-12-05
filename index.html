@@ -6,7 +6,6 @@
 <title>Status Assistência — Visual</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -38,7 +37,7 @@ body{
   padding:20px 28px;
 }
 
-/* HEADER NOVO */
+/* HEADER */
 .header-block{
   width:100%;
   display:flex;
@@ -47,47 +46,23 @@ body{
   margin-bottom:25px;
   gap:25px;
 }
-
 .header-logo{
   height:150px;
-  width:auto;
   object-fit:contain;
   filter:drop-shadow(0 0 6px rgba(255,255,255,0.25));
 }
+.header-text{ text-align:center; }
+.header-title{ font-size:48px; font-weight:800; margin:0; }
+.header-subtitle{ font-size:22px; opacity:.9; margin:0; }
 
-.header-text{
-  text-align:center;
-}
-
-.header-title{
-  font-size:48px;
-  font-weight:800;
-  margin:0;
-  padding:0;
-}
-
-.header-subtitle{
-  font-size:22px;
-  margin:0;
-  padding:0;
-  opacity:0.90;
-}
-
-/* TÍTULO ENTRE ALERTAS E GRÁFICO */
-.mid-title-wrapper{
+/* TÍTULO ENTRE ALERTAS E TABELA */
+.table-section-title{
   width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin:12px 0 20px 0;
-}
-
-.mid-title-text{
+  text-align:center;
   font-size:26px;
   font-weight:700;
+  margin:18px 0 10px 0;
   color:#e8e8e8;
-  opacity:0.95;
-  text-align:center;
 }
 
 /* ALERTAS + GRÁFICO */
@@ -95,7 +70,7 @@ body{
   display:grid;
   grid-template-columns: 1fr 360px;
   gap:16px;
-  margin-bottom:18px;
+  margin-bottom:10px;
   align-items:start;
 }
 
@@ -110,24 +85,7 @@ body{
   color:#ffb3b3;
   font-size:18px;
 }
-.alerts-list{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.alert-empty{ color:var(--muted); font-size:14px; }
-
-.alert-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px;
-  border-radius:10px;
-  background:linear-gradient(90deg,rgba(255,0,0,0.10),rgba(255,0,0,0.03));
-  border:1px solid rgba(255,0,0,0.12);
-  color:#ffdede;
-}
-.alert-time{ font-weight:700; color:#ffdede; }
+.alert-empty{ color:var(--muted); }
 
 /* GRÁFICO */
 .chart-card{
@@ -135,69 +93,41 @@ body{
   padding:12px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.04);
-  box-shadow:0 6px 18px rgba(0,0,0,0.6);
-  height:100%;
-  min-height:120px;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
 }
 
 /* TABELA */
 .table-wrapper{
   flex:1;
-  display:flex;
-  flex-direction:column;
   background:linear-gradient(180deg,#0d0d0d,#090909);
   border:1px solid rgba(255,255,255,0.06);
   border-radius:14px;
   padding:14px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.6);
-  margin-bottom:18px;
-  min-height:0;
+  margin-top:10px;
 }
-.table-title{
-  font-size:18px;
-  font-weight:700;
-  margin-bottom:12px;
-}
-
-.scroll-area{
-  flex:1;
-  overflow-y:auto;
-  border-radius:10px;
-  padding-right:8px;
-}
-
 table{
   width:100%;
   border-collapse:collapse;
-  background:linear-gradient(180deg,#3a3a3a 0%,#2b2b2b 45%,#1f1f1f 100%);
+  background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
 thead th{
   padding:14px;
   background:linear-gradient(180deg,#545454,#3f3f3f);
-  text-align:left;
-  color:#fff;
-  font-size:15px;
-  font-weight:700;
-  position:sticky;
-  top:0;
+  font-size:15px; color:#fff;
 }
 tbody td{
   padding:14px;
   border-bottom:1px solid rgba(0,0,0,0.25);
   color:#e0e0e0;
-  font-size:15px;
 }
-
 .status-badge{
   padding:6px 12px;
   border-radius:999px;
+  background:#999;
   font-weight:700;
   font-size:13px;
-  color:#0b0b0b;
-  display:inline-block;
 }
 
 /* PROMOÇÕES */
@@ -221,11 +151,6 @@ tbody td{
   from{ transform:translateX(0%); }
   to{ transform:translateX(-100%); }
 }
-
-@media (max-width:920px){
-  .top-row{ grid-template-columns:1fr; }
-  .chart-card{ order:2; }
-}
 </style>
 </head>
 <body>
@@ -234,24 +159,18 @@ tbody td{
 
   <!-- HEADER -->
   <div class="header-block">
-    <img src="imageem.png" class="header-logo" alt="Logo">
+    <img src="imageem.png" class="header-logo">
     <div class="header-text">
       <h1 class="header-title">TÍTULO</h1>
       <div class="header-subtitle">subtitulo</div>
     </div>
   </div>
 
-  <!-- TÍTULO CENTRAL ENTRE ALERTAS E GRÁFICO -->
-  <div class="mid-title-wrapper">
-      <h2 class="mid-title-text">Status de Serviço</h2>
-  </div>
-
   <!-- ALERTAS + GRÁFICO -->
   <div class="top-row">
-
-    <div class="alerts" role="status" aria-live="polite">
+    <div class="alerts">
       <h3>Alertas (5 minutos)</h3>
-      <div id="alerts-list" class="alerts-list">
+      <div id="alerts-list">
         <div class="alert-empty">Nenhum alerta no momento.</div>
       </div>
     </div>
@@ -259,23 +178,23 @@ tbody td{
     <div class="chart-card">
       <canvas id="statusChart" style="width:100%;max-width:320px;height:180px"></canvas>
     </div>
-
   </div>
+
+  <!-- TÍTULO NO LOCAL EXATO -->
+  <div class="table-section-title">Status de Serviço</div>
 
   <!-- TABELA -->
   <div class="table-wrapper">
-    <div class="scroll-area" id="scrollArea">
-      <table id="tabelaStatus">
-        <thead>
-          <tr>
-            <th>Cliente</th>
-            <th>Status</th>
-            <th>Previsão</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+    <table id="tabelaStatus">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Status</th>
+          <th>Previsão</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
   <!-- PROMOÇÕES -->
@@ -305,9 +224,14 @@ const statusColors = {
   "Em Reparo": "#3498db",
   "Pronto para Retirada": "#2ecc71"
 };
-
 function escapeHtml(s){
-  return (s+"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+  return (s+"").replace(/[&<>"']/g,c=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":"&#39;"
+  }[c]));
 }
 
 function carregarTabela(){
@@ -316,7 +240,9 @@ function carregarTabela(){
   tbody.innerHTML="";
 
   if(dados.length===0){
-    tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">Nenhum serviço lançado.</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
+      Nenhum serviço lançado.
+    </td></tr>`;
     atualizarGrafico();
     return;
   }
@@ -332,7 +258,6 @@ function carregarTabela(){
     tbody.appendChild(tr);
   });
 
-  iniciarAutoScroll();
   atualizarAlertsUI();
   atualizarGrafico();
 }
@@ -350,12 +275,15 @@ function parseTimeHHMM(t){
   return d;
 }
 
-function minutesDiff(a,b){ return (b-a)/60000; }
+function minutesDiff(a,b){
+  return (b-a)/60000;
+}
 
 function atualizarAlertsUI(){
   const lista=getTabela();
   const box=document.getElementById("alerts-list");
   box.innerHTML="";
+
   const now=new Date();
   const arr=[];
 
@@ -387,8 +315,12 @@ function atualizarAlertsUI(){
   });
 }
 
-/* GRÁFICO */
+/* ==========================
+      GRÁFICO STATUS
+========================== */
+
 let chartInstance=null;
+
 const statusOptions=[
   "Análise/Diagnóstico",
   "Aguardando Aprovação",
@@ -399,9 +331,15 @@ const statusOptions=[
 
 function atualizarGrafico(){
   const tabela=getTabela();
+
   const counts={};
   statusOptions.forEach(s=>counts[s]=0);
-  tabela.forEach(x=>counts[x.status]!==undefined && counts[x.status]++);
+
+  tabela.forEach(x=>{
+    if(counts[x.status]!==undefined){
+      counts[x.status]++;
+    }
+  });
 
   const data=statusOptions.map(s=>counts[s]);
   const ctx=document.getElementById("statusChart").getContext("2d");
@@ -430,26 +368,14 @@ function atualizarGrafico(){
   });
 }
 
-let scrollInterval=null;
-function iniciarAutoScroll(){
-  const area=document.getElementById("scrollArea");
-  const table=document.getElementById("tabelaStatus");
-  if(!area||!table) return;
-
-  clearInterval(scrollInterval);
-  area.scrollTop=0;
-
-  const linhas=table.querySelectorAll("tbody tr").length;
-  if(linhas<=10) return;
-
-  scrollInterval=setInterval(()=>{
-    area.scrollTop+=1;
-    if(area.scrollTop >= table.offsetHeight - area.offsetHeight){
-      area.scrollTop=0;
-    }
-  },80);
+/* PROMOÇÕES ROLANDO */
+function refreshAll(){
+  carregarTabela();
+  carregarPromocoes();
+  atualizarAlertsUI();
 }
 
+/* DETECTA ALTERAÇÕES NO LOCALSTORAGE */
 let lastRaw=localStorage.getItem(STORAGE_KEY);
 setInterval(()=>{
   const nowRaw=localStorage.getItem(STORAGE_KEY);
@@ -458,12 +384,6 @@ setInterval(()=>{
     refreshAll();
   }
 },900);
-
-function refreshAll(){
-  carregarTabela();
-  carregarPromocoes();
-  atualizarAlertsUI();
-}
 
 document.addEventListener("DOMContentLoaded",()=>{
   refreshAll();
