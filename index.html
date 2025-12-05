@@ -1,324 +1,565 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Assistência Técnica</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Painel de Controle | Serviços</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-
-:root { --verde: #00A65A; }
-
-/* FUNDO */
-body {
-    font-family: 'Roboto', sans-serif;
-    background: #111;
-    margin: 0;
-    padding: 20px;
-    color: #fff;
-    overflow-x: hidden;
-
-    background-image: url("preview.png");
-    background-repeat: no-repeat;
-    background-size: 55% 100%;
-    background-position: right top;
-    background-attachment: fixed;
+/* ---------- GERAL ---------- */
+:root{
+  --accent: #4caf50;
+  --bg-dark: #0f0f0f;
+  --panel: #161616;
+  --muted: #bdbdbd;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Inter",sans-serif;
+  background: linear-gradient(180deg,#000000,#131313,#1c1c1c);
+  color:#e6e6e6;
+  display:flex;
+  justify-content:center;
+  padding:20px;
 }
 
-body::before {
-    content: "";
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(to right, #111 70%, transparent);
-    z-index: -2;
+/* ---------- CONTAINER ---------- */
+.container{
+  width:95%;
+  max-width:980px;
+  background:var(--bg-dark);
+  padding:22px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 12px 30px rgba(0,0,0,0.75);
+  animation:fadeIn .6s ease;
 }
 
-body::after {
-    content: "";
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 55%;
-    height: 100%;
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(2px);
-    clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
-    z-index: -1;
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(-8px)}
+  to{opacity:1; transform:none}
 }
 
-/* BOTÃO ADMIN */
-.admin-btn {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    font-size: 32px;
-    text-decoration: none;
-    color: var(--verde);
-    background: rgba(0,0,0,0.5);
-    padding: 8px 12px;
-    border-radius: 10px;
-    border: 2px solid var(--verde);
-    transition: 0.2s;
-    z-index: 9999;
+/* ---------- LOGO + VOLTAR ---------- */
+.header-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:8px;
 }
-.admin-btn:hover {
-    background: var(--verde);
-    color: black;
+.logo-container{text-align:center;flex:1;}
+.logo-container img{width:150px;filter:drop-shadow(0 0 6px rgba(255,255,255,0.2));}
+
+.voltar-btn{
+  font-size:26px;
+  color:var(--accent);
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:8px;
+}
+.voltar-btn:hover{background:rgba(76,175,80,0.12)}
+
+/* ---------- TOP ROW ---------- */
+.top-row{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:16px;
+  margin:12px 0 20px;
+  align-items:start;
 }
 
-/* RELOGIO */
-.relogio {
-    position: fixed;
-    top: 15px;
-    left: 20px;
-    font-size: 26px;
-    font-weight: 400;
-    color: var(--verde);
-    background: rgba(0,0,0,0.4);
-    padding: 6px 14px;
-    border-radius: 10px;
-    border: 2px solid var(--verde);
-    z-index: 9999;
+.alerts{
+  background:linear-gradient(180deg,#171717,#121212);
+  border-radius:10px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.04);
+  min-height:84px;
+}
+.alerts h3{margin:0 0 8px;color:#ffb3b3;font-size:16px;}
+.alerts-list{display:flex;flex-direction:column;gap:8px;}
+.alert-empty{color:var(--muted);font-size:14px}
+
+.alert-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:8px;
+  border-radius:8px;
+  background:linear-gradient(90deg, rgba(255,0,0,0.06), rgba(255,0,0,0.02));
+  border:1px solid rgba(255,0,0,0.08);
+  color:#ffdede;
+  font-size:14px;
+}
+.alert-item .left{display:flex;gap:10px;align-items:center;}
+.alert-time{font-weight:700;color:#ffdede;}
+
+.chart-card{
+  background:linear-gradient(180deg,#0b0b0b,#090909);
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow:0 6px 18px rgba(0,0,0,0.6);
+  height:100%;
 }
 
-/* LOGO */
-.header-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5px;
+/* ---------- FORM ---------- */
+form{margin-bottom:14px;}
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  align-items:end;
 }
-.logo-placeholder {
-    height: 120px;
-}
-
-/* TÍTULO */
-h1 {
-    font-size: 2.2em;
-    font-weight: 300;
-    text-align: center;
-    color: var(--verde);
-    text-shadow: 0 0 10px #00a65a55;
-    margin-bottom: 20px;
+@media(max-width:720px){
+  .top-row{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .chart-card{order:2}
+  .alerts{order:1}
 }
 
-/* TABELA */
-.table-center { width: 100%; display: flex; justify-content: center; }
-#status-table {
-    width: 85%;
-    max-width: 1500px;
-    border-collapse: collapse;
-    background: rgba(20,20,20,0.85);
-    border: 3px solid var(--verde);
-    border-radius: 10px;
-    box-shadow: 0 0 15px #00a65a55;
+.form-group{width:100%;display:flex;flex-direction:column;}
+.form-group.full{grid-column:1/-1}
+label{font-size:14px;color:#dcdcdc;font-weight:600;margin-bottom:6px;}
+
+input[type="text"], select, textarea{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #333;
+  background:var(--panel);
+  color:#eaeaea;
+  font-size:15px;
 }
-#status-table thead th {
-    background: rgba(0,0,0,0.6);
-    color: var(--verde);
-    padding: 15px;
-    border-bottom: 3px solid var(--verde);
-    font-size: 1.3em;
-}
-#data-body {
-    display: block;
-    max-height: 500px;
-    overflow-y: hidden;
-}
-#data-body tr, #status-table thead tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
-td {
-    padding: 16px;
-    color: #fff;
-    border-bottom: 1px solid #333;
-    font-size: 1.2em;
+input:focus, select:focus, textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 10px rgba(76,175,80,0.08);
 }
 
-/* CORES */
-.status-pronto td { background: #00A65A; font-weight: 700; }
-.status-espera td { background: #333300; color: #FFD700; }
-.status-analise td { background: #001144; color: #A7C8FF; }
+textarea{min-height:88px;resize:vertical;}
 
-/* PROMOÇÕES */
-.promos-container {
-    margin-top: 35px;
-    background: rgba(20,20,20,0.85);
-    border-top: 3px solid var(--verde);
-    border-bottom: 3px solid var(--verde);
-    padding: 12px 0;
-    overflow: hidden;
-    white-space: nowrap;
-    box-shadow: 0 0 12px #00a65a55;
+.btn-principal{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background:linear-gradient(90deg,var(--accent),#3e8e41);
+  color:white;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+  transition:.14s transform;
 }
-.promos-text {
-    display: inline-block;
-    font-size: 1.5em;
-    color: var(--verde);
-    padding-left: 100%;
-    animation: scrollPromos 18s linear infinite;
-}
-@keyframes scrollPromos {
-    from { transform: translateX(0); }
-    to { transform: translateX(-100%); }
-}
+.btn-principal:hover{transform:translateY(-2px)}
 
-/* BOTÃO TELA CHEIA */
-.fullscreen-btn {
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 25px;
-    font-size: 20px;
-    background: rgba(0,0,0,0.6);
-    border: 2px solid var(--verde);
-    color: var(--verde);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.25s;
-    z-index: 9999;
+/* ---------- TABLE ---------- */
+.table-card{
+  margin-top:14px;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid #444;
+  box-shadow:0 8px 30px rgba(0,0,0,0.6);
 }
-.fullscreen-btn:hover {
-    background: var(--verde);
-    color: black;
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:linear-gradient(180deg,#3a3a3a 0%,#2b2b2b 45%,#1f1f1f 100%);
+}
+th{
+  padding:12px 14px;
+  background:linear-gradient(180deg,#545454,#3f3f3f);
+  color:#fff;
+  text-align:left;
+  font-weight:700;
+}
+td{
+  padding:12px 14px;
+  border-bottom:1px solid rgba(0,0,0,0.25);
+  color:#e0e0e0;
 }
 
+/* actions */
+.btn-edit{padding:8px 12px;background:#3498db;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-delete{padding:8px 12px;background:#e74c3c;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
+
+.msg-sucesso{
+  background:var(--accent);
+  color:#fff;
+  padding:10px;
+  border-radius:8px;
+  text-align:center;
+  display:none;
+  margin-bottom:12px;
+}
+
+.small-muted{color:var(--muted);font-size:13px;}
 </style>
 </head>
 <body>
 
-<!-- Ícone ADM -->
-<a href="administrador.html" class="admin-btn">⚙️</a>
+<div class="container">
 
-<!-- Relógio -->
-<div class="relogio" id="relogio">00:00</div>
+  <div class="header-row">
+    <a class="voltar-btn" href="index.html">←</a>
+    <div class="logo-container"><img src="imageem.png" alt="Logo"></div>
+    <div style="width:34px"></div>
+  </div>
 
-<!-- Botão Tela Cheia -->
-<div class="fullscreen-btn" onclick="toggleFullscreen()">📺 Tela Cheia</div>
+  <h1 style="margin-top:6px;margin-bottom:8px;text-align:center">Painel de Controle</h1>
 
-<div class="header-container">
-    <img src="imageem.png" class="logo-placeholder">
-</div>
+  <div id="success-msg" class="msg-sucesso">Dados salvos!</div>
 
-<h1>PAINEL DE SERVIÇOS</h1>
+  <!-- TOP ROW -->
+  <div class="top-row">
+    <div class="alerts" id="alerts">
+      <h3>Alertas (5 minutos)</h3>
+      <div id="alerts-list" class="alerts-list">
+        <div class="alert-empty">Nenhum alerta no momento.</div>
+      </div>
+    </div>
 
-<div class="table-center">
-    <table id="status-table">
-        <thead>
-            <tr>
-                <th>Cliente</th>
-                <th>Status</th>
-                <th>Previsão</th>
-            </tr>
-        </thead>
-        <tbody id="data-body"></tbody>
+    <div class="chart-card">
+      <canvas id="statusChart" style="width:100%;height:220px"></canvas>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <form id="service-form">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="cliente">Cliente:</label>
+        <input type="text" id="cliente" required placeholder="Nome do cliente">
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <select id="status">
+          <option>Análise/Diagnóstico</option>
+          <option>Aguardando Aprovação</option>
+          <option>Aguardando Peça</option>
+          <option>Em Reparo</option>
+          <option>Pronto para Retirada</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label for="previsao">Previsão (HH:MM):</label>
+        <input type="text" id="previsao" placeholder="Ex: 15:20" pattern="[0-2][0-9]:[0-5][0-9]" required>
+      </div>
+
+      <div class="form-group full" style="margin-top:4px">
+        <button type="submit" id="submit-btn" class="btn-principal">Adicionar Serviço</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <table id="services-table">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Status</th>
+          <th>Previsão</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="services-list"></tbody>
     </table>
-</div>
+  </div>
 
-<div class="promos-container">
-    <div id="promos" class="promos-text"></div>
-</div>
+  <h2 style="margin-top:18px">Promoções do Dia</h2>
+  <textarea id="promo"></textarea>
+  <div style="margin-top:10px">
+    <button class="btn-principal" onclick="salvarPromo()">Salvar Promoções</button>
+  </div>
 
-<script src="dados.js"></script>
+</div>
 
 <script>
+/* ===========================
+   BANCO DE DADOS
+   =========================== */
+const STORAGE_KEY = "assist_db";
 
-/* RELOGIO */
-function atualizarRelogio() {
-    const agora = new Date();
-    const h = agora.getHours().toString().padStart(2,"0");
-    const m = agora.getMinutes().toString().padStart(2,"0");
-    document.getElementById("relogio").textContent = `${h}:${m}`;
+function getDB(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw){
+    const db = { tabela:[], promocoes:"" };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    return db;
+  }
+  try { return JSON.parse(raw); }
+  catch(e){ return { tabela:[], promocoes:"" }; }
 }
-setInterval(atualizarRelogio, 1000);
-atualizarRelogio();
 
-/* BOTÃO TELA CHEIA */
-function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        document.querySelector(".fullscreen-btn").textContent = "❌ Sair da Tela Cheia";
-    } else {
-        document.exitFullscreen();
-        document.querySelector(".fullscreen-btn").textContent = "📺 Tela Cheia";
+function saveDB(db){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
+
+function getTabela(){ return getDB().tabela || []; }
+function setTabela(t){ const db=getDB(); db.tabela=t; saveDB(db); }
+
+function getPromocoes(){ return getDB().promocoes || ""; }
+function setPromocoes(t){ const db=getDB(); db.promocoes=t||""; saveDB(db); }
+
+/* ===========================
+   STATUS COLORS (ALTERAÇÃO PEDIDA)
+   =========================== */
+const statusColors = {
+  "Análise/Diagnóstico": "#9aa0a6",
+  "Aguardando Aprovação": "#f1c40f",
+  "Aguardando Peça": "#e67e22",
+  "Em Reparo": "#3498db",
+  "Pronto para Retirada": "#2ecc71"
+};
+
+/* ===========================
+   UI FUNCTIONS
+   =========================== */
+
+const statusOptions = [
+  "Análise/Diagnóstico",
+  "Aguardando Aprovação",
+  "Aguardando Peça",
+  "Em Reparo",
+  "Pronto para Retirada"
+];
+
+function carregar(){
+  document.getElementById("promo").value = getPromocoes();
+
+  const lista = document.getElementById("services-list");
+  lista.innerHTML = "";
+  getTabela().forEach((item, i)=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${escapeHtml(item.cliente)}</td>
+      <td>${escapeHtml(item.status)}</td>
+      <td>${escapeHtml(item.previsao)}</td>
+      <td>
+        <button class="btn-edit" onclick="editar(${i})">Editar</button>
+        <button class="btn-delete" onclick="excluir(${i})">Excluir</button>
+      </td>`;
+    lista.appendChild(tr);
+  });
+
+  atualizarGrafico();
+  atualizarAlertsUI();
+}
+
+function escapeHtml(s){
+  return (s+"").replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"
+  }[c]));
+}
+
+function salvar(){
+  const cliente = document.getElementById("cliente").value.trim();
+  const status = document.getElementById("status").value;
+  const previsao = document.getElementById("previsao").value.trim();
+
+  if(!cliente){alert("Preencha o nome do cliente.");return;}
+  if(!/^[0-2][0-9]:[0-5][0-9]$/.test(previsao)){alert("Previsão inválida.");return;}
+
+  const db = getDB();
+  const indexInput = document.getElementById("service-index");
+
+  if(indexInput && indexInput.value !== ""){
+    db.tabela[indexInput.value] = { cliente,status,previsao };
+  } else {
+    db.tabela.push({ cliente,status,previsao });
+  }
+
+  saveDB(db);
+  limpar();
+  showSuccess("Dados salvos!");
+  carregar();
+}
+
+document.getElementById("service-form").addEventListener("submit",e=>{
+  e.preventDefault();
+  salvar();
+});
+
+function editar(i){
+  const item = getTabela()[i];
+  let idxEl = document.getElementById("service-index");
+  if(!idxEl){
+    idxEl = document.createElement("input");
+    idxEl.type="hidden";
+    idxEl.id="service-index";
+    document.getElementById("service-form").appendChild(idxEl);
+  }
+  idxEl.value=i;
+
+  document.getElementById("cliente").value=item.cliente;
+  document.getElementById("status").value=item.status;
+  document.getElementById("previsao").value=item.previsao;
+  document.getElementById("submit-btn").textContent="Salvar Alterações";
+}
+
+function excluir(i){
+  if(!confirm("Deseja excluir?"))return;
+  const db=getDB();
+  db.tabela.splice(i,1);
+  saveDB(db);
+  carregar();
+}
+
+function salvarPromo(){
+  setPromocoes(document.getElementById("promo").value);
+  alert("Promoções atualizadas!");
+}
+
+function limpar(){
+  document.getElementById("service-index")?.remove?.();
+  document.getElementById("cliente").value="";
+  document.getElementById("status").value=statusOptions[0];
+  document.getElementById("previsao").value="";
+  document.getElementById("submit-btn").textContent="Adicionar Serviço";
+}
+
+function showSuccess(text){
+  const el=document.getElementById("success-msg");
+  el.textContent=text;
+  el.style.display="block";
+  setTimeout(()=>el.style.display="none",2000);
+}
+
+/* ===========================
+   GRÁFICO (CORRIGIDO)
+   =========================== */
+
+let chartInstance=null;
+
+function atualizarGrafico(){
+  const tabela=getTabela();
+  const counts={};
+  statusOptions.forEach(s=>counts[s]=0);
+  tabela.forEach(item=>counts[item.status]++);
+
+  const labels=statusOptions;
+  const data=labels.map(l=>counts[l]);
+  const ctx=document.getElementById("statusChart").getContext("2d");
+
+  if(chartInstance){
+    chartInstance.data.labels=labels;
+    chartInstance.data.datasets[0].data=data;
+    chartInstance.data.datasets[0].backgroundColor =
+        labels.map(label=>statusColors[label]);
+    chartInstance.update();
+    return;
+  }
+
+  chartInstance=new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels,
+      datasets:[{
+        data,
+        backgroundColor: labels.map(label=>statusColors[label]),
+        borderColor:'rgba(0,0,0,0.3)',
+        borderWidth:1
+      }]
+    },
+    options:{
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{color:'#dcdcdc'}}
+      }
     }
+  });
 }
 
-/* CÁLCULO PREVISÃO */
-function calcularPrevisao(texto) {
-    const original = texto;
-    if (!texto.match(/\d/)) return original;
+/* ===========================
+   ALERTAS
+   =========================== */
 
-    const agora = new Date();
-    let minutos = 0;
-
-    const min = texto.match(/(\d+)\s*min/);
-    if (min) minutos += parseInt(min[1]);
-
-    const hr = texto.match(/(\d+)\s*h/);
-    if (hr) minutos += parseInt(hr[1]) * 60;
-
-    agora.setMinutes(agora.getMinutes() + minutos);
-
-    const h = agora.getHours().toString().padStart(2,"0");
-    const m = agora.getMinutes().toString().padStart(2,"0");
-
-    return `${original} → ${h}:${m}`;
+function parseTimeHHMM(hhmm){
+  const m=hhmm.match(/^([0-2][0-9]):([0-5][0-9])$/);
+  if(!m)return null;
+  const now=new Date();
+  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1],10),parseInt(m[2],10));
+  if(d.getTime()<now.getTime()-(1000*60)){d.setDate(d.getDate()+1);}
+  return d;
 }
 
-/* RENDERIZA TABELA */
-function renderTable() {
-    const data = getTabela();
-    const tbody = document.getElementById("data-body");
-    tbody.innerHTML = "";
+function minutesDiff(a,b){return (b-a)/60000;}
 
-    data.forEach(item => {
-        const row = tbody.insertRow();
+function atualizarAlertsUI(){
+  const lista=getTabela();
+  const container=document.getElementById("alerts-list");
+  container.innerHTML="";
+  const now=new Date();
+  const alerts=[];
 
-        if (item.status.includes("Pronto")) row.className = "status-pronto";
-        else if (item.status.includes("Aguardando")) row.className = "status-espera";
-        else if (item.status.includes("Análise")) row.className = "status-analise";
-
-        row.insertCell().textContent = item.cliente;
-        row.insertCell().textContent = item.status;
-        row.insertCell().textContent = calcularPrevisao(item.previsao);
-    });
-}
-
-/* PROMOÇÕES */
-document.getElementById("promos").textContent = getPromocoes();
-
-/* SCROLL AUTOMÁTICO DA TABELA */
-function autoScroll() {
-    const tbody = document.getElementById("data-body");
-    const rows = tbody.querySelectorAll("tr").length;
-
-    if (rows > 7) {
-        tbody.style.overflowY = "auto";
-        tbody.scrollBy({ top: 1, behavior: "smooth" });
-
-        if (tbody.scrollTop + tbody.clientHeight >= tbody.scrollHeight - 2) {
-            tbody.scrollTo({ top: 0, behavior: "smooth" });
-        }
-    } else {
-        tbody.style.overflowY = "hidden";
-        tbody.scrollTo({ top: 0 });
+  lista.forEach(item=>{
+    const target=parseTimeHHMM(item.previsao);
+    if(!target)return;
+    const mins=minutesDiff(now,target);
+    if(mins<=5 && mins>=0){
+      alerts.push({item,mins});
     }
-}
-setInterval(autoScroll, 100);
+  });
 
-/* ATUALIZAÇÃO */
-renderTable();
-setInterval(renderTable, 7000);
+  if(alerts.length===0){
+    container.innerHTML=`<div class="alert-empty">Nenhum alerta no momento.</div>`;
+    return;
+  }
+
+  alerts.sort((a,b)=>a.mins-b.mins);
+
+  alerts.forEach(a=>{
+    const div=document.createElement("div");
+    div.className="alert-item";
+    div.innerHTML=`
+      <div class="left">
+        <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
+        <div style="font-size:13px;color:#ffdede">${escapeHtml(a.item.status)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="alert-time">${a.item.previsao}</div>
+        <div style="font-size:13px;color:#ffdede">${Math.ceil(a.mins)} min</div>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+let alertInterval=null;
+function startAlertChecker(){
+  if(alertInterval)clearInterval(alertInterval);
+  atualizarAlertsUI();
+  alertInterval=setInterval(atualizarAlertsUI,30000);
+}
+
+/* ===========================
+   INIT
+   =========================== */
+
+function initDemoDataIfEmpty(){
+  const db=getDB();
+  if(!db.tabela || db.tabela.length===0){
+    const now=new Date();
+    const a=new Date(now.getTime()+7*60000);
+    const b=new Date(now.getTime()+2*60000);
+    const fmt=d=>String(d.getHours()).padStart(2,'0')+":"+String(d.getMinutes()).padStart(2,'0');
+    db.tabela=[
+      {cliente:"João Silva",status:"Em Reparo",previsao:fmt(a)},
+      {cliente:"Maria Costa",status:"Aguardando Peça",previsao:fmt(b)}
+    ];
+    saveDB(db);
+  }
+}
+
+initDemoDataIfEmpty();
+carregar();
+startAlertChecker();
 
 </script>
-
 </body>
 </html>
