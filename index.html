@@ -17,7 +17,7 @@
             overflow-x: hidden;
         }
 
-        /* CABEÇALHO — LOGO CENTRALIZADA */
+        /* LOGO CENTRALIZADA */
         .header-container {
             display: flex;
             justify-content: center;
@@ -30,23 +30,26 @@
             height: 120px;
         }
 
-        /* TÍTULO */
+        /* TÍTULO CENTRALIZADO */
         h1 {
             font-size: 2.4em;
             font-weight: 300;
             color: #00A65A;
             margin: 10px auto 20px auto;
-            width: 90%;
-            max-width: 1600px;
             text-align: center;
+            width: 100%;
         }
 
-        /* TABELA STATUS ALINHADA À ESQUERDA */
+        /* TABELA CENTRALIZADA */
+        .table-center {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
         #status-table {
             width: 90%;
             max-width: 1600px;
-            margin-left: 0;
-            margin-right: auto;
             border-collapse: collapse;
             text-align: left;
             border: 3px solid #00A65A;
@@ -88,7 +91,7 @@
             border-bottom: 1px solid #1a1a1a;
         }
 
-        /* CORES DAS LINHAS */
+        /* CORES POR STATUS */
         .status-pronto td {
             background-color: #00A65A !important;
             color: #fff !important;
@@ -105,7 +108,7 @@
             color: #9dccff !important;
         }
 
-        /* PROMOÇÕES EM FAIXA */
+        /* PROMOÇÕES */
         .promos-container {
             margin-top: 35px;
             width: 100%;
@@ -143,17 +146,19 @@
     <!-- TÍTULO -->
     <h1>ACOMPANHAMENTO DE SERVIÇOS</h1>
 
-    <!-- TABELA STATUS -->
-    <table id="status-table">
-        <thead>
-            <tr>
-                <th>Cliente</th>
-                <th>Status</th>
-                <th>Previsão</th>
-            </tr>
-        </thead>
-        <tbody id="data-body"></tbody>
-    </table>
+    <!-- TABELA CENTRALIZADA -->
+    <div class="table-center">
+        <table id="status-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Status</th>
+                    <th>Previsão</th>
+                </tr>
+            </thead>
+            <tbody id="data-body"></tbody>
+        </table>
+    </div>
 
     <!-- PROMOÇÕES -->
     <div class="promos-container">
@@ -178,11 +183,10 @@
         ];
     }
 
-    /* CALCULA PREVISÃO AUTOMÁTICA */
+    /* CÁLCULO DE PREVISÃO */
     function calcularPrevisao(texto) {
-        const original = texto;  // mantém o texto original
+        const original = texto;
 
-        // só calcula se for tempo (minutos ou horas)
         if (!texto.match(/\d/)) return original;
 
         const agora = new Date();
@@ -204,7 +208,7 @@
         return `${original} → ${h}:${m}`;
     }
 
-    /* RENDERIZA TABELA */
+    /* RENDER TABELA */
     function renderTable() {
         const data = getServiceData();
         const tbody = document.getElementById("data-body");
@@ -229,12 +233,12 @@
     renderTable();
     setInterval(renderTable, 10000);
 
-    /* ROLAGEM AUTOMÁTICA SE +7 LINHAS */
+    /* SCROLL AUTOMÁTICO SE +7 LINHAS */
     function autoScroll() {
         const tbody = document.getElementById("data-body");
         const rows = tbody.querySelectorAll("tr").length;
 
-        if (rows > 8) {
+        if (rows > 7) {
             tbody.style.overflowY = "auto";
             tbody.scrollBy({ top: 1, behavior: "smooth" });
 
