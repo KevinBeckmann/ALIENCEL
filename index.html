@@ -6,7 +6,6 @@
 <title>Status Assistência — Visual</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 :root{
@@ -17,7 +16,7 @@
   --text: #e6e6e6;
 }
 *{box-sizing:border-box}
-html,body{height:100%; margin:0; padding:0;}
+html,body{height:100%;}
 body{
   margin:0;
   font-family:"Inter",sans-serif;
@@ -56,16 +55,8 @@ body{
   background:rgba(255,255,255,0.1);
   color:white;
 }
-
-/* Tela Cheia */
-.fullscreen-btn{
-  right:12px;
-}
-
-/* Login / ITG */
-.admin-btn{
-  right:54px;
-}
+.fullscreen-btn{ right:12px; }
+.admin-btn{ right:54px; }
 
 /* HEADER */
 .header-block{
@@ -85,47 +76,31 @@ body{
 .header-title{ font-size:48px; font-weight:800; margin:0; }
 .header-subtitle{ font-size:22px; opacity:.9; margin:0; }
 
+/* ALERTA FULL WIDTH */
+.alerts-full{
+  width:100%;
+  background:linear-gradient(180deg,#171717,#121212);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px;
+  padding:14px 18px;
+  margin-bottom:20px;
+}
+.alerts-full h3{
+  margin:0 0 10px;
+  color:#ffb3b3;
+  font-size:20px;
+  font-weight:600;
+}
+.alert-empty{ color:var(--muted); }
+
 /* TÍTULO ENTRE ALERTAS E TABELA */
 .table-section-title{
   width:100%;
   text-align:center;
   font-size:26px;
   font-weight:700;
-  margin:18px 0 10px 0;
+  margin:10px 0 10px 0;
   color:#e8e8e8;
-}
-
-/* ALERTAS + GRÁFICO */
-.top-row{
-  display:grid;
-  grid-template-columns: 1fr 360px;
-  gap:16px;
-  margin-bottom:10px;
-  align-items:start;
-}
-
-.alerts{
-  background:linear-gradient(180deg,#171717,#121212);
-  border-radius:12px;
-  padding:12px 14px;
-  border:1px solid rgba(255,255,255,0.06);
-}
-.alerts h3{
-  margin:0 0 8px;
-  color:#ffb3b3;
-  font-size:18px;
-}
-.alert-empty{ color:var(--muted); }
-
-/* GRÁFICO */
-.chart-card{
-  background:linear-gradient(180deg,#0b0b0b,#090909);
-  padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.04);
-  display:flex;
-  justify-content:center;
-  align-items:center;
 }
 
 /* TABELA */
@@ -154,6 +129,8 @@ tbody td{
   color:#e0e0e0;
   text-align:center;
 }
+
+/* STATUS BADGE */
 .status-badge{
   display:flex;
   justify-content:center;
@@ -209,20 +186,15 @@ tbody td{
     </div>
   </div>
 
-  <!-- ALERTAS + GRÁFICO -->
-  <div class="top-row">
-    <div class="alerts">
-      <h3>Alertas (5 minutos)</h3>
-      <div id="alerts-list">
-        <div class="alert-empty">Nenhum alerta no momento.</div>
-      </div>
-    </div>
-
-    <div class="chart-card">
-      <canvas id="statusChart" style="width:100%;max-width:320px;height:180px"></canvas>
+  <!-- ALERTAS FULL WIDTH -->
+  <div class="alerts-full">
+    <h3>Alertas (5 minutos)</h3>
+    <div id="alerts-list">
+      <div class="alert-empty">Nenhum alerta no momento.</div>
     </div>
   </div>
 
+  <!-- TÍTULO -->
   <div class="table-section-title">Status de Serviço</div>
 
   <!-- TABELA -->
@@ -247,7 +219,7 @@ tbody td{
 </div>
 
 <script>
-/* FULLSCREEN */
+/* BOTÃO FULLSCREEN */
 document.getElementById("fullButton").addEventListener("click",()=>{
   if(!document.fullscreenElement){
     document.documentElement.requestFullscreen();
@@ -258,7 +230,7 @@ document.getElementById("fullButton").addEventListener("click",()=>{
 
 /* ITG / ADMIN */
 document.getElementById("adminButton").addEventListener("click", () => {
-    window.location.href = "administrador.html";
+  window.location.href = "administrador.html";
 });
 
 /* BANCO */
@@ -270,11 +242,9 @@ function getDB(){
   try{ return JSON.parse(raw); }
   catch{ return { tabela: [], promocoes: "" }; }
 }
-
 function getTabela(){ return getDB().tabela || []; }
 function getPromocoes(){ return getDB().promocoes || ""; }
 
-/* CORES COM TRANSPARÊNCIA */
 const statusColors = {
   "Análise/Diagnóstico": "rgba(154,160,166,0.55)",
   "Aguardando Aprovação": "rgba(241,196,15,0.55)",
@@ -298,7 +268,6 @@ function carregarTabela(){
     tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
       Nenhum serviço lançado.
     </td></tr>`;
-    atualizarGrafico(); 
     return;
   }
 
@@ -314,13 +283,9 @@ function carregarTabela(){
   });
 
   atualizarAlertsUI();
-  atualizarGrafico();
 }
 
-function carregarPromocoes(){
-  document.getElementById("promosText").textContent=getPromocoes();
-}
-
+/* ALERTAS */
 function parseTimeHHMM(t){
   const m=String(t).match(/^([0-2][0-9]):([0-5][0-9])$/);
   if(!m) return null;
@@ -329,7 +294,6 @@ function parseTimeHHMM(t){
   if(d < now - 60000) d.setDate(d.getDate()+1);
   return d;
 }
-
 function minutesDiff(a,b){ return (b-a)/60000; }
 
 function atualizarAlertsUI(){
@@ -367,46 +331,12 @@ function atualizarAlertsUI(){
   });
 }
 
-/* GRÁFICO */
-let chartInstance=null;
-const statusOptions=[
-  "Análise/Diagnóstico","Aguardando Aprovação","Aguardando Peça","Em Reparo","Pronto para Retirada"
-];
-
-function atualizarGrafico(){
-  const tabela=getTabela();
-  const counts={};
-  statusOptions.forEach(s=>counts[s]=0);
-  tabela.forEach(x=>counts[x.status]++);
-  const data=statusOptions.map(s=>counts[s]);
-
-  const ctx=document.getElementById("statusChart").getContext("2d");
-
-  if(chartInstance){
-    chartInstance.data.datasets[0].data=data;
-    chartInstance.update();
-    return;
-  }
-
-  chartInstance=new Chart(ctx,{
-    type:"doughnut",
-    data:{
-      labels:statusOptions,
-      datasets:[{
-        data,
-        backgroundColor:statusOptions.map(s=>statusColors[s]),
-        borderWidth:1,
-        borderColor:"rgba(0,0,0,0.4)"
-      }]
-    },
-    options:{
-      plugins:{ legend:{ display:false }},
-      maintainAspectRatio:false
-    }
-  });
+/* PROMOÇÕES */
+function carregarPromocoes(){
+  document.getElementById("promosText").textContent=getPromocoes();
 }
 
-/* PROMOÇÕES */
+/* REFRESH */
 function refreshAll(){
   carregarTabela();
   carregarPromocoes();
@@ -424,7 +354,6 @@ setInterval(()=>{
 
 document.addEventListener("DOMContentLoaded",()=>{
   refreshAll();
-  setTimeout(()=>atualizarGrafico(),150);
 });
 </script>
 
