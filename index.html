@@ -37,6 +37,36 @@ body{
   padding:20px 28px;
 }
 
+/* BOTÕES SUPERIORES */
+.button-top{
+  position:fixed;
+  top:12px;
+  font-size:18px;
+  padding:5px 11px;
+  color:#b7b7b7;
+  background:rgba(0,0,0,0.32);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;
+  cursor:pointer;
+  z-index:9999;
+  transition:0.25s;
+  backdrop-filter:blur(3px);
+}
+.button-top:hover{
+  background:rgba(255,255,255,0.1);
+  color:white;
+}
+
+/* Tela Cheia */
+.fullscreen-btn{
+  right:12px;
+}
+
+/* Login / ITG */
+.admin-btn{
+  right:54px;
+}
+
 /* HEADER */
 .header-block{
   width:100%;
@@ -117,12 +147,12 @@ thead th{
   background:linear-gradient(180deg,#545454,#3f3f3f);
   font-size:15px; color:#fff;
   text-align:center;
-
 }
 tbody td{
   padding:14px;
   border-bottom:1px solid rgba(0,0,0,0.25);
   color:#e0e0e0;
+  text-align:center;
 }
 .status-badge{
   padding:6px 12px;
@@ -157,6 +187,10 @@ tbody td{
 </head>
 <body>
 
+<!-- BOTÕES SUPERIORES -->
+<button class="button-top fullscreen-btn" id="fullButton">⛶</button>
+<button class="button-top admin-btn" id="adminButton">👤</button>
+
 <div class="container">
 
   <!-- HEADER -->
@@ -182,7 +216,6 @@ tbody td{
     </div>
   </div>
 
-  <!-- TÍTULO NO LOCAL EXATO -->
   <div class="table-section-title">Status de Serviço</div>
 
   <!-- TABELA -->
@@ -207,6 +240,21 @@ tbody td{
 </div>
 
 <script>
+/* FULLSCREEN */
+document.getElementById("fullButton").addEventListener("click",()=>{
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen();
+  }else{
+    document.exitFullscreen();
+  }
+});
+
+/* ITG / ADMIN */
+document.getElementById("adminButton").addEventListener("click", () => {
+    window.location.href = "controle.html";
+});
+
+/* BANCO */
 const STORAGE_KEY = "assist_db";
 
 function getDB(){
@@ -226,13 +274,10 @@ const statusColors = {
   "Em Reparo": "#3498db",
   "Pronto para Retirada": "#2ecc71"
 };
+
 function escapeHtml(s){
   return (s+"").replace(/[&<>"']/g,c=>({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":"&#39;"
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"
   }[c]));
 }
 
@@ -245,8 +290,7 @@ function carregarTabela(){
     tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
       Nenhum serviço lançado.
     </td></tr>`;
-    atualizarGrafico();
-    return;
+    atualizarGrafico(); return;
   }
 
   dados.forEach(item=>{
@@ -277,15 +321,12 @@ function parseTimeHHMM(t){
   return d;
 }
 
-function minutesDiff(a,b){
-  return (b-a)/60000;
-}
+function minutesDiff(a,b){ return (b-a)/60000; }
 
 function atualizarAlertsUI(){
   const lista=getTabela();
   const box=document.getElementById("alerts-list");
   box.innerHTML="";
-
   const now=new Date();
   const arr=[];
 
@@ -317,33 +358,19 @@ function atualizarAlertsUI(){
   });
 }
 
-/* ==========================
-      GRÁFICO STATUS
-========================== */
-
+/* GRÁFICO */
 let chartInstance=null;
-
 const statusOptions=[
-  "Análise/Diagnóstico",
-  "Aguardando Aprovação",
-  "Aguardando Peça",
-  "Em Reparo",
-  "Pronto para Retirada"
+  "Análise/Diagnóstico","Aguardando Aprovação","Aguardando Peça","Em Reparo","Pronto para Retirada"
 ];
 
 function atualizarGrafico(){
   const tabela=getTabela();
-
   const counts={};
   statusOptions.forEach(s=>counts[s]=0);
-
-  tabela.forEach(x=>{
-    if(counts[x.status]!==undefined){
-      counts[x.status]++;
-    }
-  });
-
+  tabela.forEach(x=>counts[x.status]++);
   const data=statusOptions.map(s=>counts[s]);
+
   const ctx=document.getElementById("statusChart").getContext("2d");
 
   if(chartInstance){
@@ -370,14 +397,13 @@ function atualizarGrafico(){
   });
 }
 
-/* PROMOÇÕES ROLANDO */
+/* PROMOÇÕES */
 function refreshAll(){
   carregarTabela();
   carregarPromocoes();
   atualizarAlertsUI();
 }
 
-/* DETECTA ALTERAÇÕES NO LOCALSTORAGE */
 let lastRaw=localStorage.getItem(STORAGE_KEY);
 setInterval(()=>{
   const nowRaw=localStorage.getItem(STORAGE_KEY);
