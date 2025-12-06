@@ -155,11 +155,19 @@ tbody td{
   text-align:center;
 }
 .status-badge{
-  padding:6px 12px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:165px;      /* ajuste como quiser */
+  height:28px;
+  padding:0;
   border-radius:999px;
-  background:#999;
   font-weight:700;
   font-size:13px;
+  text-align:center;
+  margin:0 auto;    /* centraliza */
+  color:#fff;
+
 }
 
 /* PROMOÇÕES */
@@ -267,12 +275,12 @@ function getDB(){
 function getTabela(){ return getDB().tabela || []; }
 function getPromocoes(){ return getDB().promocoes || ""; }
 
-const statusColors = {
-  "Análise/Diagnóstico": "#9aa0a6",
-  "Aguardando Aprovação": "#f1c40f",
-  "Aguardando Peça": "#e67e22",
-  "Em Reparo": "#3498db",
-  "Pronto para Retirada": "#2ecc71"
+const statusCores = {
+    "Análise/Diagnóstico": "rgba(154,160,166,0.55)",
+    "Aguardando Aprovação": "rgba(241,196,15,0.55)",
+    "Aguardando Peça": "rgba(230,126,34,0.55)",
+    "Em Reparo": "rgba(52,152,219,0.55)",
+    "Pronto para Retirada": "rgba(46,204,113,0.55)"
 };
 
 function escapeHtml(s){
