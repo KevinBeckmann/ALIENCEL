@@ -14,7 +14,6 @@
   --panel: #161616;
   --muted: #bdbdbd;
   --text: #e6e6e6;
-
   --scroll-speed: 42s;
 }
 
@@ -31,7 +30,7 @@ body{
   min-height:100vh;
 }
 
-/* container */
+/* CONTAINER */
 .container{
   width:100%;
   flex:1;
@@ -40,7 +39,7 @@ body{
   padding:20px 28px;
 }
 
-/* BOTÕES SUPERIORES */
+/* BOTÕES TOPO */
 .button-top{
   position:fixed;
   top:12px;
@@ -98,7 +97,7 @@ body{
 }
 .alert-empty{ color:var(--muted); }
 
-/* Título acima da tabela */
+/* TÍTULO */
 .table-section-title{
   width:100%;
   text-align:center;
@@ -120,13 +119,14 @@ body{
   overflow:hidden;
 }
 
-/* scroll */
+/* ÁREA DE SCROLL */
 .scroll-area{
   max-height: calc(100vh - 320px);
   overflow:hidden;
   position: relative;
 }
 
+/* animação */
 .scroll-area.auto-scroll table{
   animation: scrollTable var(--scroll-speed) linear infinite;
 }
@@ -144,38 +144,38 @@ table{
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
 
-/* remove qualquer margem/padding */
 table tr, table td, table th {
   margin:0;
   padding:0;
 }
 
-/* cabeçalho */
+/* CABEÇALHO */
 thead th{
-  padding:18px;
+  padding:14px; /* REDUÇÃO DO ESPAÇO – CORRIGIDO */
   background:linear-gradient(180deg,#545454,#3f3f3f);
   font-size:26px;
   font-weight:700;
   color:#fff;
   text-align:center;
+  line-height:24px;
 }
 
-/* LINHAS — fundo restaurado + colado */
+/* LINHAS */
 tbody tr{
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
 
 tbody td{
-  padding:18px;
+  padding:16px 18px;
   color:#e0e0e0;
   text-align:center;
   font-size:26px;
-  line-height:34px;
+  line-height:28px;
   font-weight:600;
-  background:transparent; /* deixa o fundo da tabela aparecer */
+  background:transparent;
 }
 
-/* badge status */
+/* BADGE */
 .status-badge{
   display:flex;
   justify-content:center;
@@ -191,7 +191,7 @@ tbody td{
   margin:0 auto;
 }
 
-/* PROMO BOX */
+/* PROMOÇÕES */
 #promosBox{
   width:100%;
   background:linear-gradient(180deg,#171717,#121212);
@@ -209,7 +209,6 @@ tbody td{
   padding-left:100%;
   animation: slidePromo 14s linear infinite;
 }
-
 @keyframes slidePromo{
   from{ transform:translateX(0%); }
   to{ transform:translateX(-100%); }
@@ -247,6 +246,7 @@ tbody td{
   <!-- TABELA -->
   <div class="table-wrapper">
     <div class="scroll-area" id="scrollArea">
+
       <table id="tabelaStatus">
         <thead>
           <tr>
@@ -257,6 +257,7 @@ tbody td{
         </thead>
         <tbody></tbody>
       </table>
+
     </div>
   </div>
 
@@ -301,7 +302,7 @@ const statusColors = {
   "Pronto para Retirada": "rgba(46,204,113,0.55)"
 };
 
-/* ESCAPE HTML */
+/* ESCAPE */
 function escapeHtml(s){
   return (s+"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
 }
@@ -339,7 +340,7 @@ function carregarTabela(){
   ativarScrollSeNecessario(dados.length);
 }
 
-/* SCROLL */
+/* SCROLL AUTOMÁTICO */
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
@@ -347,6 +348,8 @@ function ativarScrollSeNecessario(qtd){
 
   const oldClone = document.getElementById("clone-tabela");
   if(oldClone) oldClone.remove();
+
+  /* REMOVIDO scroll-separator — conforme pedido */
   const oldSep = document.getElementById("scroll-separator");
   if(oldSep) oldSep.remove();
 
@@ -354,7 +357,6 @@ function ativarScrollSeNecessario(qtd){
     area.classList.add("auto-scroll");
 
     const tabela = document.querySelector("#tabelaStatus");
-
     tabela.style.tableLayout = "fixed";
 
     const clone = tabela.cloneNode(true);
@@ -364,24 +366,12 @@ function ativarScrollSeNecessario(qtd){
     clone.querySelector("thead").style.visibility = "hidden";
 
     const alturaCabecalho = tabela.querySelector("thead").offsetHeight;
+
     clone.style.position="absolute";
     clone.style.top = alturaCabecalho + "px";
     clone.style.left="0";
     clone.style.width="100%";
-    clone.style.background = tabela.style.background;
 
-    const sep = document.createElement("div");
-    sep.id = "scroll-separator";
-    sep.style.position = "absolute";
-    sep.style.left = "0";
-    sep.style.right = "0";
-    sep.style.top = alturaCabecalho + "px";
-    sep.style.height = "1px";
-    sep.style.pointerEvents = "none";
-    sep.style.zIndex = "5";
-    sep.style.background = "linear-gradient(90deg, rgba(0,0,0,0.35), rgba(255,255,255,0.03), rgba(0,0,0,0.35))";
-
-    area.appendChild(sep);
     area.appendChild(clone);
   }
 }
@@ -442,7 +432,7 @@ function carregarPromocoes(){
   document.getElementById("promosText").textContent = getPromocoes();
 }
 
-/* REFRESH */
+/* REFRESH AUTOMÁTICO */
 function refreshAll(){
   carregarTabela();
   carregarPromocoes();
@@ -458,7 +448,6 @@ setInterval(()=>{
   }
 },900);
 
-/* INICIAR */
 document.addEventListener("DOMContentLoaded",()=>{
   refreshAll();
 });
