@@ -15,24 +15,24 @@
   --muted: #bdbdbd;
   --text: #e6e6e6;
 
-  /* velocidade de rolagem */
+  /* velocidade do scroll */
   --scroll-speed: 42s;
 }
 
-*{box-sizing:border-box}
-html,body{height:100%;}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
 
 body{
   margin:0;
   font-family:"Inter",sans-serif;
   background: linear-gradient(180deg,#000000,#131313,#1c1c1c);
   color:var(--text);
-  -webkit-font-smoothing:antialiased;
   display:flex;
   flex-direction:column;
   min-height:100vh;
 }
 
+/* container geral */
 .container{
   width:100%;
   flex:1;
@@ -82,7 +82,7 @@ body{
 .header-title{ font-size:48px; font-weight:800; margin:0; }
 .header-subtitle{ font-size:22px; opacity:.9; margin:0; }
 
-/* ALERTA FULL WIDTH */
+/* ALERTAS */
 .alerts-full{
   width:100%;
   background:linear-gradient(180deg,#171717,#121212);
@@ -99,7 +99,7 @@ body{
 }
 .alert-empty{ color:var(--muted); }
 
-/* TÍTULO ENTRE ALERTAS E TABELA */
+/* Título acima da tabela */
 .table-section-title{
   width:100%;
   text-align:center;
@@ -117,38 +117,52 @@ body{
   border-radius:14px;
   padding:14px;
   margin-top:10px;
+  position:relative;
+  overflow:hidden; /* impede "vazamentos" */
 }
 
-/* SCROLL AUTOMÁTICO */
+/* Área para scroll */
 .scroll-area{
   max-height: calc(100vh - 320px);
   overflow: hidden;
   position: relative;
 }
 
+/* scroll automático */
 .scroll-area.auto-scroll table{
   animation: scrollTable var(--scroll-speed) linear infinite;
 }
 
+/* ANIMAÇÃO */
 @keyframes scrollTable{
   0% { transform: translateY(0); }
   100% { transform: translateY(-50%); }
 }
 
+/* estilo tabela */
 table{
   width:100%;
   border-collapse:collapse;
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
+
+/* remove qualquer margem ou espaçamento */
+table tr, table td, table th {
+  margin:0;
+  padding:0;
+}
+
+/* cabeçalho */
 thead th{
   padding:18px;
   background:linear-gradient(180deg,#545454,#3f3f3f);
   font-size:26px;
-  line-height:32px;
   font-weight:700;
   color:#fff;
   text-align:center;
 }
+
+/* linhas */
 tbody td{
   padding:18px;
   border-bottom:1px solid rgba(0,0,0,0.25);
@@ -157,8 +171,10 @@ tbody td{
   font-size:26px;
   line-height:34px;
   font-weight:600;
+  background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f); /* FIX fundo igual */
 }
 
+/* badge status */
 .status-badge{
   display:flex;
   justify-content:center;
@@ -174,7 +190,7 @@ tbody td{
   margin:0 auto;
 }
 
-/* PROMOÇÕES */
+/* PROMO BOX */
 #promosBox{
   width:100%;
   background:linear-gradient(180deg,#171717,#121212);
@@ -186,7 +202,6 @@ tbody td{
 }
 #promosText{
   font-size:28px;
-  line-height:34px;
   font-weight:700;
   color:#dcdcdc;
   display:inline-block;
@@ -217,7 +232,7 @@ tbody td{
     </div>
   </div>
 
-  <!-- ALERTAS FULL -->
+  <!-- ALERTAS -->
   <div class="alerts-full">
     <h3>Atenção para as seguintes O.S.</h3>
     <div id="alerts-list">
@@ -225,21 +240,23 @@ tbody td{
     </div>
   </div>
 
-  <!-- TÍTULO -->
+  <!-- TÍTULO DA TABELA -->
   <div class="table-section-title">Status de Serviço</div>
 
-  <!-- TABELA COM SCROLL -->
-  <div class="table-wrapper scroll-area" id="scrollArea">
-    <table id="tabelaStatus">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Status</th>
-          <th>Previsão</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <!-- TABLE WRAPPER + SCROLL -->
+  <div class="table-wrapper">
+    <div class="scroll-area" id="scrollArea">
+      <table id="tabelaStatus">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Status</th>
+            <th>Previsão</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- PROMOÇÕES -->
@@ -248,34 +265,43 @@ tbody td{
   </div>
 
 </div>
-
 <script>
-/* FULLSCREEN */
-document.getElementById("fullButton").addEventListener("click",()=>{
-  if(!document.fullscreenElement){
+/* BOTÃO FULLSCREEN */
+document.getElementById("fullButton").addEventListener("click", () => {
+  if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen();
-  }else{
+  } else {
     document.exitFullscreen();
   }
 });
 
-/* ADMIN */
+/* BOTÃO ADMIN */
 document.getElementById("adminButton").addEventListener("click", () => {
   window.location.href = "administrador.html";
 });
 
-/* BANCO */
+/* BANCO LOCAL */
 const STORAGE_KEY = "assist_db";
 
-function getDB(){
+function getDB() {
   const raw = localStorage.getItem(STORAGE_KEY);
-  if(!raw) return { tabela: [], promocoes: "" };
-  try{ return JSON.parse(raw); }
-  catch{ return { tabela: [], promocoes: "" }; }
+  if (!raw) return { tabela: [], promocoes: "" };
+  try { 
+    return JSON.parse(raw);
+  } catch {
+    return { tabela: [], promocoes: "" };
+  }
 }
-function getTabela(){ return getDB().tabela || []; }
-function getPromocoes(){ return getDB().promocoes || ""; }
 
+function getTabela() {
+  return getDB().tabela || [];
+}
+
+function getPromocoes() {
+  return getDB().promocoes || "";
+}
+
+/* CORES DO STATUS */
 const statusColors = {
   "Análise/Diagnóstico": "rgba(154,160,166,0.55)",
   "Aguardando Aprovação": "rgba(241,196,15,0.55)",
@@ -284,33 +310,43 @@ const statusColors = {
   "Pronto para Retirada": "rgba(46,204,113,0.55)"
 };
 
-function escapeHtml(s){
-  return (s+"").replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"
+/* PROTEÇÃO XSS */
+function escapeHtml(s) {
+  return (s + "").replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":"&#39;"
   }[c]));
 }
 
-/* TABELA */
-function carregarTabela(){
-  const tbody=document.querySelector("#tabelaStatus tbody");
-  const dados=getTabela();
-  tbody.innerHTML="";
+/* CARREGAR TABELA */
+function carregarTabela() {
+  const tbody = document.querySelector("#tabelaStatus tbody");
+  const dados = getTabela();
+  tbody.innerHTML = "";
 
-  if(dados.length===0){
-    tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
-      Nenhum serviço lançado.
-    </td></tr>`;
+  if (dados.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="3" style="text-align:center;color:#bbb;padding:20px">
+          Nenhum serviço lançado.
+        </td>
+      </tr>`;
     return;
   }
 
-  dados.forEach(item=>{
-    const cor=statusColors[item.status]||"#999";
-    const tr=document.createElement("tr");
-    tr.innerHTML=`
+  dados.forEach(item => {
+    const cor = statusColors[item.status] || "#777";
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
       <td>${escapeHtml(item.cliente)}</td>
-      <td><span class="status-badge" style="background:${cor}">${escapeHtml(item.status)}</span></td>
+      <td>
+        <span class="status-badge" style="background:${cor}">
+          ${escapeHtml(item.status)}
+        </span>
+      </td>
       <td>${escapeHtml(item.previsao)}</td>
     `;
+
     tbody.appendChild(tr);
   });
 
@@ -318,15 +354,16 @@ function carregarTabela(){
   ativarScrollSeNecessario(dados.length);
 }
 
-/* SCROLL AUTOMÁTICO CORRIGIDO */
-function ativarScrollSeNecessario(qtd){
+/* SCROLL – CORREÇÃO DO FUNDO E DO ESPAÇO */
+function ativarScrollSeNecessario(qtd) {
   const area = document.getElementById("scrollArea");
 
   area.classList.remove("auto-scroll");
-  const oldClone = document.getElementById("clone-tabela");
-  if(oldClone) oldClone.remove();
 
-  if(qtd >= 7){
+  const oldClone = document.getElementById("clone-tabela");
+  if (oldClone) oldClone.remove();
+
+  if (qtd >= 7) {
     area.classList.add("auto-scroll");
 
     const tabela = document.querySelector("#tabelaStatus");
@@ -337,86 +374,104 @@ function ativarScrollSeNecessario(qtd){
     clone.id = "clone-tabela";
     clone.style.tableLayout = "fixed";
 
+    /* remove cabeçalho do clone */
     clone.querySelector("thead").style.visibility = "hidden";
 
+    /* impede espaço branco */
     clone.style.position = "absolute";
     clone.style.top = tabela.offsetHeight + "px";
     clone.style.left = "0";
     clone.style.width = "100%";
+
+    /* mantém fundo unificado */
+    clone.style.background = tabela.style.background;
 
     area.appendChild(clone);
   }
 }
 
 /* ALERTAS */
-function parseTimeHHMM(t){
-  const m=String(t).match(/^([0-2][0-9]):([0-5][0-9])$/);
-  if(!m) return null;
-  const now=new Date();
-  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1]),parseInt(m[2]));
-  if(d < now - 60000) d.setDate(d.getDate()+1);
+function parseTimeHHMM(t) {
+  const m = String(t).match(/^([0-2][0-9]):([0-5][0-9])$/);
+  if (!m) return null;
+
+  const now = new Date();
+  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(m[1]), parseInt(m[2]));
+
+  if (d < now - 60000) d.setDate(d.getDate() + 1);
+
   return d;
 }
 
-function minutesDiff(a,b){ return (b-a)/60000; }
+function minutesDiff(a, b) {
+  return (b - a) / 60000;
+}
 
-function atualizarAlertsUI(){
-  const lista=getTabela();
-  const box=document.getElementById("alerts-list");
-  box.innerHTML="";
-  const now=new Date();
-  const arr=[];
+function atualizarAlertsUI() {
+  const lista = getTabela();
+  const box = document.getElementById("alerts-list");
+  box.innerHTML = "";
 
-  lista.forEach(item=>{
-    const t=parseTimeHHMM(item.previsao);
-    if(!t) return;
-    const m=minutesDiff(now,t);
-    if(m>=0 && m<=5) arr.push({item,m});
+  const now = new Date();
+  const arr = [];
+
+  lista.forEach(item => {
+    const t = parseTimeHHMM(item.previsao);
+    if (!t) return;
+
+    const m = minutesDiff(now, t);
+
+    if (m >= 0 && m <= 5) {
+      arr.push({ item, m });
+    }
   });
 
-  if(arr.length===0){
-    box.innerHTML=`<div class="alert-empty">Nenhum alerta no momento.</div>`;
+  if (arr.length === 0) {
+    box.innerHTML = `<div class="alert-empty">Nenhum alerta no momento.</div>`;
     return;
   }
 
-  arr.sort((a,b)=>a.m-b.m);
+  arr.sort((a, b) => a.m - b.m);
 
-  arr.forEach(a=>{
-    const div=document.createElement("div");
-    div.className="alert-item";
-    div.innerHTML=`
+  arr.forEach(a => {
+    const div = document.createElement("div");
+    div.className = "alert-item";
+
+    div.innerHTML = `
       <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
       <div style="text-align:right">
         <div class="alert-time">${escapeHtml(a.item.previsao)}</div>
         <div style="font-size:13px;color:#ffdede">${Math.ceil(a.m)} min</div>
       </div>
     `;
+
     box.appendChild(div);
   });
 }
 
 /* PROMOÇÕES */
-function carregarPromocoes(){
-  document.getElementById("promosText").textContent=getPromocoes();
+function carregarPromocoes() {
+  document.getElementById("promosText").textContent = getPromocoes();
 }
 
-/* REFRESH */
-function refreshAll(){
+/* REFRESH AUTOMÁTICO */
+function refreshAll() {
   carregarTabela();
   carregarPromocoes();
   atualizarAlertsUI();
 }
 
-let lastRaw=localStorage.getItem(STORAGE_KEY);
-setInterval(()=>{
-  const nowRaw=localStorage.getItem(STORAGE_KEY);
-  if(nowRaw!==lastRaw){
-    lastRaw=nowRaw;
+let lastRaw = localStorage.getItem(STORAGE_KEY);
+setInterval(() => {
+  const nowRaw = localStorage.getItem(STORAGE_KEY);
+  if (nowRaw !== lastRaw) {
+    lastRaw = nowRaw;
     refreshAll();
   }
-},900);
+}, 900);
 
-document.addEventListener("DOMContentLoaded",()=>{
+/* INICIAR */
+document.addEventListener("DOMContentLoaded", () => {
   refreshAll();
 });
 </script>
