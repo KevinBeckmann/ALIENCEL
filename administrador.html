@@ -368,7 +368,7 @@ function carregar(){
   atualizarAlertsUI();
 }
 
-function escapeHtml(s){ return (s+"").replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+function escapeHtml(s){ return (s+"").replace(/[&<>\"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
 
 
 
@@ -487,7 +487,11 @@ function atualizarGrafico(){
       datasets: [{
         data,
         backgroundColor: [
-          '#9aa0a6','#7b7f85','#616568','#4b4f52','#2f8f4a'
+          'rgba(154,160,166,0.55)',
+          'rgba(241,196,15,0.55)',
+          'rgba(230,126,34,0.55)',
+          'rgba(52,152,219,0.55)',
+          'rgba(46,204,113,0.55)'
         ],
         borderColor: 'rgba(0,0,0,0.3)',
         borderWidth: 1
@@ -596,6 +600,29 @@ function initDemoDataIfEmpty(){
 initDemoDataIfEmpty();
 carregar();
 startAlertChecker();
+
+
+/* ======================================================
+   SINCRONIZAÇÃO EM TEMPO-REAL ENTRE ABAS (storage event)
+   e POLLING DE BACKUP (para ambientes que não disparam storage)
+   ====================================================== */
+
+// Atualiza imediatamente quando outra aba/janela altera o localStorage
+window.addEventListener('storage', (e) => {
+  if (e.key === STORAGE_KEY) {
+    carregar();
+  }
+});
+
+// Polling de 900ms para garantir atualização em outros contextos (ex: Android webview)
+let lastRaw = localStorage.getItem(STORAGE_KEY);
+setInterval(() => {
+  const nowRaw = localStorage.getItem(STORAGE_KEY);
+  if (nowRaw !== lastRaw) {
+    lastRaw = nowRaw;
+    carregar();
+  }
+}, 900);
 
 </script>
 </body>
