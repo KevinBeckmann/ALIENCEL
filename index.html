@@ -14,23 +14,25 @@
   --panel: #161616;
   --muted: #bdbdbd;
   --text: #e6e6e6;
+
+  /* velocidade de rolagem */
   --scroll-speed: 42s;
 }
 
-*{ box-sizing:border-box; }
-html,body{ height:100%; }
+*{box-sizing:border-box}
+html,body{height:100%;}
 
 body{
   margin:0;
   font-family:"Inter",sans-serif;
   background: linear-gradient(180deg,#000000,#131313,#1c1c1c);
   color:var(--text);
+  -webkit-font-smoothing:antialiased;
   display:flex;
   flex-direction:column;
   min-height:100vh;
 }
 
-/* CONTAINER */
 .container{
   width:100%;
   flex:1;
@@ -39,7 +41,7 @@ body{
   padding:20px 28px;
 }
 
-/* BOTÕES TOPO */
+/* BOTÕES SUPERIORES */
 .button-top{
   position:fixed;
   top:12px;
@@ -80,7 +82,7 @@ body{
 .header-title{ font-size:48px; font-weight:800; margin:0; }
 .header-subtitle{ font-size:22px; opacity:.9; margin:0; }
 
-/* ALERTAS */
+/* ALERTA FULL WIDTH */
 .alerts-full{
   width:100%;
   background:linear-gradient(180deg,#171717,#121212);
@@ -97,7 +99,7 @@ body{
 }
 .alert-empty{ color:var(--muted); }
 
-/* TÍTULO */
+/* TÍTULO ENTRE ALERTAS E TABELA */
 .table-section-title{
   width:100%;
   text-align:center;
@@ -107,7 +109,7 @@ body{
   color:#e8e8e8;
 }
 
-/* WRAPPER */
+/* TABELA */
 .table-wrapper{
   flex:1;
   background:linear-gradient(180deg,#0d0d0d,#090909);
@@ -115,18 +117,15 @@ body{
   border-radius:14px;
   padding:14px;
   margin-top:10px;
-  position:relative;
-  overflow:hidden;
 }
 
-/* ÁREA DE SCROLL */
+/* SCROLL AUTOMÁTICO */
 .scroll-area{
   max-height: calc(100vh - 320px);
-  overflow:hidden;
+  overflow: hidden;
   position: relative;
 }
 
-/* animação */
 .scroll-area.auto-scroll table{
   animation: scrollTable var(--scroll-speed) linear infinite;
 }
@@ -136,46 +135,30 @@ body{
   100% { transform: translateY(-50%); }
 }
 
-/* TABELA */
 table{
   width:100%;
   border-collapse:collapse;
-  border-spacing:0;
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
-
-table tr, table td, table th {
-  margin:0;
-  padding:0;
-}
-
-/* CABEÇALHO */
 thead th{
-  padding:14px; /* REDUÇÃO DO ESPAÇO – CORRIGIDO */
+  padding:18px;
   background:linear-gradient(180deg,#545454,#3f3f3f);
   font-size:26px;
+  line-height:32px;
   font-weight:700;
   color:#fff;
   text-align:center;
-  line-height:24px;
 }
-
-/* LINHAS */
-tbody tr{
-  background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
-}
-
 tbody td{
-  padding:16px 18px;
+  padding:18px;
+  border-bottom:1px solid rgba(0,0,0,0.25);
   color:#e0e0e0;
   text-align:center;
   font-size:26px;
-  line-height:28px;
+  line-height:34px;
   font-weight:600;
-  background:transparent;
 }
 
-/* BADGE */
 .status-badge{
   display:flex;
   justify-content:center;
@@ -203,12 +186,14 @@ tbody td{
 }
 #promosText{
   font-size:28px;
+  line-height:34px;
   font-weight:700;
   color:#dcdcdc;
   display:inline-block;
   padding-left:100%;
   animation: slidePromo 14s linear infinite;
 }
+
 @keyframes slidePromo{
   from{ transform:translateX(0%); }
   to{ transform:translateX(-100%); }
@@ -217,7 +202,7 @@ tbody td{
 </head>
 <body>
 
-<!-- BOTÕES -->
+<!-- BOTÕES SUPERIORES -->
 <button class="button-top fullscreen-btn" id="fullButton">⛶</button>
 <button class="button-top admin-btn" id="adminButton">👤</button>
 
@@ -232,7 +217,7 @@ tbody td{
     </div>
   </div>
 
-  <!-- ALERTAS -->
+  <!-- ALERTAS FULL -->
   <div class="alerts-full">
     <h3>Atenção para as seguintes O.S.</h3>
     <div id="alerts-list">
@@ -243,22 +228,18 @@ tbody td{
   <!-- TÍTULO -->
   <div class="table-section-title">Status de Serviço</div>
 
-  <!-- TABELA -->
-  <div class="table-wrapper">
-    <div class="scroll-area" id="scrollArea">
-
-      <table id="tabelaStatus">
-        <thead>
-          <tr>
-            <th>Cliente</th>
-            <th>Status</th>
-            <th>Previsão</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-    </div>
+  <!-- TABELA COM SCROLL -->
+  <div class="table-wrapper scroll-area" id="scrollArea">
+    <table id="tabelaStatus">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Status</th>
+          <th>Previsão</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
   <!-- PROMOÇÕES -->
@@ -270,9 +251,12 @@ tbody td{
 
 <script>
 /* FULLSCREEN */
-document.getElementById("fullButton").addEventListener("click", () => {
-  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-  else document.exitFullscreen();
+document.getElementById("fullButton").addEventListener("click",()=>{
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen();
+  }else{
+    document.exitFullscreen();
+  }
 });
 
 /* ADMIN */
@@ -280,20 +264,18 @@ document.getElementById("adminButton").addEventListener("click", () => {
   window.location.href = "administrador.html";
 });
 
-/* STORAGE */
+/* BANCO */
 const STORAGE_KEY = "assist_db";
 
-function getDB() {
+function getDB(){
   const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return { tabela: [], promocoes: "" };
-  try { return JSON.parse(raw); }
-  catch { return { tabela: [], promocoes: "" }; }
+  if(!raw) return { tabela: [], promocoes: "" };
+  try{ return JSON.parse(raw); }
+  catch{ return { tabela: [], promocoes: "" }; }
 }
-
 function getTabela(){ return getDB().tabela || []; }
 function getPromocoes(){ return getDB().promocoes || ""; }
 
-/* CORES */
 const statusColors = {
   "Análise/Diagnóstico": "rgba(154,160,166,0.55)",
   "Aguardando Aprovação": "rgba(241,196,15,0.55)",
@@ -302,37 +284,33 @@ const statusColors = {
   "Pronto para Retirada": "rgba(46,204,113,0.55)"
 };
 
-/* ESCAPE */
 function escapeHtml(s){
-  return (s+"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+  return (s+"").replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"
+  }[c]));
 }
 
-/* CARREGAR TABELA */
+/* TABELA */
 function carregarTabela(){
-  const tbody = document.querySelector("#tabelaStatus tbody");
-  const dados = getTabela();
-  tbody.innerHTML = "";
+  const tbody=document.querySelector("#tabelaStatus tbody");
+  const dados=getTabela();
+  tbody.innerHTML="";
 
   if(dados.length===0){
-    tbody.innerHTML = `
-      <tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
-        Nenhum serviço lançado.
-      </td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
+      Nenhum serviço lançado.
+    </td></tr>`;
     return;
   }
 
   dados.forEach(item=>{
-    const cor = statusColors[item.status] || "#777";
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
+    const cor=statusColors[item.status]||"#999";
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
       <td>${escapeHtml(item.cliente)}</td>
-      <td><span class="status-badge" style="background:${cor}">
-        ${escapeHtml(item.status)}
-      </span></td>
+      <td><span class="status-badge" style="background:${cor}">${escapeHtml(item.status)}</span></td>
       <td>${escapeHtml(item.previsao)}</td>
     `;
-
     tbody.appendChild(tr);
   });
 
@@ -340,23 +318,19 @@ function carregarTabela(){
   ativarScrollSeNecessario(dados.length);
 }
 
-/* SCROLL AUTOMÁTICO */
+/* SCROLL AUTOMÁTICO CORRIGIDO */
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
   area.classList.remove("auto-scroll");
-
   const oldClone = document.getElementById("clone-tabela");
   if(oldClone) oldClone.remove();
-
-  /* REMOVIDO scroll-separator — conforme pedido */
-  const oldSep = document.getElementById("scroll-separator");
-  if(oldSep) oldSep.remove();
 
   if(qtd >= 7){
     area.classList.add("auto-scroll");
 
     const tabela = document.querySelector("#tabelaStatus");
+
     tabela.style.tableLayout = "fixed";
 
     const clone = tabela.cloneNode(true);
@@ -365,12 +339,10 @@ function ativarScrollSeNecessario(qtd){
 
     clone.querySelector("thead").style.visibility = "hidden";
 
-    const alturaCabecalho = tabela.querySelector("thead").offsetHeight;
-
-    clone.style.position="absolute";
-    clone.style.top = alturaCabecalho + "px";
-    clone.style.left="0";
-    clone.style.width="100%";
+    clone.style.position = "absolute";
+    clone.style.top = tabela.offsetHeight + "px";
+    clone.style.left = "0";
+    clone.style.width = "100%";
 
     area.appendChild(clone);
   }
@@ -378,26 +350,22 @@ function ativarScrollSeNecessario(qtd){
 
 /* ALERTAS */
 function parseTimeHHMM(t){
-  const m = String(t).match(/^([0-2][0-9]):([0-5][0-9])$/);
+  const m=String(t).match(/^([0-2][0-9]):([0-5][0-9])$/);
   if(!m) return null;
-
-  const now = new Date();
-  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(m[1]), parseInt(m[2]));
-
-  if (d < now - 60000) d.setDate(d.getDate() + 1);
-
+  const now=new Date();
+  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1]),parseInt(m[2]));
+  if(d < now - 60000) d.setDate(d.getDate()+1);
   return d;
 }
 
-function minutesDiff(a,b){ return (b - a) / 60000; }
+function minutesDiff(a,b){ return (b-a)/60000; }
 
 function atualizarAlertsUI(){
-  const lista = getTabela();
-  const box = document.getElementById("alerts-list");
+  const lista=getTabela();
+  const box=document.getElementById("alerts-list");
   box.innerHTML="";
-
-  const now = new Date();
-  const arr = [];
+  const now=new Date();
+  const arr=[];
 
   lista.forEach(item=>{
     const t=parseTimeHHMM(item.previsao);
@@ -407,16 +375,16 @@ function atualizarAlertsUI(){
   });
 
   if(arr.length===0){
-    box.innerHTML = `<div class="alert-empty">Nenhum alerta no momento.</div>`;
+    box.innerHTML=`<div class="alert-empty">Nenhum alerta no momento.</div>`;
     return;
   }
 
   arr.sort((a,b)=>a.m-b.m);
 
   arr.forEach(a=>{
-    const div = document.createElement("div");
-    div.className = "alert-item";
-    div.innerHTML = `
+    const div=document.createElement("div");
+    div.className="alert-item";
+    div.innerHTML=`
       <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
       <div style="text-align:right">
         <div class="alert-time">${escapeHtml(a.item.previsao)}</div>
@@ -429,21 +397,21 @@ function atualizarAlertsUI(){
 
 /* PROMOÇÕES */
 function carregarPromocoes(){
-  document.getElementById("promosText").textContent = getPromocoes();
+  document.getElementById("promosText").textContent=getPromocoes();
 }
 
-/* REFRESH AUTOMÁTICO */
+/* REFRESH */
 function refreshAll(){
   carregarTabela();
   carregarPromocoes();
   atualizarAlertsUI();
 }
 
-let lastRaw = localStorage.getItem(STORAGE_KEY);
+let lastRaw=localStorage.getItem(STORAGE_KEY);
 setInterval(()=>{
-  const nowRaw = localStorage.getItem(STORAGE_KEY);
-  if(nowRaw !== lastRaw){
-    lastRaw = nowRaw;
+  const nowRaw=localStorage.getItem(STORAGE_KEY);
+  if(nowRaw!==lastRaw){
+    lastRaw=nowRaw;
     refreshAll();
   }
 },900);
