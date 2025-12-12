@@ -119,26 +119,38 @@ body{
   margin-top:10px;
 }
 
-/* SCROLL AUTOMÁTICO */
+/* SCROLL AUTOMÁTICO - área visível */
 .scroll-area{
   max-height: calc(100vh - 320px);
   overflow: hidden;
   position: relative;
 }
 
-.scroll-area.auto-scroll table{
-  animation: scrollTable var(--scroll-speed) linear infinite;
+/* Contêiner que movimenta as duas tabelas (original + clone) */
+.scroll-inner{
+  width:100%;
+  position: relative;
+  display:block;
 }
 
+/* A animação será aplicada ao .scroll-inner quando necessário */
+.scroll-area.auto-scroll .scroll-inner{
+  animation: scrollTable var(--scroll-speed) linear infinite;
+  will-change: transform;
+}
+
+/* keyframes: move todo o interior para cima -50% (original + clone empilhadas => rolagem contínua) */
 @keyframes scrollTable{
   0% { transform: translateY(0); }
   100% { transform: translateY(-50%); }
 }
 
+/* tabela com gradiente original (mantido) */
 table{
   width:100%;
   border-collapse:collapse;
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
+  table-layout:fixed;
 }
 thead th{
   padding:18px;
@@ -174,6 +186,15 @@ tbody td{
   margin:0 auto;
 }
 
+/* Estilo do clone (somente o necessário): fundo TRANSPARENTE para não reiniciar o gradiente */
+#clone-tabela{
+  background: transparent !important;
+}
+#clone-tabela thead th{
+  /* escondemos o header do clone para não duplicar */
+  visibility: hidden;
+}
+
 /* PROMOÇÕES */
 #promosBox{
   width:100%;
@@ -198,6 +219,9 @@ tbody td{
   from{ transform:translateX(0%); }
   to{ transform:translateX(-100%); }
 }
+
+/* pequenas melhorias para evitar seleção estranha durante a rolagem */
+.scroll-area, .scroll-inner, table { -webkit-user-select: none; user-select: none; }
 </style>
 </head>
 <body>
@@ -230,6 +254,7 @@ tbody td{
 
   <!-- TABELA COM SCROLL -->
   <div class="table-wrapper scroll-area" id="scrollArea">
+    <!-- Agora o JS criará uma .scroll-inner dinamicamente e colocará a table + clone dentro dela -->
     <table id="tabelaStatus">
       <thead>
         <tr>
@@ -300,6 +325,7 @@ function carregarTabela(){
     tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
       Nenhum serviço lançado.
     </td></tr>`;
+    limparScrollWrapper(); // garante que não fique animação quando vazio
     return;
   }
 
@@ -318,34 +344,78 @@ function carregarTabela(){
   ativarScrollSeNecessario(dados.length);
 }
 
-/* SCROLL AUTOMÁTICO CORRIGIDO */
+/* Remove scroll wrapper caso exista e restaura tabela ao estado original */
+function limparScrollWrapper(){
+  const area = document.getElementById("scrollArea");
+  area.classList.remove("auto-scroll");
+  const inner = area.querySelector(".scroll-inner");
+  if(inner){
+    // se inner existe e contém a tabela, colocamos a tabela de volta direto em area
+    const tabela = inner.querySelector("#tabelaStatus");
+    if(tabela){
+      area.appendChild(tabela);
+    }
+    inner.remove();
+  }
+  const clone = document.getElementById("clone-tabela");
+  if(clone) clone.remove();
+}
+
+/* SCROLL AUTOMÁTICO - usando wrapper .scroll-inner para garantir continuidade sem gap */
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
+  // limpa qualquer coisa antiga
   area.classList.remove("auto-scroll");
   const oldClone = document.getElementById("clone-tabela");
   if(oldClone) oldClone.remove();
-
-  if(qtd >= 7){
-    area.classList.add("auto-scroll");
-
-    const tabela = document.querySelector("#tabelaStatus");
-
-    tabela.style.tableLayout = "fixed";
-
-    const clone = tabela.cloneNode(true);
-    clone.id = "clone-tabela";
-    clone.style.tableLayout = "fixed";
-
-    clone.querySelector("thead").style.visibility = "hidden";
-
-    clone.style.position = "absolute";
-    clone.style.top = tabela.offsetHeight + "px";
-    clone.style.left = "0";
-    clone.style.width = "100%";
-
-    area.appendChild(clone);
+  const oldInner = area.querySelector(".scroll-inner");
+  if(oldInner){
+    // se já houver wrapper, desfazemos (manter apenas uma tabela para reconstruir)
+    const existingTable = oldInner.querySelector("#tabelaStatus");
+    if(existingTable){
+      area.appendChild(existingTable);
+    }
+    oldInner.remove();
   }
+
+  // Se não precisa rolar, mantém só a tabela
+  if(qtd < 7){
+    return; // nada a fazer
+  }
+
+  // Criar wrapper scroll-inner
+  const inner = document.createElement("div");
+  inner.className = "scroll-inner";
+
+  // Obter a tabela atual e movê-la para dentro do inner
+  const tabela = document.querySelector("#tabelaStatus");
+  if(!tabela) return;
+  area.appendChild(inner);
+  inner.appendChild(tabela);
+
+  // Clonar a tabela para que exista uma cópia logo abaixo
+  const clone = tabela.cloneNode(true);
+  clone.id = "clone-tabela";
+
+  // tornamos o clone visualmente transparente (mantendo as células) e escondemos o thead
+  clone.style.background = "transparent";
+  // Remover possible ids duplicados dentro do clone (safety)
+  const elemsWithId = clone.querySelectorAll("[id]");
+  elemsWithId.forEach(e => {
+    if(e.id === "tabelaStatus") e.id = "";
+    // deixar outros ids se houver, mas em geral não tem
+  });
+
+  // append clone ao inner (ficará logo abaixo da tabela original)
+  inner.appendChild(clone);
+
+  // Forçar repaint e medir alturas: queremos garantir que inner tenha altura = 2 * tabelaHeight
+  // (por padrão será), então a animação translateY(-50%) funciona corretamente.
+  requestAnimationFrame(() => {
+    // remove seleção e garantir que tudo esteja pronto
+    area.classList.add("auto-scroll");
+  });
 }
 
 /* ALERTAS */
