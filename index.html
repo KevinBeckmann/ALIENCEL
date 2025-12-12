@@ -120,9 +120,10 @@ body{
 
 /* SCROLL AUTOMÁTICO */
 .scroll-area{
-  max-height:420px;
-  overflow:hidden;
-  position:relative;
+  max-height: calc(100vh - 320px); /* ajuste automático até quase o rodapé */
+  overflow: hidden;
+  position: relative;
+
 }
 .scroll-area.auto-scroll table{
   animation: scrollTable var(--scroll-speed) linear infinite;
@@ -138,32 +139,49 @@ table{
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
 thead th{
-  padding:14px;
+  padding:16px;
   background:linear-gradient(180deg,#545454,#3f3f3f);
-  font-size:15px; color:#fff;
-  text-align:center;
-}
-tbody td{
-  padding:14px;
-  border-bottom:1px solid rgba(0,0,0,0.25);
-  color:#e0e0e0;
+  font-size:20px;
+  line-height:26px; 
+  font-weight:700;
+  color:#fff;
   text-align:center;
 }
 
-/* STATUS BADGE */
+tbody td{
+  padding:16px;
+  border-bottom:1px solid rgba(0,0,0,0.25);
+  color:#e0e0e0;
+  text-align:center;
+  font-size:22px;
+  line-height:28px; /* melhora nitidez e espaço */
+  font-weight:500;  /* deixa mais definido */
+}
+
+
 .status-badge{
   display:flex;
   justify-content:center;
   align-items:center;
-  width:165px;
-  height:28px;
-  padding:0;
-  border-radius:999px;
+
+  width:260px;          /* mais espaço para frases longas */
+  min-height:56px;      /* altura confortável para duas linhas */
+  padding:8px 16px;     /* espaçamento interno bonito */
+
+  border-radius:999px !important;
+  border:2px solid rgba(255,255,255,0.12);
+
   font-weight:700;
-  font-size:13px;
+  font-size:20px;
+  line-height:26px;     /* 👈 AQUI está a grande melhora */
   text-align:center;
-  margin:0 auto;
   color:#fff;
+
+  margin:0 auto;
+  box-sizing:border-box;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* PROMOÇÕES */
@@ -177,12 +195,18 @@ tbody td{
   overflow:hidden;
 }
 #promosText{
-  font-size:18px;
+  font-size:26px;                 /* tamanho maior */
+  line-height:32px;               /* deixa a fonte mais nítida */
+  font-weight:600;                /* melhora o contraste visual */
   color:#dcdcdc;
   display:inline-block;
   padding-left:100%;
   animation: slidePromo 14s linear infinite;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
 @keyframes slidePromo{
   from{ transform:translateX(0%); }
   to{ transform:translateX(-100%); }
