@@ -139,23 +139,30 @@ table{
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
 thead th{
-  padding:16px;
+  padding:18px;
   background:linear-gradient(180deg,#545454,#3f3f3f);
-  font-size:20px;
-  line-height:26px; 
+  font-size:26px;
+  line-height:32px;
   font-weight:700;
   color:#fff;
   text-align:center;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+
 tbody td{
-  padding:16px;
+  padding:18px;
   border-bottom:1px solid rgba(0,0,0,0.25);
   color:#e0e0e0;
   text-align:center;
-  font-size:22px;
-  line-height:28px; /* melhora nitidez e espaço */
-  font-weight:500;  /* deixa mais definido */
+  font-size:26px;
+  line-height:34px;
+  font-weight:600;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 
@@ -164,19 +171,18 @@ tbody td{
   justify-content:center;
   align-items:center;
 
-  width:260px;          /* mais espaço para frases longas */
-  min-height:56px;      /* altura confortável para duas linhas */
-  padding:8px 16px;     /* espaçamento interno bonito */
+  padding:14px 24px;       /* altura e largura naturais */
+  height:60px;             /* altura igual para todas */
 
-  border-radius:999px !important;
+  border-radius:9999px;    /* 🔥 deixa 100% arredondado */
   border:2px solid rgba(255,255,255,0.12);
 
+  font-size:26px;
   font-weight:700;
-  font-size:20px;
-  line-height:26px;     /* 👈 AQUI está a grande melhora */
-  text-align:center;
-  color:#fff;
+  line-height:26px;
+  white-space:nowrap;      /* impede quebra de linha */
 
+  color:#fff;
   margin:0 auto;
   box-sizing:border-box;
 
@@ -184,21 +190,24 @@ tbody td{
   -moz-osx-font-smoothing: grayscale;
 }
 
+
 /* PROMOÇÕES */
 #promosBox{
   width:100%;
   background:linear-gradient(180deg,#171717,#121212);
   border:1px solid rgba(255,255,255,0.06);
   border-radius:12px;
-  padding:12px 14px;
+  padding:18px 20px;
   white-space:nowrap;
   overflow:hidden;
 }
+
 #promosText{
-  font-size:26px;                 /* tamanho maior */
-  line-height:32px;               /* deixa a fonte mais nítida */
-  font-weight:600;                /* melhora o contraste visual */
+  font-size:28px;
+  line-height:34px;
+  font-weight:700;
   color:#dcdcdc;
+
   display:inline-block;
   padding-left:100%;
   animation: slidePromo 14s linear infinite;
@@ -206,6 +215,7 @@ tbody td{
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 @keyframes slidePromo{
   from{ transform:translateX(0%); }
