@@ -174,38 +174,41 @@ tbody{
   table-layout:fixed;
 }
 thead th{
-  padding:14px;
+  padding:18px;
   background:linear-gradient(180deg,#545454,#3f3f3f);
-  font-size:20px;
-  line-height:26px;
-  font-weight:700;
+  font-size:32px;
+  line-height:38px;
+  font-weight:800;
   color:#fff;
   text-align:center;
 }
+
 tbody td{
-  padding:14px;
+  padding:18px;
   border-bottom:1px solid rgba(0,0,0,0.25);
   color:#e0e0e0;
   text-align:center;
-  font-size:20px;
-  line-height:28px;
-  font-weight:600;
+  font-size:30px;
+  line-height:38px;
+  font-weight:700;
 }
+
 
 .status-badge{
   display:flex;
   justify-content:center;
   align-items:center;
-  padding:10px 20px;
-  height:50px;
+  padding:14px 28px;
+  height:64px;
   border-radius:9999px;
   border:2px solid rgba(255,255,255,0.12);
-  font-size:20px;
-  font-weight:700;
+  font-size:28px;
+  font-weight:800;
   white-space:nowrap;
   color:#fff;
   margin:0 auto;
 }
+
 
 /* Clone - remove cabeçalho completamente */
 #clone-tabela{
@@ -220,22 +223,25 @@ tbody td{
   width:100%;
   background:linear-gradient(180deg,#171717,#121212);
   border:1px solid rgba(255,255,255,0.06);
-  border-radius:12px;
-  padding:12px 20px;
+  border-radius:14px;
+  padding:22px 28px;
+  min-height:80px;
   white-space:nowrap;
   overflow:hidden;
   margin-top:12px;
   flex-shrink: 0;
 }
+
 #promosText{
-  font-size:20px;
-  line-height:28px;
-  font-weight:700;
-  color:#dcdcdc;
+  font-size:32px;
+  line-height:40px;
+  font-weight:800;
+  color:#ffffff;
   display:inline-block;
   padding-left:100%;
   animation: slidePromo 14s linear infinite;
 }
+
 
 @keyframes slidePromo{
   from{ transform:translateX(0%); }
