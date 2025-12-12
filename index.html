@@ -165,41 +165,30 @@ tbody td{
   -moz-osx-font-smoothing: grayscale;
 }
 
-  /* Ajuste da coluna do STATUS (coluna do meio) */
-td:nth-child(2), th:nth-child(2){
-  width: 32%;        /* controla a coluna do meio */
-  min-width: 280px;  /* evita quebrar o layout */
-}
-
-
 
 .status-badge{
   display:flex;
   justify-content:center;
   align-items:center;
 
-  width:100%;               /* agora fica exatamente dentro da coluna */
-  max-width: 750px;         /* limite para telas grandes */
-  height:54px;              /* altura bonita e proporcional */
-  padding:0 10px;
+  padding:14px 24px;       /* altura e largura naturais */
+  height:60px;             /* altura igual para todas */
 
-  border-radius:9999px;
+  border-radius:9999px;    /* 🔥 deixa 100% arredondado */
   border:2px solid rgba(255,255,255,0.12);
 
-  font-size:24px;
+  font-size:26px;
   font-weight:700;
-  line-height:28px;
-  white-space:nowrap;
-  text-align:center;
-  color:#fff;
+  line-height:26px;
+  white-space:nowrap;      /* impede quebra de linha */
 
+  color:#fff;
   margin:0 auto;
   box-sizing:border-box;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 
 
 /* PROMOÇÕES */
@@ -265,26 +254,16 @@ td:nth-child(2), th:nth-child(2){
   <!-- TABELA COM SCROLL -->
   <div class="table-wrapper scroll-area" id="scrollArea">
     <table id="tabelaStatus">
-
-        <colgroup>
-            <col style="width: 30%">
-            <col style="width: 40%">
-            <col style="width: 30%">
-        </colgroup>
-
-        <thead>
-            <tr>
-                <th>Cliente</th>
-                <th>Status</th>
-                <th>Previsão</th>
-            </tr>
-        </thead>
-
-        <tbody></tbody>
-
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Status</th>
+          <th>Previsão</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
     </table>
-</div>
-
+  </div>
 
   <!-- PROMOÇÕES -->
   <div id="promosBox">
@@ -362,67 +341,38 @@ function carregarTabela(){
   ativarScrollSeNecessario(dados.length);
 }
 
-/* SCROLL AUTOMÁTICO — VERSÃO 100% ALINHADA */
+/* SCROLL AUTOMÁTICO */
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
   // Remove estado anterior
   area.classList.remove("auto-scroll");
   const oldClone = document.getElementById("clone-tabela");
-  if (oldClone) oldClone.remove();
+  if(oldClone) oldClone.remove();
 
-  if (qtd >= 7){
-
+  if(qtd >= 7){
     area.classList.add("auto-scroll");
 
-    const tabela = document.getElementById("tabelaStatus");
+    const tabela = document.querySelector("#tabelaStatus");
+
+    // --- CORREÇÃO: clonar SOMENTE o tbody ---
     const originalTbody = tabela.querySelector("tbody");
+    const cloneTbody = originalTbody.cloneNode(true); 
+    cloneTbody.id = "clone-tabela";
 
-    // CLONA SOMENTE O TBODY
-    const cloneTbody = originalTbody.cloneNode(true);
-
-    // CRIA TABELA NOVA
+    // Criar nova tabela contendo APENAS tbody (SEM cabeçalho)
     const newTable = document.createElement("table");
-    newTable.id = "clone-tabela";
-
-    /* ------------------------------
-       COPIA COLUNAS EXATAS DO TABLE
-    -------------------------------- */
-
-    const colgroup = document.createElement("colgroup");
-    const cols = tabela.querySelectorAll("thead th");
-
-    cols.forEach(th => {
-      const col = document.createElement("col");
-      const width = th.offsetWidth + "px";
-      col.style.width = width;
-      colgroup.appendChild(col);
-    });
-
-    newTable.appendChild(colgroup);
-
-    /* ------------------------------ */
-
-    // Aplica estilos visuais idênticos
-    newTable.style.position = "absolute";
-    newTable.style.left = "0px";
-    newTable.style.top = tabela.offsetHeight + "px";
-    newTable.style.width = tabela.offsetWidth + "px";
-    newTable.style.borderCollapse = "collapse";
-
-    // copia o background real
-    const tbStyle = window.getComputedStyle(tabela);
-    newTable.style.background = tbStyle.background;
-
-    // adiciona o tbody clonado
     newTable.appendChild(cloneTbody);
 
-    // insere no scroll
+    // Estilos para manter aparência idêntica
+    newTable.style.width = "100%";
+    newTable.style.borderCollapse = "collapse";
+    newTable.style.position = "absolute";
+    newTable.style.top = tabela.offsetHeight + "px";
+
     area.appendChild(newTable);
   }
 }
-
-
 
 
 /* ALERTAS */
