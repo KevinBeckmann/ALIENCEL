@@ -417,30 +417,30 @@ function parseTimeHHMM(t){
 function minutesDiff(a,b){ return (b-a)/60000; }
 
 function atualizarAlertsUI(){
-  const lista=getTabela();
-  const box=document.getElementById("alerts-list");
-  box.innerHTML="";
-  const now=new Date();
-  const arr([]);
+  const lista = getTabela();
+  const box = document.getElementById("alerts-list");
+  box.innerHTML = "";
+  const now = new Date();
+  const arr = [];
 
   lista.forEach(item=>{
-    const t=parseTimeHHMM(item.previsao);
+    const t = parseTimeHHMM(item.previsao);
     if(!t) return;
-    const m=minutesDiff(now,t);
+    const m = minutesDiff(now,t);
     if(m>=0 && m<=5) arr.push({item,m});
   });
 
   if(arr.length===0){
-    box.innerHTML=`<div class="alert-empty">Nenhum alerta no momento.</div>`;
+    box.innerHTML = `<div class="alert-empty">Nenhum alerta no momento.</div>`;
     return;
   }
 
   arr.sort((a,b)=>a.m-b.m);
 
   arr.forEach(a=>{
-    const div=document.createElement("div");
-    div.className="alert-item";
-    div.innerHTML=`
+    const div = document.createElement("div");
+    div.className = "alert-item";
+    div.innerHTML = `
       <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
       <div style="text-align:right">
         <div class="alert-time">${escapeHtml(a.item.previsao)}</div>
@@ -450,6 +450,7 @@ function atualizarAlertsUI(){
     box.appendChild(div);
   });
 }
+
 
 /* PROMOÇÕES */
 function carregarPromocoes(){
