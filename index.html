@@ -343,33 +343,56 @@ function carregarTabela(){
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
+  // remover classe/clone/separador antigos
   area.classList.remove("auto-scroll");
-
   const oldClone = document.getElementById("clone-tabela");
   if(oldClone) oldClone.remove();
+  const oldSep = document.getElementById("scroll-separator");
+  if(oldSep) oldSep.remove();
 
   if(qtd >= 7){
     area.classList.add("auto-scroll");
 
     const tabela = document.querySelector("#tabelaStatus");
 
+    // forçar layout fixo pra colunas alinharem
     tabela.style.tableLayout = "fixed";
 
+    // clonar tabela inteira (thead + tbody)
     const clone = tabela.cloneNode(true);
     clone.id = "clone-tabela";
     clone.style.tableLayout = "fixed";
-
     clone.querySelector("thead").style.visibility = "hidden";
 
-    clone.style.position="absolute";
-    clone.style.top = tabela.offsetHeight + "px";
-    clone.style.left="0";
-    clone.style.width="100%";
+    // calcular posição exatamente abaixo do cabeçalho
+    const alturaCabecalho = tabela.querySelector("thead").offsetHeight;
+    // posiciona o clone logo abaixo do thead (sem deixar espaço extra)
+    clone.style.position = "absolute";
+    clone.style.top = alturaCabecalho + "px";
+    clone.style.left = "0";
+    clone.style.width = "100%";
+    // garantir mesmo background visual
+    clone.style.background = window.getComputedStyle(tabela).background || tabela.style.background;
 
-    clone.style.background = tabela.style.background;
+    // criar/posicionar separador visual (a linha que você quer manter)
+    const sep = document.createElement("div");
+    sep.id = "scroll-separator";
+    // estilo da linha — ajuste a cor/opacidade se quiser outro visual
+    sep.style.position = "absolute";
+    sep.style.left = "0";
+    sep.style.right = "0";
+    sep.style.top = alturaCabecalho + "px"; // mesma posição do topo do clone
+    sep.style.height = "1px";
+    sep.style.pointerEvents = "none";
+    sep.style.zIndex = "5";
+    sep.style.background = "linear-gradient(90deg, rgba(0,0,0,0.35), rgba(255,255,255,0.03), rgba(0,0,0,0.35))";
+
+    // acrescentar ao DOM (separador antes do clone para ficar sobre o conteúdo)
+    area.appendChild(sep);
     area.appendChild(clone);
   }
 }
+
 
 /* ALERTAS */
 function parseTimeHHMM(t){
