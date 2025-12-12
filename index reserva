@@ -20,24 +20,25 @@
 }
 
 *{box-sizing:border-box}
-html,body{height:100%;}
+html,body{height:100%; margin: 0;}
+
 body{
-  margin:0;
   font-family:"Inter",sans-serif;
-  background: linear-gradient(180deg,#000000,#131313,#1c1c1c);
+  background:#1f1f1f;
   color:var(--text);
   -webkit-font-smoothing:antialiased;
   display:flex;
   flex-direction:column;
-  min-height:100vh;
+  overflow: hidden;
 }
 
 .container{
   width:100%;
-  flex:1;
+  height:100vh;
   display:flex;
   flex-direction:column;
   padding:20px 28px;
+  overflow: hidden;
 }
 
 /* BOTÕES SUPERIORES */
@@ -62,24 +63,23 @@ body{
 .fullscreen-btn{ right:12px; }
 .admin-btn{ right:54px; }
 
-/* HEADER — voltou ao original */
+/* HEADER */
 .header-block{
   width:100%;
   display:flex;
   justify-content:center;
   align-items:center;
-  margin-bottom:25px;
   gap:25px;
-  margin-left:-40px;
+  flex-shrink: 0;
 }
 .header-logo{
-  height:150px;
+  height:120px;
   object-fit:contain;
   filter:drop-shadow(0 0 6px rgba(255,255,255,0.25));
 }
 .header-text{ text-align:center; }
-.header-title{ font-size:48px; font-weight:800; margin:0; }
-.header-subtitle{ font-size:22px; opacity:.9; margin:0; }
+.header-title{ font-size:42px; font-weight:800; margin:0; }
+.header-subtitle{ font-size:18px; opacity:.9; margin:0; }
 
 /* ALERTA FULL WIDTH */
 .alerts-full{
@@ -87,25 +87,27 @@ body{
   background:linear-gradient(180deg,#171717,#121212);
   border:1px solid rgba(255,255,255,0.06);
   border-radius:14px;
-  padding:14px 18px;
-  margin-bottom:20px;
+  padding:12px 18px;
+  margin-top:12px;
+  flex-shrink: 0;
 }
 .alerts-full h3{
-  margin:0 0 10px;
+  margin:0 0 8px;
   color:#ffb3b3;
-  font-size:20px;
+  font-size:18px;
   font-weight:600;
 }
-.alert-empty{ color:var(--muted); }
+.alert-empty{ color:var(--muted); font-size: 14px; }
 
 /* TÍTULO ENTRE ALERTAS E TABELA */
 .table-section-title{
   width:100%;
   text-align:center;
-  font-size:26px;
+  font-size:22px;
   font-weight:700;
-  margin:10px 0 10px 0;
+  margin:12px 0 8px 0;
   color:#e8e8e8;
+  flex-shrink: 0;
 }
 
 /* TABELA */
@@ -115,32 +117,69 @@ body{
   border:1px solid rgba(255,255,255,0.06);
   border-radius:14px;
   padding:14px;
-  margin-top:10px;
+  overflow: hidden;
+  min-height: 0;
 }
 
-/* SCROLL AUTOMÁTICO */
+/* SCROLL AUTOMÁTICO - área visível */
 .scroll-area{
-  max-height:420px;
-  overflow:hidden;
-  position:relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.scroll-area.auto-scroll table{
+
+.scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+/* Contêiner que movimenta as duas tabelas (original + clone) */
+.scroll-inner{
+  width:100%;
+  position: relative;
+  display:block;
+  background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
+}
+
+/* A animação será aplicada ao .scroll-inner quando necessário */
+.scroll-area.auto-scroll .scroll-inner{
   animation: scrollTable var(--scroll-speed) linear infinite;
+  will-change: transform;
 }
+
+/* keyframes: move todo o interior para cima -50% (original + clone) */
 @keyframes scrollTable{
   0% { transform: translateY(0); }
   100% { transform: translateY(-50%); }
 }
 
+/* tabela */
 table{
   width:100%;
   border-collapse:collapse;
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
+  table-layout:fixed;
+  display:block;
+}
+thead{
+  display:table;
+  width:100%;
+  table-layout:fixed;
+}
+tbody{
+  display:table;
+  width:100%;
+  table-layout:fixed;
 }
 thead th{
   padding:14px;
   background:linear-gradient(180deg,#545454,#3f3f3f);
-  font-size:15px; color:#fff;
+  font-size:20px;
+  line-height:26px;
+  font-weight:700;
+  color:#fff;
   text-align:center;
 }
 tbody td{
@@ -148,22 +187,32 @@ tbody td{
   border-bottom:1px solid rgba(0,0,0,0.25);
   color:#e0e0e0;
   text-align:center;
+  font-size:20px;
+  line-height:28px;
+  font-weight:600;
 }
 
-/* STATUS BADGE */
 .status-badge{
   display:flex;
   justify-content:center;
   align-items:center;
-  width:165px;
-  height:28px;
-  padding:0;
-  border-radius:999px;
+  padding:10px 20px;
+  height:50px;
+  border-radius:9999px;
+  border:2px solid rgba(255,255,255,0.12);
+  font-size:20px;
   font-weight:700;
-  font-size:13px;
-  text-align:center;
-  margin:0 auto;
+  white-space:nowrap;
   color:#fff;
+  margin:0 auto;
+}
+
+/* Clone - remove cabeçalho completamente */
+#clone-tabela{
+  background: transparent !important;
+}
+#clone-tabela thead{
+  display: none !important;
 }
 
 /* PROMOÇÕES */
@@ -172,26 +221,37 @@ tbody td{
   background:linear-gradient(180deg,#171717,#121212);
   border:1px solid rgba(255,255,255,0.06);
   border-radius:12px;
-  padding:12px 14px;
+  padding:12px 20px;
   white-space:nowrap;
   overflow:hidden;
+  margin-top:12px;
+  flex-shrink: 0;
 }
 #promosText{
-  font-size:18px;
+  font-size:20px;
+  line-height:28px;
+  font-weight:700;
   color:#dcdcdc;
   display:inline-block;
   padding-left:100%;
   animation: slidePromo 14s linear infinite;
 }
+
 @keyframes slidePromo{
   from{ transform:translateX(0%); }
   to{ transform:translateX(-100%); }
+}
+
+/* evitar seleção */
+.scroll-area, .scroll-inner, table {
+  -webkit-user-select: none;
+  user-select: none;
 }
 </style>
 </head>
 <body>
 
-<!-- BOTÕES SUPERIORES -->
+<!-- BOTÕES -->
 <button class="button-top fullscreen-btn" id="fullButton">⛶</button>
 <button class="button-top admin-btn" id="adminButton">👤</button>
 
@@ -206,7 +266,7 @@ tbody td{
     </div>
   </div>
 
-  <!-- ALERTAS FULL -->
+  <!-- ALERTAS -->
   <div class="alerts-full">
     <h3>Atenção para as seguintes O.S.</h3>
     <div id="alerts-list">
@@ -214,10 +274,9 @@ tbody td{
     </div>
   </div>
 
-  <!-- TÍTULO -->
   <div class="table-section-title">Status de Serviço</div>
 
-  <!-- TABELA COM SCROLL -->
+  <!-- TABELA -->
   <div class="table-wrapper scroll-area" id="scrollArea">
     <table id="tabelaStatus">
       <thead>
@@ -289,6 +348,7 @@ function carregarTabela(){
     tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
       Nenhum serviço lançado.
     </td></tr>`;
+    limparScrollWrapper();
     return;
   }
 
@@ -307,23 +367,66 @@ function carregarTabela(){
   ativarScrollSeNecessario(dados.length);
 }
 
-/* SCROLL AUTOMÁTICO */
+/* Limpa scroll antigo */
+function limparScrollWrapper(){
+  const area = document.getElementById("scrollArea");
+  area.classList.remove("auto-scroll");
+  const inner = area.querySelector(".scroll-inner");
+  if(inner){
+    const tabela = inner.querySelector("#tabelaStatus");
+    if(tabela){
+      area.appendChild(tabela);
+    }
+    inner.remove();
+  }
+  const clone = document.getElementById("clone-tabela");
+  if(clone) clone.remove();
+}
+
+/* Scroll automático */
 function ativarScrollSeNecessario(qtd){
-  const area=document.getElementById("scrollArea");
+  const area = document.getElementById("scrollArea");
 
   area.classList.remove("auto-scroll");
-  const oldClone=document.getElementById("clone-tabela");
+  const oldClone = document.getElementById("clone-tabela");
   if(oldClone) oldClone.remove();
-
-  if(qtd >= 7){
-    area.classList.add("auto-scroll");
-    const tabela=document.querySelector("#tabelaStatus");
-    const clone=tabela.cloneNode(true);
-    clone.id="clone-tabela";
-    clone.style.position="absolute";
-    clone.style.top=tabela.offsetHeight+"px";
-    area.appendChild(clone);
+  const oldInner = area.querySelector(".scroll-inner");
+  if(oldInner){
+    const existingTable = oldInner.querySelector("#tabelaStatus");
+    if(existingTable){
+      area.appendChild(existingTable);
+    }
+    oldInner.remove();
   }
+
+  if(qtd < 7){
+    return;
+  }
+
+  const inner = document.createElement("div");
+  inner.className = "scroll-inner";
+
+  const tabela = document.querySelector("#tabelaStatus");
+  if(!tabela) return;
+  area.appendChild(inner);
+  inner.appendChild(tabela);
+
+  const clone = tabela.cloneNode(true);
+  clone.id = "clone-tabela";
+  
+  const thead = clone.querySelector("thead");
+  if(thead) thead.remove();
+
+  const elemsWithId = clone.querySelectorAll("[id]");
+  elemsWithId.forEach(e => {
+    if(e.id === "tabelaStatus") e.id = "";
+  });
+
+  inner.appendChild(clone);
+
+  requestAnimationFrame(() => {
+    area.classList.add("auto-scroll");
+  });
 }
 
 /* ALERTAS */
@@ -335,33 +438,34 @@ function parseTimeHHMM(t){
   if(d < now - 60000) d.setDate(d.getDate()+1);
   return d;
 }
+
 function minutesDiff(a,b){ return (b-a)/60000; }
 
 function atualizarAlertsUI(){
-  const lista=getTabela();
-  const box=document.getElementById("alerts-list");
-  box.innerHTML="";
-  const now=new Date();
-  const arr=[];
+  const lista = getTabela();
+  const box = document.getElementById("alerts-list");
+  box.innerHTML = "";
+  const now = new Date();
+  const arr = [];
 
   lista.forEach(item=>{
-    const t=parseTimeHHMM(item.previsao);
+    const t = parseTimeHHMM(item.previsao);
     if(!t) return;
-    const m=minutesDiff(now,t);
+    const m = minutesDiff(now,t);
     if(m>=0 && m<=5) arr.push({item,m});
   });
 
   if(arr.length===0){
-    box.innerHTML=`<div class="alert-empty">Nenhum alerta no momento.</div>`;
+    box.innerHTML = `<div class="alert-empty">Nenhum alerta no momento.</div>`;
     return;
   }
 
   arr.sort((a,b)=>a.m-b.m);
 
   arr.forEach(a=>{
-    const div=document.createElement("div");
-    div.className="alert-item";
-    div.innerHTML=`
+    const div = document.createElement("div");
+    div.className = "alert-item";
+    div.innerHTML = `
       <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
       <div style="text-align:right">
         <div class="alert-time">${escapeHtml(a.item.previsao)}</div>
@@ -377,7 +481,6 @@ function carregarPromocoes(){
   document.getElementById("promosText").textContent=getPromocoes();
 }
 
-/* REFRESH */
 function refreshAll(){
   carregarTabela();
   carregarPromocoes();
