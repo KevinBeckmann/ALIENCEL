@@ -366,20 +366,28 @@ function ativarScrollSeNecessario(qtd){
 
     const tabela = document.querySelector("#tabelaStatus");
 
-    // --- CORREÇÃO: clonar SOMENTE o tbody ---
+    // Clonar somente o TBODY (não clona fundo e nem cabeçalho)
     const originalTbody = tabela.querySelector("tbody");
-    const cloneTbody = originalTbody.cloneNode(true); 
+    const cloneTbody = originalTbody.cloneNode(true);
     cloneTbody.id = "clone-tabela";
 
-    // Criar nova tabela contendo APENAS tbody (SEM cabeçalho)
+    // Criar nova tabela contendo somente o tbody
     const newTable = document.createElement("table");
     newTable.appendChild(cloneTbody);
 
-    // Estilos para manter aparência idêntica
+    // Estilos para alinhar corretamente com a tabela original
     newTable.style.width = "100%";
     newTable.style.borderCollapse = "collapse";
     newTable.style.position = "absolute";
+
+    // Posiciona o clone logo abaixo da tabela original,
+    // mas SEM somar o fundo do thead → perfeito
     newTable.style.top = tabela.offsetHeight + "px";
+
+    // Centraliza horizontalmente
+    newTable.style.left = "0";
+    newTable.style.right = "0";
+    newTable.style.margin = "0 auto";
 
     area.appendChild(newTable);
   }
