@@ -303,7 +303,7 @@ const statusColors = {
 
 /* ESCAPE HTML */
 function escapeHtml(s){
-  return (s+"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;'}[c]));
+  return (s+"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
 }
 
 /* CARREGAR TABELA */
@@ -343,8 +343,8 @@ function carregarTabela(){
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
-  // remover classe/clone/separador antigos
   area.classList.remove("auto-scroll");
+
   const oldClone = document.getElementById("clone-tabela");
   if(oldClone) oldClone.remove();
   const oldSep = document.getElementById("scroll-separator");
@@ -355,44 +355,36 @@ function ativarScrollSeNecessario(qtd){
 
     const tabela = document.querySelector("#tabelaStatus");
 
-    // forçar layout fixo pra colunas alinharem
     tabela.style.tableLayout = "fixed";
 
-    // clonar tabela inteira (thead + tbody)
     const clone = tabela.cloneNode(true);
     clone.id = "clone-tabela";
     clone.style.tableLayout = "fixed";
+
     clone.querySelector("thead").style.visibility = "hidden";
 
-    // calcular posição exatamente abaixo do cabeçalho
     const alturaCabecalho = tabela.querySelector("thead").offsetHeight;
-    // posiciona o clone logo abaixo do thead (sem deixar espaço extra)
-    clone.style.position = "absolute";
+    clone.style.position="absolute";
     clone.style.top = alturaCabecalho + "px";
-    clone.style.left = "0";
-    clone.style.width = "100%";
-    // garantir mesmo background visual
-    clone.style.background = window.getComputedStyle(tabela).background || tabela.style.background;
+    clone.style.left="0";
+    clone.style.width="100%";
+    clone.style.background = tabela.style.background;
 
-    // criar/posicionar separador visual (a linha que você quer manter)
     const sep = document.createElement("div");
     sep.id = "scroll-separator";
-    // estilo da linha — ajuste a cor/opacidade se quiser outro visual
     sep.style.position = "absolute";
     sep.style.left = "0";
     sep.style.right = "0";
-    sep.style.top = alturaCabecalho + "px"; // mesma posição do topo do clone
+    sep.style.top = alturaCabecalho + "px";
     sep.style.height = "1px";
     sep.style.pointerEvents = "none";
     sep.style.zIndex = "5";
     sep.style.background = "linear-gradient(90deg, rgba(0,0,0,0.35), rgba(255,255,255,0.03), rgba(0,0,0,0.35))";
 
-    // acrescentar ao DOM (separador antes do clone para ficar sobre o conteúdo)
     area.appendChild(sep);
     area.appendChild(clone);
   }
 }
-
 
 /* ALERTAS */
 function parseTimeHHMM(t){
@@ -402,12 +394,12 @@ function parseTimeHHMM(t){
   const now = new Date();
   const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(m[1]), parseInt(m[2]));
 
-  if (d < now - 60000) d.setDate(d.getDate()+1);
+  if (d < now - 60000) d.setDate(d.getDate() + 1);
 
   return d;
 }
 
-function minutesDiff(a,b){ return (b-a)/60000; }
+function minutesDiff(a,b){ return (b - a) / 60000; }
 
 function atualizarAlertsUI(){
   const lista = getTabela();
@@ -432,8 +424,8 @@ function atualizarAlertsUI(){
   arr.sort((a,b)=>a.m-b.m);
 
   arr.forEach(a=>{
-    const div=document.createElement("div");
-    div.className="alert-item";
+    const div = document.createElement("div");
+    div.className = "alert-item";
     div.innerHTML = `
       <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
       <div style="text-align:right">
