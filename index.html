@@ -165,30 +165,41 @@ tbody td{
   -moz-osx-font-smoothing: grayscale;
 }
 
+  /* Ajuste da coluna do STATUS (coluna do meio) */
+td:nth-child(2), th:nth-child(2){
+  width: 32%;        /* controla a coluna do meio */
+  min-width: 280px;  /* evita quebrar o layout */
+}
+
+
 
 .status-badge{
   display:flex;
   justify-content:center;
   align-items:center;
 
-  padding:14px 24px;       /* altura e largura naturais */
-  height:60px;             /* altura igual para todas */
+  width:100%;               /* agora fica exatamente dentro da coluna */
+  max-width: 750px;         /* limite para telas grandes */
+  height:54px;              /* altura bonita e proporcional */
+  padding:0 10px;
 
-  border-radius:9999px;    /* 🔥 deixa 100% arredondado */
+  border-radius:9999px;
   border:2px solid rgba(255,255,255,0.12);
 
-  font-size:26px;
+  font-size:24px;
   font-weight:700;
-  line-height:26px;
-  white-space:nowrap;      /* impede quebra de linha */
-
+  line-height:28px;
+  white-space:nowrap;
+  text-align:center;
   color:#fff;
+
   margin:0 auto;
   box-sizing:border-box;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 
 /* PROMOÇÕES */
