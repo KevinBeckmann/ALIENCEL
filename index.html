@@ -25,7 +25,7 @@ html,body{height:100%;}
 body{
   margin:0;
   font-family:"Inter",sans-serif;
-  background: linear-gradient(180deg,#000000,#131313,#1c1c1c);
+  background:#1f1f1f;  /* <<<<< AQUI: SÓ ALTEREI ESTE FUNDO */
   color:var(--text);
   -webkit-font-smoothing:antialiased;
   display:flex;
@@ -139,13 +139,13 @@ body{
   will-change: transform;
 }
 
-/* keyframes: move todo o interior para cima -50% (original + clone empilhadas => rolagem contínua) */
+/* keyframes: move todo o interior para cima -50% (original + clone) */
 @keyframes scrollTable{
   0% { transform: translateY(0); }
   100% { transform: translateY(-50%); }
 }
 
-/* tabela com gradiente original (mantido) */
+/* tabela */
 table{
   width:100%;
   border-collapse:collapse;
@@ -186,12 +186,11 @@ tbody td{
   margin:0 auto;
 }
 
-/* Estilo do clone (somente o necessário): fundo TRANSPARENTE para não reiniciar o gradiente */
+/* Clone */
 #clone-tabela{
   background: transparent !important;
 }
 #clone-tabela thead th{
-  /* escondemos o header do clone para não duplicar */
   visibility: hidden;
 }
 
@@ -220,13 +219,16 @@ tbody td{
   to{ transform:translateX(-100%); }
 }
 
-/* pequenas melhorias para evitar seleção estranha durante a rolagem */
-.scroll-area, .scroll-inner, table { -webkit-user-select: none; user-select: none; }
+/* evitar seleção */
+.scroll-area, .scroll-inner, table {
+  -webkit-user-select: none;
+  user-select: none;
+}
 </style>
 </head>
 <body>
 
-<!-- BOTÕES SUPERIORES -->
+<!-- BOTÕES -->
 <button class="button-top fullscreen-btn" id="fullButton">⛶</button>
 <button class="button-top admin-btn" id="adminButton">👤</button>
 
@@ -241,7 +243,7 @@ tbody td{
     </div>
   </div>
 
-  <!-- ALERTAS FULL -->
+  <!-- ALERTAS -->
   <div class="alerts-full">
     <h3>Atenção para as seguintes O.S.</h3>
     <div id="alerts-list">
@@ -249,12 +251,10 @@ tbody td{
     </div>
   </div>
 
-  <!-- TÍTULO -->
   <div class="table-section-title">Status de Serviço</div>
 
-  <!-- TABELA COM SCROLL -->
+  <!-- TABELA -->
   <div class="table-wrapper scroll-area" id="scrollArea">
-    <!-- Agora o JS criará uma .scroll-inner dinamicamente e colocará a table + clone dentro dela -->
     <table id="tabelaStatus">
       <thead>
         <tr>
@@ -325,7 +325,7 @@ function carregarTabela(){
     tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
       Nenhum serviço lançado.
     </td></tr>`;
-    limparScrollWrapper(); // garante que não fique animação quando vazio
+    limparScrollWrapper();
     return;
   }
 
@@ -344,13 +344,12 @@ function carregarTabela(){
   ativarScrollSeNecessario(dados.length);
 }
 
-/* Remove scroll wrapper caso exista e restaura tabela ao estado original */
+/* Limpa scroll antigo */
 function limparScrollWrapper(){
   const area = document.getElementById("scrollArea");
   area.classList.remove("auto-scroll");
   const inner = area.querySelector(".scroll-inner");
   if(inner){
-    // se inner existe e contém a tabela, colocamos a tabela de volta direto em area
     const tabela = inner.querySelector("#tabelaStatus");
     if(tabela){
       area.appendChild(tabela);
@@ -361,17 +360,15 @@ function limparScrollWrapper(){
   if(clone) clone.remove();
 }
 
-/* SCROLL AUTOMÁTICO - usando wrapper .scroll-inner para garantir continuidade sem gap */
+/* Scroll automático */
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
-  // limpa qualquer coisa antiga
   area.classList.remove("auto-scroll");
   const oldClone = document.getElementById("clone-tabela");
   if(oldClone) oldClone.remove();
   const oldInner = area.querySelector(".scroll-inner");
   if(oldInner){
-    // se já houver wrapper, desfazemos (manter apenas uma tabela para reconstruir)
     const existingTable = oldInner.querySelector("#tabelaStatus");
     if(existingTable){
       area.appendChild(existingTable);
@@ -379,41 +376,30 @@ function ativarScrollSeNecessario(qtd){
     oldInner.remove();
   }
 
-  // Se não precisa rolar, mantém só a tabela
   if(qtd < 7){
-    return; // nada a fazer
+    return;
   }
 
-  // Criar wrapper scroll-inner
   const inner = document.createElement("div");
   inner.className = "scroll-inner";
 
-  // Obter a tabela atual e movê-la para dentro do inner
   const tabela = document.querySelector("#tabelaStatus");
   if(!tabela) return;
   area.appendChild(inner);
   inner.appendChild(tabela);
 
-  // Clonar a tabela para que exista uma cópia logo abaixo
   const clone = tabela.cloneNode(true);
   clone.id = "clone-tabela";
-
-  // tornamos o clone visualmente transparente (mantendo as células) e escondemos o thead
   clone.style.background = "transparent";
-  // Remover possible ids duplicados dentro do clone (safety)
+
   const elemsWithId = clone.querySelectorAll("[id]");
   elemsWithId.forEach(e => {
     if(e.id === "tabelaStatus") e.id = "";
-    // deixar outros ids se houver, mas em geral não tem
   });
 
-  // append clone ao inner (ficará logo abaixo da tabela original)
   inner.appendChild(clone);
 
-  // Forçar repaint e medir alturas: queremos garantir que inner tenha altura = 2 * tabelaHeight
-  // (por padrão será), então a animação translateY(-50%) funciona corretamente.
   requestAnimationFrame(() => {
-    // remove seleção e garantir que tudo esteja pronto
     area.classList.add("auto-scroll");
   });
 }
@@ -435,7 +421,7 @@ function atualizarAlertsUI(){
   const box=document.getElementById("alerts-list");
   box.innerHTML="";
   const now=new Date();
-  const arr=[];
+  const arr([]);
 
   lista.forEach(item=>{
     const t=parseTimeHHMM(item.previsao);
@@ -470,7 +456,6 @@ function carregarPromocoes(){
   document.getElementById("promosText").textContent=getPromocoes();
 }
 
-/* REFRESH */
 function refreshAll(){
   carregarTabela();
   carregarPromocoes();
