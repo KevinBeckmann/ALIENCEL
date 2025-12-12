@@ -126,13 +126,8 @@ body{
   position: relative;
 }
 
-.scroll-area.auto-scroll table#tabelaStatus{
+.scroll-area.auto-scroll table{
   /* A tabela principal rola para cima (início da animação) */
-  animation: scrollTable var(--scroll-speed) linear infinite;
-}
-
-.scroll-area.auto-scroll table#clone-tabela{
-  /* O clone rola junto com a tabela principal */
   animation: scrollTable var(--scroll-speed) linear infinite;
 }
 
@@ -144,12 +139,14 @@ body{
 table{
   width:100%;
   border-collapse:collapse;
+  /* Fundo principal da tabela */
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
 
-/* Estilo para garantir a cor de fundo também no clone */
+/* A tabela clone também usará o fundo principal */
 #clone-tabela {
-  background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f) !important;
+  /* Garante que o fundo não mude */
+  background: inherit !important; 
 }
 
 thead th{
@@ -349,11 +346,14 @@ function ativarScrollSeNecessario(qtd){
     }
 
     // 5. Aplica os estilos necessários para o posicionamento e animação
-    tabela.style.tableLayout = "fixed"; // Garante que as colunas tenham o mesmo tamanho
+    tabela.style.tableLayout = "fixed"; 
 
     clone.style.tableLayout = "fixed";
     clone.style.position = "absolute";
-    clone.style.top = tabela.offsetHeight + "px"; // Posiciona o clone imediatamente abaixo da tabela original
+    
+    // CORREÇÃO PRINCIPAL: Subtrair 1px para sobrepor a borda do último elemento, eliminando o espaço.
+    clone.style.top = (tabela.offsetHeight - 1) + "px"; 
+    
     clone.style.left = "0";
     clone.style.width = "100%";
     
