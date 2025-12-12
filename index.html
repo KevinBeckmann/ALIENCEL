@@ -343,22 +343,37 @@ function carregarTabela(){
 
 /* SCROLL AUTOMÁTICO */
 function ativarScrollSeNecessario(qtd){
-  const area=document.getElementById("scrollArea");
+  const area = document.getElementById("scrollArea");
 
+  // Remove estado anterior
   area.classList.remove("auto-scroll");
-  const oldClone=document.getElementById("clone-tabela");
+  const oldClone = document.getElementById("clone-tabela");
   if(oldClone) oldClone.remove();
 
   if(qtd >= 7){
     area.classList.add("auto-scroll");
-    const tabela=document.querySelector("#tabelaStatus");
-    const clone=tabela.cloneNode(true);
-    clone.id="clone-tabela";
-    clone.style.position="absolute";
-    clone.style.top=tabela.offsetHeight+"px";
-    area.appendChild(clone);
+
+    const tabela = document.querySelector("#tabelaStatus");
+
+    // --- CORREÇÃO: clonar SOMENTE o tbody ---
+    const originalTbody = tabela.querySelector("tbody");
+    const cloneTbody = originalTbody.cloneNode(true); 
+    cloneTbody.id = "clone-tabela";
+
+    // Criar nova tabela contendo APENAS tbody (SEM cabeçalho)
+    const newTable = document.createElement("table");
+    newTable.appendChild(cloneTbody);
+
+    // Estilos para manter aparência idêntica
+    newTable.style.width = "100%";
+    newTable.style.borderCollapse = "collapse";
+    newTable.style.position = "absolute";
+    newTable.style.top = tabela.offsetHeight + "px";
+
+    area.appendChild(newTable);
   }
 }
+
 
 /* ALERTAS */
 function parseTimeHHMM(t){
