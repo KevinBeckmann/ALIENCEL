@@ -25,7 +25,7 @@ html,body{height:100%;}
 body{
   margin:0;
   font-family:"Inter",sans-serif;
-  background:#1f1f1f;  /* <<<<< AQUI: SÓ ALTEREI ESTE FUNDO */
+  background:#1f1f1f;
   color:var(--text);
   -webkit-font-smoothing:antialiased;
   display:flex;
@@ -151,6 +151,17 @@ table{
   border-collapse:collapse;
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
   table-layout:fixed;
+  display:block;
+}
+thead{
+  display:table;
+  width:100%;
+  table-layout:fixed;
+}
+tbody{
+  display:table;
+  width:100%;
+  table-layout:fixed;
 }
 thead th{
   padding:18px;
@@ -186,12 +197,12 @@ tbody td{
   margin:0 auto;
 }
 
-/* Clone */
+/* Clone - remove cabeçalho completamente */
 #clone-tabela{
   background: transparent !important;
 }
-#clone-tabela thead th{
-  visibility: hidden;
+#clone-tabela thead{
+  display: none !important;
 }
 
 /* PROMOÇÕES */
@@ -390,7 +401,9 @@ function ativarScrollSeNecessario(qtd){
 
   const clone = tabela.cloneNode(true);
   clone.id = "clone-tabela";
-  clone.style.background = "transparent";
+  
+  const thead = clone.querySelector("thead");
+  if(thead) thead.remove();
 
   const elemsWithId = clone.querySelectorAll("[id]");
   elemsWithId.forEach(e => {
@@ -450,7 +463,6 @@ function atualizarAlertsUI(){
     box.appendChild(div);
   });
 }
-
 
 /* PROMOÇÕES */
 function carregarPromocoes(){
