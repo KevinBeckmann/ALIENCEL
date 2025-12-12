@@ -14,7 +14,11 @@
   --panel: #161616;
   --muted: #bdbdbd;
   --text: #e6e6e6;
+
+  /* velocidade de rolagem */
+  --scroll-speed: 42s;
 }
+
 *{box-sizing:border-box}
 html,body{height:100%;}
 body{
@@ -58,16 +62,14 @@ body{
 .fullscreen-btn{ right:12px; }
 .admin-btn{ right:54px; }
 
-/* HEADER */
+/* HEADER — voltou ao original */
 .header-block{
-  width:100%;                   
-  display:flex;                 
-  justify-content:center;       
-  align-items:center;           
-  margin-bottom:25px;          
-  gap:25px;                    
-
-  /* ajuste fino para mover o grupo um pouco à esquerda */
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:25px;
+  gap:25px;
   margin-left:-40px;
 }
 .header-logo{
@@ -115,6 +117,21 @@ body{
   padding:14px;
   margin-top:10px;
 }
+
+/* SCROLL AUTOMÁTICO */
+.scroll-area{
+  max-height:420px;
+  overflow:hidden;
+  position:relative;
+}
+.scroll-area.auto-scroll table{
+  animation: scrollTable var(--scroll-speed) linear infinite;
+}
+@keyframes scrollTable{
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
 table{
   width:100%;
   border-collapse:collapse;
@@ -189,9 +206,9 @@ tbody td{
     </div>
   </div>
 
-  <!-- ALERTAS FULL WIDTH -->
+  <!-- ALERTAS FULL -->
   <div class="alerts-full">
-    <h3>Alertas (5 minutos)</h3>
+    <h3>Atenção para as seguintes O.S.</h3>
     <div id="alerts-list">
       <div class="alert-empty">Nenhum alerta no momento.</div>
     </div>
@@ -200,8 +217,8 @@ tbody td{
   <!-- TÍTULO -->
   <div class="table-section-title">Status de Serviço</div>
 
-  <!-- TABELA -->
-  <div class="table-wrapper">
+  <!-- TABELA COM SCROLL -->
+  <div class="table-wrapper scroll-area" id="scrollArea">
     <table id="tabelaStatus">
       <thead>
         <tr>
@@ -222,7 +239,7 @@ tbody td{
 </div>
 
 <script>
-/* BOTÃO FULLSCREEN */
+/* FULLSCREEN */
 document.getElementById("fullButton").addEventListener("click",()=>{
   if(!document.fullscreenElement){
     document.documentElement.requestFullscreen();
@@ -231,7 +248,7 @@ document.getElementById("fullButton").addEventListener("click",()=>{
   }
 });
 
-/* ITG / ADMIN */
+/* ADMIN */
 document.getElementById("adminButton").addEventListener("click", () => {
   window.location.href = "administrador.html";
 });
@@ -262,6 +279,7 @@ function escapeHtml(s){
   }[c]));
 }
 
+/* TABELA */
 function carregarTabela(){
   const tbody=document.querySelector("#tabelaStatus tbody");
   const dados=getTabela();
@@ -286,6 +304,26 @@ function carregarTabela(){
   });
 
   atualizarAlertsUI();
+  ativarScrollSeNecessario(dados.length);
+}
+
+/* SCROLL AUTOMÁTICO */
+function ativarScrollSeNecessario(qtd){
+  const area=document.getElementById("scrollArea");
+
+  area.classList.remove("auto-scroll");
+  const oldClone=document.getElementById("clone-tabela");
+  if(oldClone) oldClone.remove();
+
+  if(qtd >= 7){
+    area.classList.add("auto-scroll");
+    const tabela=document.querySelector("#tabelaStatus");
+    const clone=tabela.cloneNode(true);
+    clone.id="clone-tabela";
+    clone.style.position="absolute";
+    clone.style.top=tabela.offsetHeight+"px";
+    area.appendChild(clone);
+  }
 }
 
 /* ALERTAS */
