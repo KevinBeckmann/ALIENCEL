@@ -353,46 +353,46 @@ function carregarTabela(){
 }
 
 /* SCROLL AUTOMÁTICO */
+/* SCROLL AUTOMÁTICO — VERSÃO FINAL CORRIGIDA */
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
-  // Remove estado anterior
+  // Remove scroll antigo e clone anterior
   area.classList.remove("auto-scroll");
   const oldClone = document.getElementById("clone-tabela");
-  if(oldClone) oldClone.remove();
+  if (oldClone) oldClone.remove();
 
-  if(qtd >= 7){
+  // Ativa scroll apenas se houver 7 ou mais registros
+  if (qtd >= 7) {
+
     area.classList.add("auto-scroll");
 
-    const tabela = document.querySelector("#tabelaStatus");
+    const tabela = document.getElementById("tabelaStatus");
 
-    // Clona SOMENTE o tbody original
+    // CLONA APENAS O TBODY (nunca o thead)
     const originalTbody = tabela.querySelector("tbody");
     const cloneTbody = originalTbody.cloneNode(true);
 
-    // Cria nova tabela para o clone
+    // Cria nova tabela para scroll
     const newTable = document.createElement("table");
     newTable.id = "clone-tabela";
 
-    // --- COPIA O COLGROUP PARA MANTER AS COLUNAS ALINHADAS ---
-    const colgroup = tabela.querySelector("colgroup");
-    if(colgroup){
-      newTable.appendChild(colgroup.cloneNode(true));
-    }
-
-    // Adiciona o tbody clonado
-    newTable.appendChild(cloneTbody);
-
-    // Estilos para manter alinhamento perfeito
-    newTable.style.width = tabela.offsetWidth + "px";
-    newTable.style.borderCollapse = "collapse";
+    // Mantém mesmo estilo visual da tabela real
     newTable.style.position = "absolute";
     newTable.style.left = "0px";
     newTable.style.top = tabela.offsetHeight + "px";
+    newTable.style.width = tabela.offsetWidth + "px";
+    newTable.style.borderCollapse = "collapse";
+    newTable.style.background = window.getComputedStyle(tabela).background;
 
+    // Adiciona *somente* o corpo clonado
+    newTable.appendChild(cloneTbody);
+
+    // Coloca o clone dentro da área de scroll
     area.appendChild(newTable);
   }
 }
+
 
 
 /* ALERTAS */
