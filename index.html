@@ -9,74 +9,74 @@
 
 <style>
 :root{
-  --accent: #4caf50;
-  --bg-dark: #0f0f0f;
-  --panel: #161616;
-  --muted: #bdbdbd;
-  --text: #e6e6e6;
+  --accent: #4caf50;
+  --bg-dark: #0f0f0f;
+  --panel: #161616;
+  --muted: #bdbdbd;
+  --text: #e6e6e6;
 
-  /* velocidade de rolagem */
-  --scroll-speed: 42s;
+  /* velocidade de rolagem */
+  --scroll-speed: 42s;
 }
 
 *{box-sizing:border-box}
 html,body{height:100%;}
 
 body{
-  margin:0;
-  font-family:"Inter",sans-serif;
-  background: linear-gradient(180deg,#000000,#131313,#1c1c1c);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  display:flex;
-  flex-direction:column;
-  min-height:100vh;
+  margin:0;
+  font-family:"Inter",sans-serif;
+  background: linear-gradient(180deg,#000000,#131313,#1c1c1c);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
 }
 
 .container{
-  width:100%;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  padding:20px 28px;
+  width:100%;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:20px 28px;
 }
 
 /* BOTÕES SUPERIORES */
 .button-top{
-  position:fixed;
-  top:12px;
-  font-size:18px;
-  padding:5px 11px;
-  color:#b7b7b7;
-  background:rgba(0,0,0,0.32);
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:8px;
-  cursor:pointer;
-  z-index:9999;
-  transition:0.25s;
-  backdrop-filter:blur(3px);
+  position:fixed;
+  top:12px;
+  font-size:18px;
+  padding:5px 11px;
+  color:#b7b7b7;
+  background:rgba(0,0,0,0.32);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;
+  cursor:pointer;
+  z-index:9999;
+  transition:0.25s;
+  backdrop-filter:blur(3px);
 }
 .button-top:hover{
-  background:rgba(255,255,255,0.1);
-  color:white;
+  background:rgba(255,255,255,0.1);
+  color:white;
 }
 .fullscreen-btn{ right:12px; }
 .admin-btn{ right:54px; }
 
 /* HEADER */
 .header-block{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin-bottom:25px;
-  gap:25px;
-  margin-left:-40px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:25px;
+  gap:25px;
+  margin-left:-40px;
 }
 .header-logo{
-  height:150px;
-  object-fit:contain;
-  filter:drop-shadow(0 0 6px rgba(255,255,255,0.25));
+  height:150px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,0.25));
 }
 .header-text{ text-align:center; }
 .header-title{ font-size:48px; font-weight:800; margin:0; }
@@ -84,354 +84,340 @@ body{
 
 /* ALERTA FULL WIDTH */
 .alerts-full{
-  width:100%;
-  background:linear-gradient(180deg,#171717,#121212);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:14px;
-  padding:14px 18px;
-  margin-bottom:20px;
+  width:100%;
+  background:linear-gradient(180deg,#171717,#121212);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px;
+  padding:14px 18px;
+  margin-bottom:20px;
 }
 .alerts-full h3{
-  margin:0 0 10px;
-  color:#ffb3b3;
-  font-size:20px;
-  font-weight:600;
+  margin:0 0 10px;
+  color:#ffb3b3;
+  font-size:20px;
+  font-weight:600;
 }
 .alert-empty{ color:var(--muted); }
 
 /* TÍTULO ENTRE ALERTAS E TABELA */
 .table-section-title{
-  width:100%;
-  text-align:center;
-  font-size:26px;
-  font-weight:700;
-  margin:10px 0 10px 0;
-  color:#e8e8e8;
+  width:100%;
+  text-align:center;
+  font-size:26px;
+  font-weight:700;
+  margin:10px 0 10px 0;
+  color:#e8e8e8;
 }
 
 /* TABELA */
 .table-wrapper{
-  flex:1;
-  background:linear-gradient(180deg,#0d0d0d,#090909);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:14px;
-  padding:14px;
-  margin-top:10px;
+  flex:1;
+  background:linear-gradient(180deg,#0d0d0d,#090909);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px;
+  padding:14px;
+  margin-top:10px;
 }
 
 /* SCROLL AUTOMÁTICO */
 .scroll-area{
-  max-height: calc(100vh - 320px);
-  overflow: hidden;
-  position: relative;
+  max-height: calc(100vh - 320px);
+  overflow: hidden;
+  position: relative;
 }
 
 .scroll-area.auto-scroll table{
-  /* A tabela principal rola para cima (início da animação) */
-  animation: scrollTable var(--scroll-speed) linear infinite;
+  animation: scrollTable var(--scroll-speed) linear infinite;
 }
 
 @keyframes scrollTable{
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
 }
 
 table{
-  width:100%;
-  border-collapse:collapse;
-  /* Fundo principal da tabela */
-  background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
+  width:100%;
+  border-collapse:collapse;
+  background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
-
-/* A tabela clone também usará o fundo principal */
-#clone-tabela {
-  /* Garante que o fundo não mude */
-  background: inherit !important; 
-}
-
 thead th{
-  padding:18px;
-  background:linear-gradient(180deg,#545454,#3f3f3f);
-  font-size:26px;
-  line-height:32px;
-  font-weight:700;
-  color:#fff;
-  text-align:center;
+  padding:18px;
+  background:linear-gradient(180deg,#545454,#3f3f3f);
+  font-size:26px;
+  line-height:32px;
+  font-weight:700;
+  color:#fff;
+  text-align:center;
 }
 tbody td{
-  padding:18px;
-  border-bottom:1px solid rgba(0,0,0,0.25);
-  color:#e0e0e0;
-  text-align:center;
-  font-size:26px;
-  line-height:34px;
-  font-weight:600;
+  padding:18px;
+  border-bottom:1px solid rgba(0,0,0,0.25);
+  color:#e0e0e0;
+  text-align:center;
+  font-size:26px;
+  line-height:34px;
+  font-weight:600;
 }
 
 .status-badge{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:14px 24px;
-  height:60px;
-  border-radius:9999px;
-  border:2px solid rgba(255,255,255,0.12);
-  font-size:26px;
-  font-weight:700;
-  white-space:nowrap;
-  color:#fff;
-  margin:0 auto;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:14px 24px;
+  height:60px;
+  border-radius:9999px;
+  border:2px solid rgba(255,255,255,0.12);
+  font-size:26px;
+  font-weight:700;
+  white-space:nowrap;
+  color:#fff;
+  margin:0 auto;
 }
 
 /* PROMOÇÕES */
 #promosBox{
-  width:100%;
-  background:linear-gradient(180deg,#171717,#121212);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:12px;
-  padding:18px 20px;
-  white-space:nowrap;
-  overflow:hidden;
+  width:100%;
+  background:linear-gradient(180deg,#171717,#121212);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;
+  padding:18px 20px;
+  white-space:nowrap;
+  overflow:hidden;
 }
 #promosText{
-  font-size:28px;
-  line-height:34px;
-  font-weight:700;
-  color:#dcdcdc;
-  display:inline-block;
-  padding-left:100%;
-  animation: slidePromo 14s linear infinite;
+  font-size:28px;
+  line-height:34px;
+  font-weight:700;
+  color:#dcdcdc;
+  display:inline-block;
+  padding-left:100%;
+  animation: slidePromo 14s linear infinite;
 }
 
 @keyframes slidePromo{
-  from{ transform:translateX(0%); }
-  to{ transform:translateX(-100%); }
+  from{ transform:translateX(0%); }
+  to{ transform:translateX(-100%); }
 }
 </style>
 </head>
 <body>
 
+<!-- BOTÕES SUPERIORES -->
 <button class="button-top fullscreen-btn" id="fullButton">⛶</button>
 <button class="button-top admin-btn" id="adminButton">👤</button>
 
 <div class="container">
 
-    <div class="header-block">
-    <img src="imageem.png" class="header-logo">
-    <div class="header-text">
-      <h1 class="header-title">ALIENCELL</h1>
-      <div class="header-subtitle">Reparos avançados Apple</div>
-    </div>
-  </div>
+  <!-- HEADER -->
+  <div class="header-block">
+    <img src="imageem.png" class="header-logo">
+    <div class="header-text">
+      <h1 class="header-title">ALIENCELL</h1>
+      <div class="header-subtitle">Reparos avançados Apple</div>
+    </div>
+  </div>
 
-    <div class="alerts-full">
-    <h3>Atenção para as seguintes O.S.</h3>
-    <div id="alerts-list">
-      <div class="alert-empty">Nenhum alerta no momento.</div>
-    </div>
-  </div>
+  <!-- ALERTAS FULL -->
+  <div class="alerts-full">
+    <h3>Atenção para as seguintes O.S.</h3>
+    <div id="alerts-list">
+      <div class="alert-empty">Nenhum alerta no momento.</div>
+    </div>
+  </div>
 
-    <div class="table-section-title">Status de Serviço</div>
+  <!-- TÍTULO -->
+  <div class="table-section-title">Status de Serviço</div>
 
-    <div class="table-wrapper scroll-area" id="scrollArea">
-    <table id="tabelaStatus">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Status</th>
-          <th>Previsão</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <!-- TABELA COM SCROLL -->
+  <div class="table-wrapper scroll-area" id="scrollArea">
+    <table id="tabelaStatus">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Status</th>
+          <th>Previsão</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-    <div id="promosBox">
-    <span id="promosText"></span>
-  </div>
+  <!-- PROMOÇÕES -->
+  <div id="promosBox">
+    <span id="promosText"></span>
+  </div>
 
 </div>
 
 <script>
 /* FULLSCREEN */
 document.getElementById("fullButton").addEventListener("click",()=>{
-  if(!document.fullscreenElement){
-    document.documentElement.requestFullscreen();
-  }else{
-    document.exitFullscreen();
-  }
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen();
+  }else{
+    document.exitFullscreen();
+  }
 });
 
 /* ADMIN */
 document.getElementById("adminButton").addEventListener("click", () => {
-  window.location.href = "administrador.html";
+  window.location.href = "administrador.html";
 });
 
 /* BANCO */
 const STORAGE_KEY = "assist_db";
 
 function getDB(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(!raw) return { tabela: [], promocoes: "" };
-  try{ return JSON.parse(raw); }
-  catch{ return { tabela: [], promocoes: "" }; }
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return { tabela: [], promocoes: "" };
+  try{ return JSON.parse(raw); }
+  catch{ return { tabela: [], promocoes: "" }; }
 }
 function getTabela(){ return getDB().tabela || []; }
 function getPromocoes(){ return getDB().promocoes || ""; }
 
 const statusColors = {
-  "Análise/Diagnóstico": "rgba(154,160,166,0.55)",
-  "Aguardando Aprovação": "rgba(241,196,15,0.55)",
-  "Aguardando Peça": "rgba(230,126,34,0.55)",
-  "Em Reparo": "rgba(52,152,219,0.55)",
-  "Pronto para Retirada": "rgba(46,204,113,0.55)"
+  "Análise/Diagnóstico": "rgba(154,160,166,0.55)",
+  "Aguardando Aprovação": "rgba(241,196,15,0.55)",
+  "Aguardando Peça": "rgba(230,126,34,0.55)",
+  "Em Reparo": "rgba(52,152,219,0.55)",
+  "Pronto para Retirada": "rgba(46,204,113,0.55)"
 };
 
 function escapeHtml(s){
-  return (s+"").replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"
-  }[c]));
+  return (s+"").replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"
+  }[c]));
 }
 
 /* TABELA */
 function carregarTabela(){
-  const tbody=document.querySelector("#tabelaStatus tbody");
-  const dados=getTabela();
-  tbody.innerHTML="";
+  const tbody=document.querySelector("#tabelaStatus tbody");
+  const dados=getTabela();
+  tbody.innerHTML="";
 
-  if(dados.length===0){
-    tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
-      Nenhum serviço lançado.
-    </td></tr>`;
-    return;
-  }
+  if(dados.length===0){
+    tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#bbb;padding:20px">
+      Nenhum serviço lançado.
+    </td></tr>`;
+    return;
+  }
 
-  dados.forEach(item=>{
-    const cor=statusColors[item.status]||"#999";
-    const tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${escapeHtml(item.cliente)}</td>
-      <td><span class="status-badge" style="background:${cor}">${escapeHtml(item.status)}</span></td>
-      <td>${escapeHtml(item.previsao)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
+  dados.forEach(item=>{
+    const cor=statusColors[item.status]||"#999";
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${escapeHtml(item.cliente)}</td>
+      <td><span class="status-badge" style="background:${cor}">${escapeHtml(item.status)}</span></td>
+      <td>${escapeHtml(item.previsao)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
 
-  atualizarAlertsUI();
-  ativarScrollSeNecessario(dados.length);
+  atualizarAlertsUI();
+  ativarScrollSeNecessario(dados.length);
 }
 
 /* SCROLL AUTOMÁTICO CORRIGIDO */
 function ativarScrollSeNecessario(qtd){
-  const area = document.getElementById("scrollArea");
-  const tabela = document.getElementById("tabelaStatus");
+  const area = document.getElementById("scrollArea");
 
-  // 1. Limpa o estado anterior
-  area.classList.remove("auto-scroll");
-  const oldClone = document.getElementById("clone-tabela");
-  if(oldClone) oldClone.remove();
+  area.classList.remove("auto-scroll");
+  const oldClone = document.getElementById("clone-tabela");
+  if(oldClone) oldClone.remove();
 
-  // 2. Verifica se a rolagem automática é necessária
-  if(qtd >= 7){
-    area.classList.add("auto-scroll");
+  if(qtd >= 7){
+    area.classList.add("auto-scroll");
 
-    // 3. Cria a nova tabela clone
-    const clone = document.createElement("table");
-    clone.id = "clone-tabela";
+    const tabela = document.querySelector("#tabelaStatus");
 
-    // 4. Clona apenas o corpo (tbody) para evitar a duplicação do cabeçalho (thead)
-    const tbody = tabela.querySelector("tbody");
-    if (tbody) {
-      clone.appendChild(tbody.cloneNode(true));
-    }
+    tabela.style.tableLayout = "fixed";
 
-    // 5. Aplica os estilos necessários para o posicionamento e animação
-    tabela.style.tableLayout = "fixed"; 
+    const clone = tabela.cloneNode(true);
+    clone.id = "clone-tabela";
+    clone.style.tableLayout = "fixed";
 
-    clone.style.tableLayout = "fixed";
-    clone.style.position = "absolute";
-    
-    // CORREÇÃO PRINCIPAL: Subtrair 1px para sobrepor a borda do último elemento, eliminando o espaço.
-    clone.style.top = (tabela.offsetHeight - 1) + "px"; 
-    
-    clone.style.left = "0";
-    clone.style.width = "100%";
-    
-    // 6. Insere o clone
-    area.appendChild(clone);
-  }
+    clone.querySelector("thead").style.visibility = "hidden";
+
+    clone.style.position = "absolute";
+    clone.style.top = tabela.offsetHeight + "px";
+    clone.style.left = "0";
+    clone.style.width = "100%";
+
+    area.appendChild(clone);
+  }
 }
 
 /* ALERTAS */
 function parseTimeHHMM(t){
-  const m=String(t).match(/^([0-2][0-9]):([0-5][0-9])$/);
-  if(!m) return null;
-  const now=new Date();
-  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1]),parseInt(m[2]));
-  if(d < now - 60000) d.setDate(d.getDate()+1);
-  return d;
+  const m=String(t).match(/^([0-2][0-9]):([0-5][0-9])$/);
+  if(!m) return null;
+  const now=new Date();
+  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1]),parseInt(m[2]));
+  if(d < now - 60000) d.setDate(d.getDate()+1);
+  return d;
 }
 
 function minutesDiff(a,b){ return (b-a)/60000; }
 
 function atualizarAlertsUI(){
-  const lista=getTabela();
-  const box=document.getElementById("alerts-list");
-  box.innerHTML="";
-  const now=new Date();
-  const arr=[];
+  const lista=getTabela();
+  const box=document.getElementById("alerts-list");
+  box.innerHTML="";
+  const now=new Date();
+  const arr=[];
 
-  lista.forEach(item=>{
-    const t=parseTimeHHMM(item.previsao);
-    if(!t) return;
-    const m=minutesDiff(now,t);
-    if(m>=0 && m<=5) arr.push({item,m});
-  });
+  lista.forEach(item=>{
+    const t=parseTimeHHMM(item.previsao);
+    if(!t) return;
+    const m=minutesDiff(now,t);
+    if(m>=0 && m<=5) arr.push({item,m});
+  });
 
-  if(arr.length===0){
-    box.innerHTML=`<div class="alert-empty">Nenhum alerta no momento.</div>`;
-    return;
-  }
+  if(arr.length===0){
+    box.innerHTML=`<div class="alert-empty">Nenhum alerta no momento.</div>`;
+    return;
+  }
 
-  arr.sort((a,b)=>a.m-b.m);
+  arr.sort((a,b)=>a.m-b.m);
 
-  arr.forEach(a=>{
-    const div=document.createElement("div");
-    div.className="alert-item";
-    div.innerHTML=`
-      <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
-      <div style="text-align:right">
-        <div class="alert-time">${escapeHtml(a.item.previsao)}</div>
-        <div style="font-size:13px;color:#ffdede">${Math.ceil(a.m)} min</div>
-      </div>
-    `;
-    box.appendChild(div);
-  });
+  arr.forEach(a=>{
+    const div=document.createElement("div");
+    div.className="alert-item";
+    div.innerHTML=`
+      <div style="font-weight:700">${escapeHtml(a.item.cliente)}</div>
+      <div style="text-align:right">
+        <div class="alert-time">${escapeHtml(a.item.previsao)}</div>
+        <div style="font-size:13px;color:#ffdede">${Math.ceil(a.m)} min</div>
+      </div>
+    `;
+    box.appendChild(div);
+  });
 }
 
 /* PROMOÇÕES */
 function carregarPromocoes(){
-  document.getElementById("promosText").textContent=getPromocoes();
+  document.getElementById("promosText").textContent=getPromocoes();
 }
 
 /* REFRESH */
 function refreshAll(){
-  carregarTabela();
-  carregarPromocoes();
-  atualizarAlertsUI();
+  carregarTabela();
+  carregarPromocoes();
+  atualizarAlertsUI();
 }
 
 let lastRaw=localStorage.getItem(STORAGE_KEY);
 setInterval(()=>{
-  const nowRaw=localStorage.getItem(STORAGE_KEY);
-  if(nowRaw!==lastRaw){
-    lastRaw=nowRaw;
-    refreshAll();
-  }
+  const nowRaw=localStorage.getItem(STORAGE_KEY);
+  if(nowRaw!==lastRaw){
+    lastRaw=nowRaw;
+    refreshAll();
+  }
 },900);
 
 document.addEventListener("DOMContentLoaded",()=>{
-  refreshAll();
+  refreshAll();
 });
 </script>
 
