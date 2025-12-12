@@ -265,16 +265,26 @@ td:nth-child(2), th:nth-child(2){
   <!-- TABELA COM SCROLL -->
   <div class="table-wrapper scroll-area" id="scrollArea">
     <table id="tabelaStatus">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Status</th>
-          <th>Previsão</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
+
+        <colgroup>
+            <col style="width: 30%">
+            <col style="width: 40%">
+            <col style="width: 30%">
+        </colgroup>
+
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Status</th>
+                <th>Previsão</th>
+            </tr>
+        </thead>
+
+        <tbody></tbody>
+
     </table>
-  </div>
+</div>
+
 
   <!-- PROMOÇÕES -->
   <div id="promosBox">
@@ -352,46 +362,66 @@ function carregarTabela(){
   ativarScrollSeNecessario(dados.length);
 }
 
-/* SCROLL AUTOMÁTICO */
-/* SCROLL AUTOMÁTICO — VERSÃO FINAL CORRIGIDA */
+/* SCROLL AUTOMÁTICO — VERSÃO 100% ALINHADA */
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
-  // Remove scroll antigo e clone anterior
+  // Remove estado anterior
   area.classList.remove("auto-scroll");
   const oldClone = document.getElementById("clone-tabela");
   if (oldClone) oldClone.remove();
 
-  // Ativa scroll apenas se houver 7 ou mais registros
-  if (qtd >= 7) {
+  if (qtd >= 7){
 
     area.classList.add("auto-scroll");
 
     const tabela = document.getElementById("tabelaStatus");
-
-    // CLONA APENAS O TBODY (nunca o thead)
     const originalTbody = tabela.querySelector("tbody");
+
+    // CLONA SOMENTE O TBODY
     const cloneTbody = originalTbody.cloneNode(true);
 
-    // Cria nova tabela para scroll
+    // CRIA TABELA NOVA
     const newTable = document.createElement("table");
     newTable.id = "clone-tabela";
 
-    // Mantém mesmo estilo visual da tabela real
+    /* ------------------------------
+       COPIA COLUNAS EXATAS DO TABLE
+    -------------------------------- */
+
+    const colgroup = document.createElement("colgroup");
+    const cols = tabela.querySelectorAll("thead th");
+
+    cols.forEach(th => {
+      const col = document.createElement("col");
+      const width = th.offsetWidth + "px";
+      col.style.width = width;
+      colgroup.appendChild(col);
+    });
+
+    newTable.appendChild(colgroup);
+
+    /* ------------------------------ */
+
+    // Aplica estilos visuais idênticos
     newTable.style.position = "absolute";
     newTable.style.left = "0px";
     newTable.style.top = tabela.offsetHeight + "px";
     newTable.style.width = tabela.offsetWidth + "px";
     newTable.style.borderCollapse = "collapse";
-    newTable.style.background = window.getComputedStyle(tabela).background;
 
-    // Adiciona *somente* o corpo clonado
+    // copia o background real
+    const tbStyle = window.getComputedStyle(tabela);
+    newTable.style.background = tbStyle.background;
+
+    // adiciona o tbody clonado
     newTable.appendChild(cloneTbody);
 
-    // Coloca o clone dentro da área de scroll
+    // insere no scroll
     area.appendChild(newTable);
   }
 }
+
 
 
 
