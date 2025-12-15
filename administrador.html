@@ -3,14 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" content="#4caf50">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ALIENCELL Admin">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
 <title>Painel de Controle | Serviços</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-/* ---------- GERAL ---------- */
 :root{
   --accent: #4caf50;
   --bg-dark: #0f0f0f;
@@ -28,7 +32,6 @@ body{
   padding:20px;
 }
 
-/* ---------- CONTAINER ---------- */
 .container{
   width:95%;
   max-width:980px;
@@ -40,13 +43,11 @@ body{
   animation:fadeIn .6s ease;
 }
 
-/* animations */
 @keyframes fadeIn{
   from{opacity:0; transform:translateY(-8px)}
   to{opacity:1; transform:none}
 }
 
-/* ---------- LOGO + VOLTAR ---------- */
 .header-row{
   display:flex;
   align-items:center;
@@ -66,7 +67,6 @@ body{
 }
 .voltar-btn:hover{ background:rgba(76,175,80,0.12) }
 
-/* ---------- TOP ROW: ALERTS + CHART ---------- */
 .top-row{
   display:grid;
   grid-template-columns:1fr 360px;
@@ -75,7 +75,6 @@ body{
   align-items:start;
 }
 
-/* alerts */
 .alerts{
   background:linear-gradient(180deg,#171717,#121212);
   border-radius:10px;
@@ -87,7 +86,6 @@ body{
 .alerts-list{ display:flex; flex-direction:column; gap:8px; }
 .alert-empty{ color:var(--muted); font-size:14px }
 
-/* single alert */
 .alert-item{
   display:flex;
   justify-content:space-between;
@@ -103,7 +101,6 @@ body{
 .alert-item .left{ display:flex; gap:10px; align-items:center; }
 .alert-time{ font-weight:700; color:#ffdede; }
 
-/* chart card */
 .chart-card{
   background:linear-gradient(180deg,#0b0b0b,#090909);
   padding:12px;
@@ -113,7 +110,6 @@ body{
   height:100%;
 }
 
-/* ---------- FORM ---------- */
 form{ margin-bottom:14px; }
 .form-grid{
   display:grid;
@@ -128,7 +124,6 @@ form{ margin-bottom:14px; }
   .alerts{ order:1 }
 }
 
-/* form groups */
 .form-group{ width:100%; display:flex; flex-direction:column; }
 .form-group.full{ grid-column:1/-1 }
 label{ font-size:14px; color:#dcdcdc; font-weight:600; margin-bottom:6px; }
@@ -149,7 +144,6 @@ input:focus, select:focus, textarea:focus{
 }
 textarea{ min-height:88px; resize:vertical; }
 
-/* button style (same width as inputs) */
 .btn-principal{
   width:100%;
   padding:12px;
@@ -164,7 +158,6 @@ textarea{ min-height:88px; resize:vertical; }
 }
 .btn-principal:hover{ transform:translateY(-2px) }
 
-/* ---------- TABLE (CROMADO) ---------- */
 .table-card{
   margin-top:14px;
   border-radius:12px;
@@ -192,7 +185,6 @@ td{
   vertical-align:middle;
 }
 
-/* actions */
 .btn-edit, .btn-delete{
   padding:8px 12px;
   border:none;
@@ -204,7 +196,6 @@ td{
 .btn-edit{ background:#3498db; color:white }
 .btn-delete{ background:#e74c3c; color:white }
 
-/* message */
 .msg-sucesso{
   background:var(--accent);
   color:#fff;
@@ -215,7 +206,6 @@ td{
   margin-bottom:12px;
 }
 
-/* small helpers */
 .small-muted{ color:var(--muted); font-size:13px; }
 
 </style>
@@ -234,7 +224,6 @@ td{
 
   <div id="success-msg" class="msg-sucesso">Dados salvos!</div>
 
-  <!-- TOP ROW -->
   <div class="top-row">
     <div class="alerts" id="alerts">
       <h3>O.S. Expira em 5 minutos</h3>
@@ -248,7 +237,6 @@ td{
     </div>
   </div>
 
-  <!-- FORM -->
   <form id="service-form">
     <div class="form-grid">
       <div class="form-group">
@@ -279,7 +267,6 @@ td{
     </div>
   </form>
 
-  <!-- TABLE -->
   <div class="table-card">
     <table id="services-table">
       <thead>
@@ -303,10 +290,15 @@ td{
 </div>
 
 <script>
-/* ===========================
-   BANCO DE DADOS CORRIGIDO
-   =========================== */
-const STORAGE_KEY = "assist_db";  // <<< AQUI FOI A ÚNICA ALTERAÇÃO
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('Service Worker registrado'))
+      .catch(err => console.log('Erro no Service Worker:', err));
+  });
+}
+
+const STORAGE_KEY = "assist_db";
 
 function getDB(){
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -329,12 +321,6 @@ function setTabela(tabela){ const db=getDB(); db.tabela=tabela; saveDB(db); }
 function getPromocoes(){ return (getDB().promocoes) || ""; }
 function setPromocoes(txt){ const db=getDB(); db.promocoes = txt||""; saveDB(db); }
 
-
-
-/* ===========================
-   UI / Data functions
-   =========================== */
-
 const statusOptions = [
   "Análise/Diagnóstico",
   "Aguardando Aprovação",
@@ -344,10 +330,8 @@ const statusOptions = [
 ];
 
 function carregar(){
-  // preencher promo
   document.getElementById("promo").value = getPromocoes();
 
-  // preencher tabela
   const lista = document.getElementById("services-list");
   lista.innerHTML = "";
   getTabela().forEach((item, i) => {
@@ -370,9 +354,6 @@ function carregar(){
 
 function escapeHtml(s){ return (s+"").replace(/[&<>\"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
 
-
-
-/* salvar / editar */
 function limpar(){
   document.getElementById("service-index")?.remove?.();
   document.getElementById("cliente").value = "";
@@ -408,7 +389,6 @@ document.getElementById("service-form").addEventListener("submit", (e)=>{
   salvar();
 });
 
-/* editar / excluir */
 function editar(i){
   const item = getTabela()[i];
   if(!item) return;
@@ -436,17 +416,11 @@ function excluir(i){
   carregar();
 }
 
-
-
-/* promos */
 function salvarPromo(){
   setPromocoes(document.getElementById("promo").value);
   alert("Promoções atualizadas!");
 }
 
-
-
-/* success message */
 function showSuccess(text){
   const el = document.getElementById("success-msg");
   el.textContent = text;
@@ -454,11 +428,6 @@ function showSuccess(text){
   setTimeout(()=> el.style.display = "none", 2000);
 }
 
-
-
-/* ===========================
-   CHART
-   =========================== */
 let chartInstance = null;
 function atualizarGrafico(){
   const tabela = getTabela();
@@ -505,12 +474,6 @@ function atualizarGrafico(){
     }
   });
 }
-
-
-
-/* ===========================
-   ALERTAS
-   =========================== */
 
 function parseTimeHHMM(hhmm){
   const m = hhmm.match(/^([0-2][0-9]):([0-5][0-9])$/);
@@ -576,12 +539,6 @@ function startAlertChecker(){
   }, 30*1000);
 }
 
-
-
-/* ===========================
-   INIT
-   =========================== */
-
 function initDemoDataIfEmpty(){
   const db = getDB();
   if(!db.tabela || db.tabela.length === 0){
@@ -601,20 +558,12 @@ initDemoDataIfEmpty();
 carregar();
 startAlertChecker();
 
-
-/* ======================================================
-   SINCRONIZAÇÃO EM TEMPO-REAL ENTRE ABAS (storage event)
-   e POLLING DE BACKUP (para ambientes que não disparam storage)
-   ====================================================== */
-
-// Atualiza imediatamente quando outra aba/janela altera o localStorage
 window.addEventListener('storage', (e) => {
   if (e.key === STORAGE_KEY) {
     carregar();
   }
 });
 
-// Polling de 900ms para garantir atualização em outros contextos (ex: Android webview)
 let lastRaw = localStorage.getItem(STORAGE_KEY);
 setInterval(() => {
   const nowRaw = localStorage.getItem(STORAGE_KEY);
@@ -627,3 +576,4 @@ setInterval(() => {
 </script>
 </body>
 </html>
+
