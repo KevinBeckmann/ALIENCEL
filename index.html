@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" content="#4caf50">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ALIENCELL">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
 <title>Status Assistência — Visual</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -14,8 +20,6 @@
   --panel: #161616;
   --muted: #bdbdbd;
   --text: #e6e6e6;
-
-  /* velocidade de rolagem */
   --scroll-speed: 42s;
 }
 
@@ -41,7 +45,6 @@ body{
   overflow: hidden;
 }
 
-/* BOTÕES SUPERIORES */
 .button-top{
   position:fixed;
   top:12px;
@@ -63,7 +66,6 @@ body{
 .fullscreen-btn{ right:12px; }
 .admin-btn{ right:54px; }
 
-/* HEADER */
 .header-block{
   width:100%;
   display:flex;
@@ -81,7 +83,6 @@ body{
 .header-title{ font-size:42px; font-weight:800; margin:0; }
 .header-subtitle{ font-size:18px; opacity:.9; margin:0; }
 
-/* ALERTA FULL WIDTH */
 .alerts-full{
   width:100%;
   background:linear-gradient(180deg,#171717,#121212);
@@ -99,7 +100,6 @@ body{
 }
 .alert-empty{ color:var(--muted); font-size: 14px; }
 
-/* TÍTULO ENTRE ALERTAS E TABELA */
 .table-section-title{
   width:100%;
   text-align:center;
@@ -110,7 +110,6 @@ body{
   flex-shrink: 0;
 }
 
-/* TABELA */
 .table-wrapper{
   flex:1;
   background:linear-gradient(180deg,#0d0d0d,#090909);
@@ -121,7 +120,6 @@ body{
   min-height: 0;
 }
 
-/* SCROLL AUTOMÁTICO - área visível */
 .scroll-area{
   width: 100%;
   height: 100%;
@@ -135,7 +133,6 @@ body{
   display: none;
 }
 
-/* Contêiner que movimenta as duas tabelas (original + clone) */
 .scroll-inner{
   width:100%;
   position: relative;
@@ -143,19 +140,16 @@ body{
   background:linear-gradient(180deg,#3a3a3a,#2b2b2b 45%,#1f1f1f);
 }
 
-/* A animação será aplicada ao .scroll-inner quando necessário */
 .scroll-area.auto-scroll .scroll-inner{
   animation: scrollTable var(--scroll-speed) linear infinite;
   will-change: transform;
 }
 
-/* keyframes: move todo o interior para cima -50% (original + clone) */
 @keyframes scrollTable{
   0% { transform: translateY(0); }
   100% { transform: translateY(-50%); }
 }
 
-/* tabela */
 table{
   width:100%;
   border-collapse:collapse;
@@ -193,7 +187,6 @@ tbody td{
   font-weight:700;
 }
 
-
 .status-badge{
   display:flex;
   justify-content:center;
@@ -209,8 +202,6 @@ tbody td{
   margin:0 auto;
 }
 
-
-/* Clone - remove cabeçalho completamente */
 #clone-tabela{
   background: transparent !important;
 }
@@ -218,7 +209,6 @@ tbody td{
   display: none !important;
 }
 
-/* PROMOÇÕES */
 #promosBox{
   width:100%;
   background:linear-gradient(180deg,#171717,#121212);
@@ -242,13 +232,11 @@ tbody td{
   animation: slidePromo 14s linear infinite;
 }
 
-
 @keyframes slidePromo{
   from{ transform:translateX(0%); }
   to{ transform:translateX(-100%); }
 }
 
-/* evitar seleção */
 .scroll-area, .scroll-inner, table {
   -webkit-user-select: none;
   user-select: none;
@@ -257,13 +245,11 @@ tbody td{
 </head>
 <body>
 
-<!-- BOTÕES -->
 <button class="button-top fullscreen-btn" id="fullButton">⛶</button>
 <button class="button-top admin-btn" id="adminButton">👤</button>
 
 <div class="container">
 
-  <!-- HEADER -->
   <div class="header-block">
     <img src="imageem.png" class="header-logo">
     <div class="header-text">
@@ -272,7 +258,6 @@ tbody td{
     </div>
   </div>
 
-  <!-- ALERTAS -->
   <div class="alerts-full">
     <h3>Atenção para as seguintes O.S.</h3>
     <div id="alerts-list">
@@ -282,7 +267,6 @@ tbody td{
 
   <div class="table-section-title">Status de Serviço</div>
 
-  <!-- TABELA -->
   <div class="table-wrapper scroll-area" id="scrollArea">
     <table id="tabelaStatus">
       <thead>
@@ -296,7 +280,6 @@ tbody td{
     </table>
   </div>
 
-  <!-- PROMOÇÕES -->
   <div id="promosBox">
     <span id="promosText"></span>
   </div>
@@ -304,7 +287,14 @@ tbody td{
 </div>
 
 <script>
-/* FULLSCREEN */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('Service Worker registrado'))
+      .catch(err => console.log('Erro no Service Worker:', err));
+  });
+}
+
 document.getElementById("fullButton").addEventListener("click",()=>{
   if(!document.fullscreenElement){
     document.documentElement.requestFullscreen();
@@ -313,12 +303,10 @@ document.getElementById("fullButton").addEventListener("click",()=>{
   }
 });
 
-/* ADMIN */
 document.getElementById("adminButton").addEventListener("click", () => {
   window.location.href = "administrador.html";
 });
 
-/* BANCO */
 const STORAGE_KEY = "assist_db";
 
 function getDB(){
@@ -344,7 +332,6 @@ function escapeHtml(s){
   }[c]));
 }
 
-/* TABELA */
 function carregarTabela(){
   const tbody=document.querySelector("#tabelaStatus tbody");
   const dados=getTabela();
@@ -373,7 +360,6 @@ function carregarTabela(){
   ativarScrollSeNecessario(dados.length);
 }
 
-/* Limpa scroll antigo */
 function limparScrollWrapper(){
   const area = document.getElementById("scrollArea");
   area.classList.remove("auto-scroll");
@@ -389,7 +375,6 @@ function limparScrollWrapper(){
   if(clone) clone.remove();
 }
 
-/* Scroll automático */
 function ativarScrollSeNecessario(qtd){
   const area = document.getElementById("scrollArea");
 
@@ -419,7 +404,7 @@ function ativarScrollSeNecessario(qtd){
 
   const clone = tabela.cloneNode(true);
   clone.id = "clone-tabela";
-  
+
   const thead = clone.querySelector("thead");
   if(thead) thead.remove();
 
@@ -435,7 +420,6 @@ function ativarScrollSeNecessario(qtd){
   });
 }
 
-/* ALERTAS */
 function parseTimeHHMM(t){
   const m=String(t).match(/^([0-2][0-9]):([0-5][0-9])$/);
   if(!m) return null;
@@ -482,7 +466,6 @@ function atualizarAlertsUI(){
   });
 }
 
-/* PROMOÇÕES */
 function carregarPromocoes(){
   document.getElementById("promosText").textContent=getPromocoes();
 }
@@ -509,3 +492,4 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 </body>
 </html>
+
